@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import boutton from './boutton.vue';
+import Boutton from './boutton.vue';
 import { Search } from 'lucide-vue-next'
 </script>
 
