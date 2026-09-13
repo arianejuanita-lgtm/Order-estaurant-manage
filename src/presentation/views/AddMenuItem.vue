@@ -3,6 +3,7 @@ import { reactive } from 'vue';
 import { useFilter } from '../stores/useFilter';
 import { useMenuItem } from '../stores/useMenuItem';
 import { MenuItem } from '@/domain/entities/MenuItem';
+import { router } from '@/router/routes';
 
 const filterStore = useFilter();
 const menuStore = useMenuItem();
@@ -39,6 +40,7 @@ const handleSubmit = async () => {
   });
 
   await menuStore.addMenuItem(newItem);
+  router.push('/');
   
   form.id = Date.now();
   form.name = '';
@@ -80,7 +82,7 @@ const handleSubmit = async () => {
       <div class="form-row">
         <div class="form-group">
           <label for="rating">Rating</label>
-          <input type="number" step="0.1" min="0" max="5" id="rating" v-model.number="form.rating" />
+          <input type="number" step="0.1" min="0" max="5" id="rating" v-model="form.rating" />
         </div>
 
         <div class="form-group">
@@ -94,7 +96,7 @@ const handleSubmit = async () => {
         <select id="category" v-model="form.category" required>
           <option disabled value="">Select a category</option>
           <option v-for="cat in filterStore.categories" key="cat" :value="cat">
-            {{ cat }}
+            {{ cat.label }}
           </option>
         </select>
       </div>
@@ -104,7 +106,7 @@ const handleSubmit = async () => {
         <div class="checkbox-group">
           <label v-for="diet in filterStore.dietaries" key="diet" class="checkbox-label">
             <input type="checkbox" :value="diet" v-model="form.dietary" />
-            {{ diet }}
+            {{ diet.label }}
           </label>
         </div>
       </div>
@@ -182,7 +184,7 @@ input[type="url"],
 select,
 textarea {
   padding: 10px 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid gray;
   border-radius: 8px;
   font-size: 0.95rem;
   outline: none;
@@ -192,7 +194,7 @@ textarea {
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: #059669;
+  border-color:gray;
 }
 
 textarea {
@@ -224,8 +226,7 @@ textarea {
 .submit-btn {
   width: 100%;
   padding: 12px;
-  background-color: #059669;
-  color: white;
+  background-color: #F5BE18;
   border: none;
   border-radius: 8px;
   font-weight: 700;
@@ -233,9 +234,5 @@ textarea {
   cursor: pointer;
   transition: background-color 0.2s;
   margin-top: 10px;
-}
-
-.submit-btn:hover {
-  background-color: #047857;
 }
 </style> 

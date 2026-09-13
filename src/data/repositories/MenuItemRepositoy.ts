@@ -1,5 +1,6 @@
 import { MenuItem } from "@/domain/entities/MenuItem";
 import { apiClient } from "../datasources/apiClient";
+
 interface IMenuItemRepository {
   getMenuItem(): Promise<MenuItem[]>;
   createMenuItem(menuItem: MenuItem): Promise<MenuItem>;
@@ -8,10 +9,9 @@ interface IMenuItemRepository {
 }
 
 export class MenuItemRepository implements IMenuItemRepository {
- async getMenuItem(): Promise<MenuItem[]> {
+  async getMenuItem(): Promise<MenuItem[]> {
     const response = await apiClient.get(""); 
     const items = response.data.record.menu_items;
-    console.log('items',items);
 
     return items.map(
       (item: any) =>
@@ -33,28 +33,18 @@ export class MenuItemRepository implements IMenuItemRepository {
   }
 
   async createMenuItem(menuItem: MenuItem): Promise<MenuItem> {
-     const response = await apiClient.post("/menu_items",menuItem.toJSON());
-     const item=response.data.record.menu_items;
-     return new MenuItem({
-          id: item.id,
-          name: item.name,
-          description: item.description,
-          price: item.price,
-          rating: item.rating,
-          reviews: item.reviews,
-          delivery_time: item.deliveryTime,
-          category: item.category,
-          dietary: item.dietary,
-          image: item.image,
-          is_available: item.isAvailable,
-          portion_sizes: item.portionSizes,
-     });
-  }
-
-async updateMenuItem(menuItem: MenuItem): Promise<MenuItem> {
-    const response = await apiClient.put(`/menu_items/${menuItem.id}`, menuItem.toJSON());
+    const getResponse = await apiClient.get("");
+    const currentData = getResponse.data.record;
+    const existingItems = currentData.menu_items || [];
     
-    const item = response.data.record.menu_items;
+    const updatedItems = [...existingItems, menuItem.toJSON()];
+    
+    const response = await apiClient.put("", {
+      ...currentData,
+      menu_items: updatedItems
+    });
+
+    const item = menuItem.toJSON();
     return new MenuItem({
          id: item.id,
          name: item.name,
@@ -62,16 +52,56 @@ async updateMenuItem(menuItem: MenuItem): Promise<MenuItem> {
          price: item.price,
          rating: item.rating,
          reviews: item.reviews,
-         delivery_time: item.deliveryTime,
+         delivery_time: item.delivery_time,
          category: item.category,
          dietary: item.dietary,
          image: item.image,
-         is_available: item.isAvailable,
-         portion_sizes: item.portionSizes,
+         is_available: item.is_available,
+         portion_sizes: item.portion_sizes,
     });
- }
+  }
+
+  async updateMenuItem(menuItem: MenuItem): Promise<MenuItem> {
+    const getResponse = await apiClient.get("");
+    const currentData = getResponse.data.record;
+    const existingItems = currentData.menu_items || [];
+
+    const updatedItems = existingItems.map((item: any) => 
+      item.id === menuItem.id ? menuItem.toJSON() : item
+    );
+
+    await apiClient.put("", {
+      ...currentData,
+      menu_items: updatedItems
+    });
+
+    const item = menuItem.toJSON();
+    return new MenuItem({
+         id: item.id,
+         name: item.name,
+         description: item.description,
+         price: item.price,
+         rating: item.rating,
+         reviews: item.reviews,
+         delivery_time: item.delivery_time,
+         category: item.category,
+         dietary: item.dietary,
+         image: item.image,
+         is_available: item.is_available,
+         portion_sizes: item.portion_sizes,
+    });
+  }
 
   async deleteMenuItem(id: number): Promise<void> {
-    await apiClient.delete(`/menu_items/${id}`);
+    const getResponse = await apiClient.get("");
+    const currentData = getResponse.data.record;
+    const existingItems = currentData.menu_items || [];
+
+    const updatedItems = existingItems.filter((item: any) => item.id !== id);
+
+    await apiClient.put("", {
+      ...currentData,
+      menu_items: updatedItems
+    });
   }
 }

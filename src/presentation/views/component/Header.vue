@@ -21,8 +21,11 @@ const titre='Order now';
     </div>
 
     <div class="navbar">
-        <div>Home</div>
+        <RouterLink to="/">
+        <div>Home</div></RouterLink>
+        <RouterLink to="/addMenuItem">
          <div>Menu</div>
+         </RouterLink>
           <div>Categorie</div>
            <div>About</div>
             <div>Blog</div>

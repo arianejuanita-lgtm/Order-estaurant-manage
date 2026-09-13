@@ -3,6 +3,7 @@ import { Star, Pencil, Trash2 } from "lucide-vue-next";
 import Boutton from "../comom/Boutton.vue";
 import logo from '../../../assets/logo.png';
 import { useMenuItem } from "@/presentation/stores/useMenuItem";
+import { RouterLink } from "vue-router";
 
 const menu = useMenuItem();
 
@@ -33,9 +34,11 @@ const handleImageError = (event: Event) => {
         @error="handleImageError" 
       />
       <div class="card-actions">
+        <RouterLink :to="`/updateMenuItem/${item.id}`">
         <div class="action-btn">
             <Pencil :size="16" />
         </div>
+    </RouterLink>
         <div class="action-btn" @click="menu.deleteMenuItem(item.id)">
             <Trash2 :size="16" />        
         </div>

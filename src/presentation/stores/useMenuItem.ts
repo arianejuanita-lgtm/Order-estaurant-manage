@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { MenuItemRepository } from "@/data/repositories/MenuItemRepositoy";
 import { MenuItem } from "@/domain/entities/MenuItem";
-import { ref, computed } from "vue";
+import { ref } from "vue";
 
 const menuItemRepository = new MenuItemRepository();
 
@@ -11,86 +11,46 @@ export const useMenuItem = defineStore("menuItem", () => {
   async function fecthMenuItems() {
     try {
       menuItems.value = await menuItemRepository.getMenuItem();
-      console.log(menuItems.value);
     } catch (error) {
       console.log(error);
-    } finally {
-      console.log(menuItems.value);
     }
   }
 
   async function addMenuItem(item: MenuItem) {
     try {
-      const newMenuItem = new MenuItem({
-        id: item.id,
-        name: item.name,
-        description: item.description,
-        price: item.price,
-        rating: item.rating,
-        reviews: item.reviews,
-        delivery_time: item.deliveryTime,
-        category: item.category,
-        dietary: item.dietary,
-        image: item.image,
-        is_available: item.isAvailable,
-        portion_sizes: item.portionSizes,
-      });
-
-      const created = await menuItemRepository.createMenuItem(newMenuItem);
+      const created = await menuItemRepository.createMenuItem(item);
       menuItems.value.unshift(created);
+      await fecthMenuItems();
     } catch (error) {
       console.log("erreur de creation", error);
-    } finally {
-      console.log("menu item cree", menuItems.value);
     }
   }
 
-async function updatedMenuItem(item: MenuItem) {
+  async function updatedMenuItem(item: MenuItem) {
     try {
-      const updatedMenuItem = new MenuItem({
-        id: item.id,
-        name: item.name,
-        description: item.description,
-        price: item.price,
-        rating: item.rating,
-        reviews: item.reviews,
-        delivery_time: item.deliveryTime,
-        category: item.category,
-        dietary: item.dietary,
-        image: item.image,
-        is_available: item.isAvailable,
-        portion_sizes: item.portionSizes,
-      });
-
-      const updated = await menuItemRepository.updateMenuItem(updatedMenuItem);
-      
+      const updated = await menuItemRepository.updateMenuItem(item);
       const index = menuItems.value.findIndex((m) => m.id === updated.id);
       if (index !== -1) {
         menuItems.value[index] = updated;
       }
+      await fecthMenuItems();
     } catch (error) {
       console.log("erreur de modification", error);
-    } finally {
-      console.log("menu item modifie", menuItems.value);
     }
   }
 
-  async function deleteMenuItem(id:number) {
+  async function deleteMenuItem(id: number) {
     try {
-        await menuItemRepository.deleteMenuItem(id);
-        menuItems.value = menuItems.value.filter((item)=> item.id !== id);
+      await menuItemRepository.deleteMenuItem(id);
+      menuItems.value = menuItems.value.filter((item) => item.id !== id);
+      await fecthMenuItems();
     } catch (error) {
-        console.log("erreur de suppression", error); 
-    }finally{
-
+      console.log("erreur de suppression", error); 
     }
-    
   }
 
   async function allMenuItem() {
-    await Promise.all([
-    fecthMenuItems()
-    ]);
+    await fecthMenuItems();
   }
 
   return {
@@ -100,8 +60,5 @@ async function updatedMenuItem(item: MenuItem) {
     fecthMenuItems,
     deleteMenuItem,
     allMenuItem
-
   };
-
-
 });
