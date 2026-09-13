@@ -11,6 +11,7 @@ export const useMenuItem = defineStore("menuItem", () => {
   async function fecthMenuItems() {
     try {
       menuItems.value = await menuItemRepository.getMenuItem();
+      console.log(menuItems.value);
     } catch (error) {
       console.log(error);
     } finally {
@@ -44,7 +45,7 @@ export const useMenuItem = defineStore("menuItem", () => {
     }
   }
 
-   async function updatedMenuItem(item: MenuItem) {
+async function updatedMenuItem(item: MenuItem) {
     try {
       const updatedMenuItem = new MenuItem({
         id: item.id,
@@ -62,7 +63,11 @@ export const useMenuItem = defineStore("menuItem", () => {
       });
 
       const updated = await menuItemRepository.updateMenuItem(updatedMenuItem);
-      menuItems.value
+      
+      const index = menuItems.value.findIndex((m) => m.id === updated.id);
+      if (index !== -1) {
+        menuItems.value[index] = updated;
+      }
     } catch (error) {
       console.log("erreur de modification", error);
     } finally {
@@ -82,12 +87,19 @@ export const useMenuItem = defineStore("menuItem", () => {
     
   }
 
+  async function allMenuItem() {
+    await Promise.all([
+    fecthMenuItems()
+    ]);
+  }
+
   return {
     menuItems,
     addMenuItem,
     updatedMenuItem,
     fecthMenuItems,
-    deleteMenuItem
+    deleteMenuItem,
+    allMenuItem
 
   };
 

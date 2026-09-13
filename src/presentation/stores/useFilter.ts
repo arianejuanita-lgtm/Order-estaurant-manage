@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref,computed } from "vue";
+import { ref, computed } from "vue";
 import { Category } from "@/domain/entities/Category";
 import { PriceRange } from "@/domain/entities/PriceRange";
 import { Dietary } from "@/domain/entities/Dietary";
@@ -8,15 +8,16 @@ import { FilterRepository } from "@/data/repositories/FilterRepository";
 
 const filter = new FilterRepository();
 
-export const useFilter= defineStore('filterMenuItem',()=>{
-    const categories=ref<Category[]>([]);
-    const PriceRanges=ref<PriceRange[]>([]);
-    const dietaries=ref<Dietary[]>([]);
-    const portionSizes=ref<PortionSize[]>([]);
+export const useFilter = defineStore("filterMenuItem", () => {
+  const categories = ref<Category[]>([]);
+  const PriceRanges = ref<PriceRange>();
+  const dietaries = ref<Dietary[]>([]);
+  const portionSizes = ref<PortionSize[]>([]);
 
-    async function fecthCategoryMenuItems() {
+  async function fecthCategoryMenuItems() {
     try {
       categories.value = await filter.getCategories();
+      console.log(categories.value);
     } catch (error) {
       console.log(error);
     } finally {
@@ -24,9 +25,10 @@ export const useFilter= defineStore('filterMenuItem',()=>{
     }
   }
 
-      async function fecthPriceRangeMenuItems() {
+  async function fecthPriceRangeMenuItems() {
     try {
       PriceRanges.value = await filter.getPriceRange();
+      console.log(PriceRanges.value);
     } catch (error) {
       console.log(error);
     } finally {
@@ -34,9 +36,18 @@ export const useFilter= defineStore('filterMenuItem',()=>{
     }
   }
 
+  async function fecthPortionSizeMenuItems() {
+    try {
+      portionSizes.value = await filter.getPortionSize();
+       console.log(portionSizes.value);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      console.log(portionSizes.value);
+    }
+  }
 
-  
-      async function fecthPortionSizeMenuItems() {
+  async function fecthdietariesMenuItems() {
     try {
       dietaries.value = await filter.getDietary();
     } catch (error) {
@@ -46,27 +57,24 @@ export const useFilter= defineStore('filterMenuItem',()=>{
     }
   }
 
-       async function fecthdietariesMenuItems() {
-    try {
-      portionSizes.value = await filter.getPortionSize();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      console.log(portionSizes.value);
-    }
+  async function fetchAllFilters() {
+    await Promise.all([
+      fecthCategoryMenuItems(),
+      fecthPortionSizeMenuItems(),
+      fecthdietariesMenuItems(),
+      fecthPriceRangeMenuItems(),
+    ]);
   }
 
-
-
-    return {
-        categories,
-        PriceRanges,
-        dietaries,
-        portionSizes,
-        fecthCategoryMenuItems,
-        fecthPortionSizeMenuItems,
-        fecthPriceRangeMenuItems,
-        fecthdietariesMenuItems
-    };
-
-})
+  return {
+    categories,
+    PriceRanges,
+    dietaries,
+    portionSizes,
+    fecthCategoryMenuItems,
+    fecthPortionSizeMenuItems,
+    fecthPriceRangeMenuItems,
+    fecthdietariesMenuItems,
+    fetchAllFilters,
+  };
+});

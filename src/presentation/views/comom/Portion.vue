@@ -1,14 +1,14 @@
 <script setup lang="ts">
 defineProps<{
   title: string,
-  ontap: (event: MouseEvent) => void;
+  // ontap: (event: MouseEvent) => void;
 }>()
 
 
 </script>
 
 <template>
-  <button v-on:click="ontap">
+  <button >
     {{ title }}
   </button>
 </template>

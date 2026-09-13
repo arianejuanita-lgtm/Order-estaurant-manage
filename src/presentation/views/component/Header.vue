@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import SVG from '../assets/SVG.png';
-import boutton from '../comom/boutton.vue';
+import SVG from '../../../assets/SVG.png'
+import boutton from '../comom/Boutton.vue';
 import { Search } from 'lucide-vue-next';
 import { User } from 'lucide-vue-next';
 import { ShoppingBag } from 'lucide-vue-next';
@@ -33,7 +33,7 @@ const titre='Order now';
         <div> <Search /></div>
         <div><User/></div>
         <div><ShoppingBag /></div>
-        <RouterLink to="/oder">
+        <RouterLink to="/">
 
         <boutton :title=titre :haut="40"/></RouterLink>
     </div>
