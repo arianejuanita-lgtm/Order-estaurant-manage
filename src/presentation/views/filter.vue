@@ -2,13 +2,16 @@
 import Categorie from './component/filters/categorie.vue';
 import Dietary from './component/filters/dietary.vue';
 import Portion from './component/filters/portion.vue';
+import { useFiltered } from '../stores/useFiltered.ts';
+
+const filter=useFiltered();
 </script>
 
 <template>
   <aside class="filters-container">
     <div class="filters-header">
       <h3 class="filters-title">Filters</h3>
-      <button class="clear-btn" type="button"  >Clear All</button>
+      <button class="clear-btn" type="button" @click="filter.clearFilter" >Clear All</button>
     </div>
 
     <hr class="divider" />

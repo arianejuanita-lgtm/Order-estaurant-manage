@@ -28,25 +28,31 @@ const form = reactive({
 });
 
 onMounted(async () => {
+  // S'assurer que les données sont chargées
   if (menuStore.menuItems.length === 0) {
     await menuStore.fecthMenuItems();
   }
   
   const existingItem = menuStore.menuItems.find((m) => m.id === itemId);
   
-  if (existingItem) {
-    form.name = existingItem.name;
-    form.description = existingItem.description;
-    form.price = existingItem.price;
-    form.rating = existingItem.rating;
-    form.reviews = existingItem.reviews;
-    form.delivery_time = existingItem.deliveryTime;
-    form.category = existingItem.category;
-    form.dietary = [...existingItem.dietary];
-    form.image = existingItem.image;
-    form.is_available = existingItem.isAvailable;
-    form.portion_sizes = [...existingItem.portionSizes];
+  // Sécurité : si l'élément n'existe pas, on redirige vers l'accueil pour éviter la page blanche
+  if (!existingItem) {
+    console.warn("Élément introuvable avec l'ID :", itemId);
+    router.push('/');
+    return;
   }
+  
+  form.name = existingItem.name;
+  form.description = existingItem.description;
+  form.price = existingItem.price;
+  form.rating = existingItem.rating;
+  form.reviews = existingItem.reviews;
+  form.delivery_time = existingItem.deliveryTime;
+  form.category = existingItem.category;
+  form.dietary = [...existingItem.dietary];
+  form.image = existingItem.image;
+  form.is_available = existingItem.isAvailable;
+  form.portion_sizes = [...existingItem.portionSizes];
 });
 
 const handleSubmit = async () => {
@@ -113,7 +119,7 @@ const handleSubmit = async () => {
         <select id="category" v-model="form.category" required>
           <option disabled value="">Select a category</option>
           <option v-for="cat in filterStore.categories" key="cat" :value="cat">
-            {{ cat.label || cat }}
+            {{ cat.label }}
           </option>
         </select>
       </div>
@@ -123,7 +129,7 @@ const handleSubmit = async () => {
         <div class="checkbox-group">
           <label v-for="diet in filterStore.dietaries" key="diet" class="checkbox-label">
             <input type="checkbox" :value="diet.label || diet" v-model="form.dietary" />
-            {{ diet.label || diet }}
+            {{ diet.label }}
           </label>
         </div>
       </div>
@@ -133,7 +139,7 @@ const handleSubmit = async () => {
         <div class="checkbox-group">
           <label v-for="portion in filterStore.portionSizes" key="portion.id || portion" class="checkbox-label">
             <input type="checkbox" :value="portion.label || portion" v-model="form.portion_sizes" />
-            {{ portion.label || portion }}
+            {{ portion.label}}
           </label>
         </div>
       </div>

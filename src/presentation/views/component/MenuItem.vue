@@ -5,17 +5,23 @@ import logo from '../../../assets/logo.png';
 import { useMenuItem } from "@/presentation/stores/useMenuItem";
 import { RouterLink } from "vue-router";
 
+
 const menu = useMenuItem();
 
 defineProps<{
     item:{
-        id:number,
-        name:string,
-        description:string,
-        price:number,
-        rating:number,
-        reviews:number,
-        image:string
+  id: number;
+    name: string;
+    description: string;
+    price: number;
+    rating: number;
+    reviews: number;
+    image: string;
+    category: string;
+    dietary: string[];
+    deliveryTime?: string;
+    isAvailable?: boolean;
+    portionSizes?: string[];
     }
 }>();
 
@@ -34,10 +40,10 @@ const handleImageError = (event: Event) => {
         @error="handleImageError" 
       />
       <div class="card-actions">
-        <RouterLink :to="`/updateMenuItem/${item.id}`">
-        <div class="action-btn">
+        <RouterLink :to="`/updateMenuItem/${item.id}`" class="action-btn">
+        
             <Pencil :size="16" />
-        </div>
+        
     </RouterLink>
         <div class="action-btn" @click="menu.deleteMenuItem(item.id)">
             <Trash2 :size="16" />        

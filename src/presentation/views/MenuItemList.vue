@@ -2,6 +2,9 @@
 import MenuItem from "./component/MenuItem.vue";
 import { useMenuItem } from "@/presentation/stores/useMenuItem";
 import { onMounted } from "vue";
+import { useFiltered } from "../stores/useFiltered.ts";
+
+const filter=useFiltered();
 
 const menu=useMenuItem();
 onMounted(
@@ -14,14 +17,14 @@ onMounted(
 <template>
   <div class="menu-container">
     <div class="menu-header">
-      <h2 class="menu-title">{{ menu.menuItems.length }} Menu Items</h2>
+      <h2 class="menu-title">{{ filter.menu.length }} Menu Items</h2>
       <div class="menu-filter">
         
       </div>
     </div>
 
     <div class="menu-grid">
-      <MenuItem v-for="item in menu.menuItems" :item="item" :key="item.id" />
+      <MenuItem v-for="item in filter.menu" :item="item" :key="item.id" />
     </div>
   </div>
 </template>

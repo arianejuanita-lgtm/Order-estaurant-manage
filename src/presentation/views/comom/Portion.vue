@@ -1,14 +1,13 @@
 <script setup lang="ts">
 defineProps<{
-  title: string,
-  // ontap: (event: MouseEvent) => void;
-}>()
-
-
+  title: string;
+  isSelected?: boolean;
+  ontap?: () => void;
+}>();
 </script>
 
 <template>
-  <button >
+  <button :class="{ 'selected-border': isSelected }" @click="ontap">
     {{ title }}
   </button>
 </template>
@@ -24,5 +23,11 @@ button {
   height: 25px;
   cursor: pointer;
   font-weight: bold;
+  background-color: transparent;
+  transition: all 0.2s ease;
+}
+
+.selected-border {
+  border-color: #F5BE18; 
 }
 </style>

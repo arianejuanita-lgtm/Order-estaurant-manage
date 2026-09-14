@@ -1,33 +1,29 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useFilter } from '@/presentation/stores/useFilter';
-import { onMounted } from 'vue';
+import { useFiltered } from '@/presentation/stores/useFiltered.ts';
 import portion from '../../comom/Portion.vue';
 
-const filterStore=useFilter();
+const filterStore = useFilter();
+const filter = useFiltered();
 
-onMounted(
-    async()=>{
-        await filterStore.fecthPortionSizeMenuItems();
-        console.log("portion.size",filterStore.portionSizes.values);
+onMounted(async () => {
+    await filterStore.fecthPortionSizeMenuItems();
+});
+
+const porte = ref<string>('');
+
+watch(porte, (newport) => {
+    filter.port = newport;
+});
+
+const selectPortion = (label: string) => {
+    if (porte.value === label) {
+        porte.value = '';
+    } else {
+        porte.value = label;
     }
-)
-
-
-// const porte = ref('');
-// const { port } = UseItem();
-
-// watch(porte, (newport) => {
-//     port.value = newport;
-// });
-
-// const selectPortion = (label) => {
-//     if (porte.value === label) {
-//         porte.value = '';
-//     } else {
-//         porte.value = label;
-//     }
-// };
+};
 </script>
 
 <template>
@@ -36,9 +32,9 @@ onMounted(
         <li v-for="p in filterStore.portionSizes" :key="p.id">
             <portion 
                 :title="p.label"
-               
+                :ontap="() => selectPortion(p.label)"
+                :is-selected="porte === p.label"
                 :id="'part' + p.id" 
-                
             />
         </li>
     </ul>
@@ -46,7 +42,6 @@ onMounted(
 
 <style>
 .bot {
-   
     width: 100%;
     height: auto;
 }

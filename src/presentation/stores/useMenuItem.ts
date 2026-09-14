@@ -17,37 +17,34 @@ export const useMenuItem = defineStore("menuItem", () => {
   }
 
   async function addMenuItem(item: MenuItem) {
-    try {
-      const created = await menuItemRepository.createMenuItem(item);
-      menuItems.value.unshift(created);
-      await fecthMenuItems();
-    } catch (error) {
-      console.log("erreur de creation", error);
-    }
+  try {
+    const created = await menuItemRepository.createMenuItem(item);
+    menuItems.value.unshift(created);
+  } catch (error: any) {
+    console.error("erreur de creation", error.response?.data || error);
   }
+}
 
-  async function updatedMenuItem(item: MenuItem) {
-    try {
-      const updated = await menuItemRepository.updateMenuItem(item);
-      const index = menuItems.value.findIndex((m) => m.id === updated.id);
-      if (index !== -1) {
-        menuItems.value[index] = updated;
-      }
-      await fecthMenuItems();
-    } catch (error) {
-      console.log("erreur de modification", error);
+async function updatedMenuItem(item: MenuItem) {
+  try {
+    const updated = await menuItemRepository.updateMenuItem(item);
+    const index = menuItems.value.findIndex((m) => m.id === updated.id);
+    if (index !== -1) {
+      menuItems.value[index] = updated;
     }
+  } catch (error: any) {
+    console.error("erreur de modification", error.response?.data || error);
   }
+}
 
-  async function deleteMenuItem(id: number) {
-    try {
-      await menuItemRepository.deleteMenuItem(id);
-      menuItems.value = menuItems.value.filter((item) => item.id !== id);
-      await fecthMenuItems();
-    } catch (error) {
-      console.log("erreur de suppression", error); 
-    }
+async function deleteMenuItem(id: number) {
+  try {
+    await menuItemRepository.deleteMenuItem(id);
+    menuItems.value = menuItems.value.filter((item) => item.id !== id);
+  } catch (error: any) {
+    console.error("erreur de suppression", error);
   }
+}
 
   async function allMenuItem() {
     await fecthMenuItems();
