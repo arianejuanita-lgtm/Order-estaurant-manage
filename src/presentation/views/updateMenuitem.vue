@@ -28,14 +28,13 @@ const form = reactive({
 });
 
 onMounted(async () => {
-  // S'assurer que les données sont chargées
+
   if (menuStore.menuItems.length === 0) {
     await menuStore.fecthMenuItems();
   }
   
   const existingItem = menuStore.menuItems.find((m) => m.id === itemId);
   
-  // Sécurité : si l'élément n'existe pas, on redirige vers l'accueil pour éviter la page blanche
   if (!existingItem) {
     console.warn("Élément introuvable avec l'ID :", itemId);
     router.push('/');

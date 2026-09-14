@@ -46,16 +46,12 @@ async function deleteMenuItem(id: number) {
   }
 }
 
-  async function allMenuItem() {
-    await fecthMenuItems();
-  }
-
   return {
     menuItems,
     addMenuItem,
     updatedMenuItem,
     fecthMenuItems,
     deleteMenuItem,
-    allMenuItem
+    
   };
 });

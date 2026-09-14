@@ -5,14 +5,13 @@ import logo from '../../../assets/logo.png';
 import { useMenuItem } from "@/presentation/stores/useMenuItem";
 import { RouterLink } from "vue-router";
 import { useOrder } from "@/presentation/stores/useOrder.ts";
-import { Order } from "@/domain/entities/Order";
-import { ref } from "vue";
+import { ref, computed, onMounted } from "vue";
 
 const orderStore = useOrder();
 const menu = useMenuItem();
-const qte=ref<number>(1);
+const checked = ref<boolean>(false);
 
-const props =defineProps<{
+const props = defineProps<{
     item: {
         id: number;
         name: string;
@@ -29,22 +28,49 @@ const props =defineProps<{
     }
 }>();
 
-const handleclick = () => {
-  const newOrder = new Order({
-    id:orderStore.orderMenuItem.length + 1,
-    items: [{
-      menuItemId: props.item.id,
-      name: props.item.name,
-      price: props.item.price,
-      quantity: qte.value,
-      portionSize: props.item.portionSizes[0] || ''
-    }],
-    totalPrice: props.item.price * qte.value,
-    status: 'pending',
-    createdAt: new Date().toISOString()
-  });
+const currentQuantity = computed(() => {
+  const existingOrder = orderStore.orderMenuItem.find(ord => 
+    ord.items.some(i => i.menuItemId === props.item.id)
+  );
+  if (existingOrder) {
+    const item = existingOrder.items.find(i => i.menuItemId === props.item.id); 
+    return item ? item.quantity : 1;
+  }
+  return 1;
+});
 
-  orderStore.addOrder(newOrder);
+onMounted(() => {
+  const exists = orderStore.orderMenuItem.some(ord => 
+    ord.items.some(i => i.menuItemId === props.item.id)
+  );
+  if (exists) checked.value = true;
+});
+
+const totalPrice = computed(() => props.item.price * currentQuantity.value);
+
+const handleclick = () => {
+  checked.value = true;
+  orderStore.addItemToOrder(props.item);
+};
+
+const addQte = () => {
+  orderStore.addItemToOrder(props.item);
+};
+
+const removeQte = () => {
+  const existingOrder = orderStore.orderMenuItem.find(ord => 
+    ord.items.some(i => i.menuItemId === props.item.id)
+  );
+  if (existingOrder) {
+    const existingItem = existingOrder.items.find(i => i.menuItemId === props.item.id);
+    if (existingItem && existingItem.quantity > 1) {
+      existingItem.quantity--;
+      existingOrder.totalPrice = existingItem.price * existingItem.quantity;
+    } else if (existingItem && existingItem.quantity === 1) {
+      orderStore.deleteOrderMenu(existingOrder.id!);
+      checked.value = false;
+    }
+  }
 };
 
 const handleImageError = (event: Event) => {
@@ -82,9 +108,18 @@ const handleImageError = (event: Event) => {
         </div>
       </div>
 
-      <div class="food-footer" @click="handleclick">
-        <span class="price">${{ item.price }}</span>
-        <Boutton title="Add" :haut="20" />
+      <div class="food-footer">
+        <span class="price">${{ totalPrice.toFixed(2) }}</span>
+        
+        <div v-if="!checked" @click="handleclick">
+          <Boutton title="Add" :haut="20" />
+        </div>
+
+        <div v-else class="qty-control">
+          <div @click="removeQte" class="qty-btn">-</div>
+          <span>{{ currentQuantity }}</span>
+          <div @click="addQte" class="qty-btn">+</div>
+        </div>
       </div>
     </div>
   </div>
@@ -101,12 +136,10 @@ const handleImageError = (event: Event) => {
   flex-direction: column;
   padding: 12px;
 }
-
 .food-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
-
 .food-image-wrapper {
   width: 100%;
   height: 160px;
@@ -118,13 +151,11 @@ const handleImageError = (event: Event) => {
   justify-content: center;
   position: relative;
 }
-
 .food-image-wrapper img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-
 .card-actions {
   position: absolute;
   top: 8px;
@@ -134,7 +165,6 @@ const handleImageError = (event: Event) => {
   justify-content: space-between;
   pointer-events: none;
 }
-
 .action-btn {
   background-color: rgba(255, 255, 255, 0.85);
   border-radius: 50%;
@@ -148,25 +178,21 @@ const handleImageError = (event: Event) => {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   transition: background-color 0.2s ease;
 }
-
 .action-btn:hover {
   background-color: #ffffff;
 }
-
 .food-info {
   padding: 12px 4px 4px 4px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
-
 .food-name {
   font-size: 1rem;
   font-weight: 600;
   color: #111827;
   margin: 0 0 6px 0;
 }
-
 .food-description {
   font-size: 0.85rem;
   color: #6b7280;
@@ -176,13 +202,11 @@ const handleImageError = (event: Event) => {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-
 .food-meta {
   display: flex;
   align-items: center;
   margin-bottom: 12px;
 }
-
 .rating {
   display: flex;
   align-items: center;
@@ -191,12 +215,10 @@ const handleImageError = (event: Event) => {
   font-weight: 600;
   color: #374151;
 }
-
 .rating small {
   color: #9ca3af;
   font-weight: normal;
 }
-
 .food-footer {
   display: flex;
   justify-content: space-between;
@@ -205,9 +227,24 @@ const handleImageError = (event: Event) => {
   padding-top: 8px;
   border-top: 1px solid #f3f4f6;
 }
-
 .price {
   font-size: 1.15rem;
   font-weight: 700;
+}
+.qty-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+.qty-btn {
+  cursor: pointer;
+  padding: 2px 8px;
+  background-color: #f3f4f6;
+  border-radius: 4px;
+  user-select: none;
+}
+.qty-btn:hover {
+  background-color: #e5e7eb;
 }
 </style>

@@ -82,4 +82,6 @@ alert("Création d'un menuitem : " + menuItem.name);
       menu_items: updatedItems
     });
   }
+
+
 }

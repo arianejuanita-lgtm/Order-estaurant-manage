@@ -50,12 +50,42 @@ export const useOrder = defineStore("order", () => {
         orderMenuItem.value.unshift(order);
     }
 
+    function addItemToOrder(menuItem: { id: number; name: string; price: number; portionSizes: string[] }) {
+        const existingOrder = orderMenuItem.value.find(ord => 
+            ord.items.some(i => i.menuItemId === menuItem.id)
+        );
+
+        if (existingOrder) {
+            const existingItem = existingOrder.items.find(i => i.menuItemId === menuItem.id);
+            if (existingItem) {
+                existingItem.quantity++;
+                existingOrder.totalPrice = existingItem.price * existingItem.quantity;
+            }
+        } else {
+            const newOrder = new Order({
+                id: orderMenuItem.value.length + 1,
+                items: [{
+                    menuItemId: menuItem.id,
+                    name: menuItem.name,
+                    price: menuItem.price,
+                    quantity: 1,
+                    portionSize: menuItem.portionSizes[0] || ''
+                }],
+                totalPrice: menuItem.price,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            });
+            orderMenuItem.value.unshift(newOrder);
+        }
+    }
+
     return {
         orderMenuItem,
         fetchOrderMenuItems,
         createOrderMenuItem,
         updateOrderMenuItem,
         deleteOrderMenu,
-        addOrder
+        addOrder,
+        addItemToOrder
     };
 });
