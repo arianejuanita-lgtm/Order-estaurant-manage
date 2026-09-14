@@ -4,26 +4,48 @@ import Boutton from "../comom/Boutton.vue";
 import logo from '../../../assets/logo.png';
 import { useMenuItem } from "@/presentation/stores/useMenuItem";
 import { RouterLink } from "vue-router";
+import { useOrder } from "@/presentation/stores/useOrder.ts";
+import { Order } from "@/domain/entities/Order";
+import { ref } from "vue";
 
-
+const orderStore = useOrder();
 const menu = useMenuItem();
+const qte=ref<number>(1);
 
-defineProps<{
-    item:{
-  id: number;
-    name: string;
-    description: string;
-    price: number;
-    rating: number;
-    reviews: number;
-    image: string;
-    category: string;
-    dietary: string[];
-    deliveryTime?: string;
-    isAvailable?: boolean;
-    portionSizes?: string[];
+const props =defineProps<{
+    item: {
+        id: number;
+        name: string;
+        description: string;
+        price: number;
+        rating: number;
+        reviews: number;
+        image: string;
+        category: string;
+        dietary: string[];
+        deliveryTime?: string;
+        isAvailable?: boolean;
+        portionSizes: string[];
     }
 }>();
+
+const handleclick = () => {
+  const newOrder = new Order({
+    id:orderStore.orderMenuItem.length + 1,
+    items: [{
+      menuItemId: props.item.id,
+      name: props.item.name,
+      price: props.item.price,
+      quantity: qte.value,
+      portionSize: props.item.portionSizes[0] || ''
+    }],
+    totalPrice: props.item.price * qte.value,
+    status: 'pending',
+    createdAt: new Date().toISOString()
+  });
+
+  orderStore.addOrder(newOrder);
+};
 
 const handleImageError = (event: Event) => {
     const target = event.target as HTMLImageElement;
@@ -41,10 +63,8 @@ const handleImageError = (event: Event) => {
       />
       <div class="card-actions">
         <RouterLink :to="`/updateMenuItem/${item.id}`" class="action-btn">
-        
             <Pencil :size="16" />
-        
-    </RouterLink>
+        </RouterLink>
         <div class="action-btn" @click="menu.deleteMenuItem(item.id)">
             <Trash2 :size="16" />        
         </div>
@@ -62,7 +82,7 @@ const handleImageError = (event: Event) => {
         </div>
       </div>
 
-      <div class="food-footer">
+      <div class="food-footer" @click="handleclick">
         <span class="price">${{ item.price }}</span>
         <Boutton title="Add" :haut="20" />
       </div>
@@ -189,6 +209,5 @@ const handleImageError = (event: Event) => {
 .price {
   font-size: 1.15rem;
   font-weight: 700;
- 
 }
 </style>

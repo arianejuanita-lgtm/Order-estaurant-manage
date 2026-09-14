@@ -24,7 +24,7 @@ onMounted(
     </div>
 
     <div class="menu-grid">
-      <MenuItem v-for="item in filter.menu" :item="item" :key="item.id" />
+      <MenuItem v-for="item in filter.menu" :item="item" :key="item.id"   />
     </div>
   </div>
 </template>
