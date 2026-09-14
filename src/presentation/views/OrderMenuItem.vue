@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import Orderitem from "./component/Orderitem.vue";
+import Orderitem from "./component/OrderItem.vue";
 import Facture from "./component/Facture.vue";
 import { useOrder } from "../stores/useOrder";
 

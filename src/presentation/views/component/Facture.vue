@@ -1,15 +1,34 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useOrder } from '@/presentation/stores/useOrder';
+import { Order } from '@/domain/entities/Order';
+import { router } from '@/router/routes';
+
 const props = defineProps<{
   subTotal: number;
 }>();
 
+const orderStore = useOrder();
 const tax = computed(() => props.subTotal * 0.1925);
 const packagingFee = 5;
 const total = computed(() => props.subTotal + tax.value + packagingFee);
 
-const handleConfirm = () => {
-  alert('Order confirmed successfully!');
+const handleConfirm = async () => {
+  const allItems = orderStore.orderMenuItem.flatMap(ord => ord.items);
+
+  const newOrder = new Order({
+    id: Date.now(),
+    items: allItems,
+    totalPrice: total.value,
+    status: "finish",
+    createdAt: new Date().toISOString()
+  });
+
+  await orderStore.createOrderMenuItem(newOrder);
+  
+  orderStore.orderMenuItem = [];
+  
+  router.push('/');
 };
 </script>
 
@@ -116,7 +135,7 @@ const handleConfirm = () => {
 }
 
 .pay-btn:hover {
-  background: #F5BE18;
+  background: #e0ab12;
 }
 
 .pay-btn:active {

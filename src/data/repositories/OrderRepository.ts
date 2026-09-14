@@ -40,8 +40,6 @@ export class OrderRepository implements IOrderMenuItems {
         orders:updatedOrder
     });
 
-    alert("creation d'un order "+ order.totalPrice);
-
     return order;
   }
 
