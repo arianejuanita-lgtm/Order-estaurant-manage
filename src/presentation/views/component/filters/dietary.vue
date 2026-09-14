@@ -35,4 +35,9 @@ v-model="dia"
         </li>
     </ul>
 </template>
-<style></style>
+<style scoped>
+input[type="checkbox"] {
+    accent-color: #F5BE18;
+    cursor: pointer;
+}
+</style>

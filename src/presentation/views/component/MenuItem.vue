@@ -189,6 +189,6 @@ const handleImageError = (event: Event) => {
 .price {
   font-size: 1.15rem;
   font-weight: 700;
-  color: #059669;
+ 
 }
 </style>

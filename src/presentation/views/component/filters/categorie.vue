@@ -11,11 +11,9 @@ onMounted(async () => {
 });
 
 const cate = ref<string>(''); 
-    console.log('cate',cate);
 
 watch(cate, (newValue) => {
     filter.catego = newValue;
-    console.log('filter.catego',filter.catego);
 });
 </script>
 
@@ -35,3 +33,10 @@ watch(cate, (newValue) => {
         </li>
     </ul>
 </template>
+
+<style scoped>
+input[type="checkbox"] {
+    accent-color: #F5BE18;
+    cursor: pointer;
+}
+</style>

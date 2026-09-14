@@ -28,21 +28,24 @@ const selectPortion = (label: string) => {
 
 <template>
     <label for="portion">Portion</label>
-    <ul class="bot">
-        <li v-for="p in filterStore.portionSizes" :key="p.id">
+    <div class="bot">
+        <div v-for="p in filterStore.portionSizes" :key="p.id">
             <portion 
                 :title="p.label"
                 :ontap="() => selectPortion(p.label)"
                 :is-selected="porte === p.label"
                 :id="'part' + p.id" 
             />
-        </li>
-    </ul>
+        </div>
+    </div>
 </template>
 
 <style>
 .bot {
-    width: 100%;
+    width: 220px;
     height: auto;
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: flex-start;
 }
 </style>

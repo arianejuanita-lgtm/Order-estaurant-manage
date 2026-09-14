@@ -5,11 +5,14 @@ import { Search } from 'lucide-vue-next';
 import { User } from 'lucide-vue-next';
 import { ShoppingBag } from 'lucide-vue-next';
 import { RouterLink } from 'vue-router';
-const titre='Order now';
+import { useOrder } from '@/presentation/stores/useOrder.ts';
+
+const orderStore = useOrder();
+const titre = 'Order now';
 </script>
 
 <template>
-    <div class="header">
+  <div class="header">
     <div class="logo">
         <div class="img">
           <img :src="SVG" alt="SVG" >
@@ -33,18 +36,23 @@ const titre='Order now';
     </div>
 
     <div class="action">
-        <div> <Search /></div>
         <div><User/></div>
-        <div><ShoppingBag /></div>
-        <RouterLink to="/">
+        
+        <RouterLink to="/orderMenuItem" class="bag-container">
+            <ShoppingBag />
+            <span v-if="orderStore.orderMenuItem.length > 0" class="badge">
+                {{ orderStore.orderMenuItem.length }}
+            </span>
+        </RouterLink>
 
-        <boutton :title=titre :haut="40"/></RouterLink>
+        <RouterLink to="/orderMenuItem">
+          <boutton :title="titre" :haut="40"/>
+        </RouterLink>
     </div>
-    </div>
+  </div>
 </template>
 
 <style scoped>
-
 .header {
   width: 100%;
   height: 80px;
@@ -61,7 +69,6 @@ const titre='Order now';
   top: 0;
   z-index: 1000;
 }
-
 
 .logo {
   display: flex;
@@ -115,39 +122,32 @@ const titre='Order now';
 
 .navbar div {
   position: relative;
-
   font-size: 15px;
   font-weight: 500;
   color: #333;
-
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
 .navbar div:hover {
-  color: #e85d04;
+  color: #F5BE18;
 }
 
 .navbar div::after {
   content: "";
-
   position: absolute;
   left: 0;
   bottom: -8px;
-
   width: 0;
   height: 2px;
-
-  background: #e85d04;
+  background: #F5BE18;
   border-radius: 10px;
-
   transition: width 0.3s ease;
 }
 
 .navbar div:hover::after {
   width: 100%;
 }
-
 
 .action {
   display: flex;
@@ -160,27 +160,59 @@ const titre='Order now';
 .action > div {
   width: 40px;
   height: 40px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 50%;
   cursor: pointer;
-
   color: #333;
   background: #f7f7f7;
-
-  transition:
-    background 0.3s ease,
-    color 0.3s ease,
-    transform 0.3s ease;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
 }
 
 .action > div:hover {
-  background: #e85d04;
-  color: white;
+  background: #F5BE18;
+  color: black;
   transform: translateY(-2px);
+}
+
+.bag-container {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #333;
+  background: #f7f7f7;
+  text-decoration: none;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.bag-container:hover {
+  background: #F5BE18;
+  color: black;
+  transform: translateY(-2px);
+}
+
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background-color: #e85d04;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 50%;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .action svg {
@@ -193,19 +225,15 @@ const titre='Order now';
   .header {
     padding: 0 25px;
   }
-
   .navbar {
     gap: 18px;
   }
-
   .navbar div {
     font-size: 14px;
   }
-
   .logo {
     min-width: auto;
   }
-
   .action {
     min-width: auto;
   }
@@ -215,7 +243,6 @@ const titre='Order now';
   .navbar {
     display: none;
   }
-
   .header {
     padding: 0 20px;
   }
@@ -225,23 +252,19 @@ const titre='Order now';
   .logo p:first-child {
     font-size: 18px;
   }
-
   .logo p:last-child {
     font-size: 7px;
     letter-spacing: 2px;
   }
-
   .img,
   .img img {
     width: 42px;
     height: 42px;
   }
-
   .action > div {
     width: 36px;
     height: 36px;
   }
-
   .action {
     gap: 6px;
   }

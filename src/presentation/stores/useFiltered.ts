@@ -9,23 +9,36 @@ export const useFiltered = defineStore("filtered", () => {
   const diate = ref<string>("");
   const port = ref<string>("");
   const price = ref<number>(0);
+  const title = ref<string>("");
 
   const finalMenu = computed(() => {
-    console.log('finalMenu');
     let result = menuStore.menuItems;
 
+    if (title.value) {
+      const searchTerm = title.value.toLowerCase();
+      result = result.filter(
+        (item) =>
+          item.name.toLowerCase().includes(searchTerm) ||
+          item.description.toLowerCase().includes(searchTerm)
+      );
+    }
+
     if (catego.value) {
-        console.log("catego.value",catego.value);
       result = result.filter((item) => item.category === catego.value);
     }
+
     if (diate.value) {
       result = result.filter((x) => x.dietary.includes(diate.value));
     }
+
     if (port.value) {
       result = result.filter((x) => x.portionSizes.includes(port.value));
     }
+
     if (price.value) {
-      result = result.filter((x) => Math.round(x.price) === Number(price.value));
+      result = result.filter(
+        (x) => Math.round(x.price) === Number(price.value)
+      );
     }
 
     return result;
@@ -36,6 +49,7 @@ export const useFiltered = defineStore("filtered", () => {
     diate.value = "";
     port.value = "";
     price.value = 0;
+    title.value = "";
   };
 
   return {
@@ -43,7 +57,8 @@ export const useFiltered = defineStore("filtered", () => {
     diate,
     port,
     price,
+    title,
     menu: finalMenu,
-    clearFilter
+    clearFilter,
   };
 });

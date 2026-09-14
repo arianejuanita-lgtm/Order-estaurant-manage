@@ -1,6 +1,5 @@
 import { MenuItem } from "@/domain/entities/MenuItem";
 import { apiClient } from "../datasources/apiClient";
-
 interface IMenuItemRepository {
   getMenuItem(): Promise<MenuItem[]>;
   createMenuItem(menuItem: MenuItem): Promise<MenuItem>;
@@ -33,7 +32,7 @@ export class MenuItemRepository implements IMenuItemRepository {
   }
 
   async createMenuItem(menuItem: MenuItem): Promise<MenuItem> {
-    console.log("creation d'un menuitem",menuItem);
+    
     const getResponse = await apiClient.get("");
     const currentData = getResponse.data.record;
     const existingItems = currentData.menu_items || [];
@@ -44,6 +43,8 @@ export class MenuItemRepository implements IMenuItemRepository {
       ...currentData,
       menu_items: updatedItems
     });
+
+alert("Création d'un menuitem : " + menuItem.name);
 
     return menuItem;
   }
@@ -63,6 +64,8 @@ export class MenuItemRepository implements IMenuItemRepository {
       ...currentData,
       menu_items: updatedItems
     });
+
+    alert("modification d'un menuitem : " + menuItem.name);
 
     return menuItem;
   }
