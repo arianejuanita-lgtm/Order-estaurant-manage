@@ -1,31 +1,16 @@
-
 <script setup lang="ts">
+// Correction des types en minuscules (bonnes pratiques TypeScript/Vue)
 defineProps<{
-  title:String,
-  haut:Number
+  title: string,
+  haut: number
 }>()
 </script>
 
 <template>
-  <button :style="{ height: haut + 'px' }">
+  <button 
+    :style="{ height: haut + 'px' }"
+    class="flex items-center justify-center bg-[#F5BE18] border border-[#F5BE18] px-5 rounded-[20px] cursor-pointer font-bold text-black"
+  >
     {{ title }}
   </button>
 </template>
-
-<style scoped>
-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background-color: #F5BE18;
-  border: 1px solid #F5BE18;
-
-  padding: 0 20px;
-  border-radius: 20px;
-
-  cursor: pointer;
-
-  font-weight: bold;
-}
-</style>
