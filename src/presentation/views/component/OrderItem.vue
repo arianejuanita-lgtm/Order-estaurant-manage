@@ -25,11 +25,13 @@ const menuItemDetails = computed(() => {
 
 const addQuantity = () => {
   props.item.quantity++;
+  console.log("prix de chaque order add", props.item.price);
 };
 
 const removeQuantity = () => {
   if (props.item.quantity > 1) {
     props.item.quantity--;
+    console.log("prix de chaque order remove", props.item.price);
   }
 };
 
@@ -41,6 +43,8 @@ const handleImageError = (event: Event) => {
   const target = event.target as HTMLImageElement;
   target.src = logo;
 };
+
+console.log("prix de chaque order", props.item.price);
 </script>
 
 <template>

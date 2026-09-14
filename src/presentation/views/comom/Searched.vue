@@ -23,10 +23,10 @@ const handleSearch = () => {
       id="search"
       placeholder="Pizza, burger..."
       v-model="text"
-      @keyup.enter="handleSearch"
+      @input="handleSearch"
       class="flex-1 h-full px-3 border-none outline-none bg-transparent text-sm text-gray-800 placeholder-gray-400"
     >
 
-    <Boutton :haut="25" @click="handleSearch" title="Search"/>
+    <Boutton :haut="25"  title="Search"/>
   </div>
 </template>

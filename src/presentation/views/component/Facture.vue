@@ -9,6 +9,7 @@ const props = defineProps<{
 }>();
 
 const orderStore = useOrder();
+console.log("order store subtotal",orderStore.addItemToOrder);
 const tax = computed(() => props.subTotal * 0.1925);
 const packagingFee = 5;
 const total = computed(() => props.subTotal + tax.value + packagingFee);
