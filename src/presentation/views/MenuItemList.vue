@@ -3,7 +3,7 @@ import MenuItem from "./component/MenuItem.vue";
 import { useMenuItem } from "@/presentation/stores/useMenuItem";
 import { onMounted, ref } from "vue";
 import { useFiltered } from "../stores/useFiltered.ts";
-import AddMenuItem from "./AddMenuItem.vue";
+import Add from "./add.vue";
 
 const filter = useFiltered();
 const menu = useMenuItem();
@@ -44,7 +44,7 @@ const closeDrawer = () => {
     <div :class="['drawer', { 'drawer-open': !clicked }]">
       <div class="drawer-content">
         <button class="close-btn" @click="closeDrawer">&times;</button>
-        <AddMenuItem @close="closeDrawer" />
+        <Add @close="closeDrawer" />
       </div>
     </div>
   </div>

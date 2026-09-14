@@ -4,6 +4,8 @@ import { useFilter } from '../stores/useFilter';
 import { useMenuItem } from '../stores/useMenuItem';
 import { MenuItem } from '@/domain/entities/MenuItem';
 
+const emit = defineEmits(['close']);
+
 const filterStore = useFilter();
 const menuStore = useMenuItem();
 
@@ -39,6 +41,7 @@ const handleSubmit = async () => {
   });
 
   await menuStore.addMenuItem(newItem);
+  
   form.id = Date.now();
   form.name = '';
   form.description = '';
@@ -47,8 +50,8 @@ const handleSubmit = async () => {
   form.category = '';
   form.dietary = [];
   form.portion_sizes = [];
-  
 
+  emit('close');
 };
 </script>
 
@@ -94,7 +97,7 @@ const handleSubmit = async () => {
         <label for="category">Category</label>
         <select id="category" v-model="form.category" required>
           <option disabled value="">Select a category</option>
-          <option v-for="cat in filterStore.categories" key="cat" :value="cat">
+          <option v-for="cat in filterStore.categories" key="cat.label || cat" :value="cat">
             {{ cat.label }}
           </option>
         </select>
@@ -103,7 +106,7 @@ const handleSubmit = async () => {
       <div class="form-group">
         <label>Dietary</label>
         <div class="checkbox-group">
-          <label v-for="diet in filterStore.dietaries" key="diet" class="checkbox-label">
+          <label v-for="diet in filterStore.dietaries" key="diet.label || diet" class="checkbox-label">
             <input type="checkbox" :value="diet" v-model="form.dietary" />
             {{ diet.label }}
           </label>
@@ -139,12 +142,10 @@ const handleSubmit = async () => {
 
 <style scoped>
 .form-container {
-  max-width: 600px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 24px;
+  padding: 10px;
   background-color: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -183,7 +184,7 @@ input[type="url"],
 select,
 textarea {
   padding: 10px 12px;
-  border: 1px solid gray;
+  border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 0.95rem;
   outline: none;
@@ -193,7 +194,7 @@ textarea {
 input:focus,
 select:focus,
 textarea:focus {
-  border-color:gray;
+  border-color: #9ca3af;
 }
 
 textarea {
@@ -234,4 +235,7 @@ textarea {
   transition: background-color 0.2s;
   margin-top: 10px;
 }
-</style> 
+.submit-btn:hover {
+  background-color: #e0ab12;
+}
+</style>
