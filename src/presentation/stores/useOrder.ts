@@ -79,6 +79,32 @@ export const useOrder = defineStore("order", () => {
         }
     }
 
+    function incrementItemQuantity(menuItemId: number) {
+        const order = orderMenuItem.value.find(ord => ord.items.some(i => i.menuItemId === menuItemId));
+        if (order) {
+            const item = order.items.find(i => i.menuItemId === menuItemId);
+            if (item) {
+                item.quantity++;
+                order.totalPrice = order.items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+            }
+        }
+    }
+
+    function decrementItemQuantity(menuItemId: number) {
+        const order = orderMenuItem.value.find(ord => ord.items.some(i => i.menuItemId === menuItemId));
+        if (order) {
+            const item = order.items.find(i => i.menuItemId === menuItemId);
+            if (item) {
+                if (item.quantity > 1) {
+                    item.quantity--;
+                    order.totalPrice = order.items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+                } else {
+                    deleteOrderMenu(order.id!);
+                }
+            }
+        }
+    }
+
     return {
         orderMenuItem,
         fetchOrderMenuItems,
@@ -86,6 +112,8 @@ export const useOrder = defineStore("order", () => {
         updateOrderMenuItem,
         deleteOrderMenu,
         addOrder,
-        addItemToOrder
+        addItemToOrder,
+        incrementItemQuantity,
+        decrementItemQuantity
     };
 });

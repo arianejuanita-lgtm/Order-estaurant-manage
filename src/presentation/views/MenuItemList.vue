@@ -12,7 +12,6 @@ onMounted(async () => {
     await menu.fecthMenuItems();
 });
 
-// true = fermé, false = ouvert (selon votre logique initiale v-if="!clicked")
 const clicked = ref<boolean>(true);
 
 const openDrawer = () => {

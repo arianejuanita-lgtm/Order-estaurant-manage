@@ -23,16 +23,13 @@ const menuItemDetails = computed(() => {
   return menuItemsStore.menuItems.find((x) => x.id === props.item.menuItemId);
 });
 
+
 const addQuantity = () => {
-  props.item.quantity++;
-  console.log("prix de chaque order add", props.item.price);
+  orderStore.incrementItemQuantity(props.item.menuItemId);
 };
 
 const removeQuantity = () => {
-  if (props.item.quantity > 1) {
-    props.item.quantity--;
-    console.log("prix de chaque order remove", props.item.price);
-  }
+  orderStore.decrementItemQuantity(props.item.menuItemId);
 };
 
 const removeItem = () => {

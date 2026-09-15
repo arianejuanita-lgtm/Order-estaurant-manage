@@ -8,8 +8,8 @@ const orderStore = useOrder();
 
 const subTotal = computed(() => {
   return orderStore.orderMenuItem.reduce((acc, order) => {
-    console.log("totalPrice order list menu items ",order.totalPrice);
-    return acc + order.totalPrice;
+    const orderSum = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    return acc + orderSum;
   }, 0);
 });
 </script>
