@@ -12,7 +12,22 @@ const menuStore = useMenuItem();
 
 const itemId = Number(route.params.id);
 
-const form = reactive({
+interface ProductForm {
+  id: number 
+  name: string
+  description: string
+  price: number
+  rating: number
+  reviews: number
+  delivery_time: string
+  category: string
+  dietary: string[]
+  image: string
+  is_available: boolean
+  portion_sizes: string[]
+}
+
+const form = reactive<ProductForm>({
   id: itemId,
   name: '',
   description: '',

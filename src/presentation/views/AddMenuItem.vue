@@ -7,7 +7,22 @@ import { MenuItem } from '@/domain/entities/MenuItem';
 const filterStore = useFilter();
 const menuStore = useMenuItem();
 
-const form = reactive({
+interface ProductForm {
+  id: number 
+  name: string
+  description: string
+  price: number
+  rating: number
+  reviews: number
+  delivery_time: string
+  category: string
+  dietary: string[]
+  image: string
+  is_available: boolean
+  portion_sizes: string[]
+}
+
+const form = reactive<ProductForm>({
   id: Date.now(),
   name: '',
   description: '',
