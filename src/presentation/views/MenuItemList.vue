@@ -41,15 +41,18 @@ const closeDrawer = () => {
 
 <template>
   <div class="max-w-[1200px] mx-auto p-5 font-sans relative">
-    <div class="flex justify-between items-center px-6 py-4 bg-white rounded-xl shadow-xs mb-6">
-    <h2 class="text-xl font-bold text-gray-900 m-0">{{ filter.menu.length }} Menu Items</h2>
+  <div class="flex justify-between items-center px-4 sm:px-6 py-4 bg-white rounded-xl shadow-xs mb-6 gap-3">
+    <h2 class="text-sm sm:text-base md:text-xl font-bold text-gray-900 m-0 truncate">
+      {{ filter.menu.length }} Menu Items
+    </h2>
     
     <button 
       type="button"
       @click="openDrawer" 
-      class="flex items-center justify-center gap-2 bg-amber-400 border border-amber-400 px-5 py-2.5 rounded-[20px] cursor-pointer font-bold text-black text-sm transition-colors hover:bg-amber-500 shadow-xs"
+      class="flex items-center justify-center shrink-0 gap-2 bg-amber-400 border border-amber-400 px-3 sm:px-5 py-2.5 rounded-[20px] cursor-pointer font-bold text-black text-sm transition-colors hover:bg-amber-500 shadow-xs"
     >
-      <Plus :size="18" /> Add menu item
+      <Plus :size="18" /> 
+      <span class="max-[420px]:hidden">Add menu item</span>
     </button>
   </div>
 

@@ -70,7 +70,7 @@ const config = computed(() => {
   <dialog 
     ref="dialogRef" 
     @close="closeDialog"
-    class="rounded-2xl border border-gray-100 bg-white p-6 shadow-2xl backdrop:bg-slate-900/50 backdrop:backdrop-blur-sm open:flex open:flex-col open:max-w-md open:w-full m-auto"
+    class="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-2xl backdrop:bg-slate-900/50 backdrop:backdrop-blur-sm open:flex open:flex-col open:w-[90%] sm:open:max-w-md m-auto"
   >
     <div class="text-center mb-6">
       <div :class="['mx-auto flex items-center justify-center h-12 w-12 rounded-full mb-4', config.iconBg]">
@@ -79,27 +79,27 @@ const config = computed(() => {
         <AlertTriangle v-else-if="mode === 'delete'" class="h-6 w-6" />
       </div>
 
-      <h3 class="text-lg font-bold text-gray-900">
+      <h3 class="text-base sm:text-lg font-bold text-gray-900">
         {{ config.title }}
       </h3>
 
-      <p class="text-sm text-gray-600 mt-1">
+      <p class="text-xs sm:text-sm text-gray-600 mt-1">
         {{ config.message }} <span class="font-semibold text-gray-900">{{ props.item?.name }}</span>?
       </p>
     </div>
         
-    <div class="flex items-center justify-center gap-4 mt-2">
+    <div class="flex items-center justify-center gap-3 mt-2">
       <button 
         type="button"
         @click="closeDialog" 
-        class="px-5 py-3 rounded-[20px] border border-gray-300 bg-white text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+        class="px-4 sm:px-5 py-2.5 sm:py-3 rounded-[20px] border border-gray-300 bg-white text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
       >
         Cancel
       </button>
       <button 
         type="button"
         @click="handleSubmit" 
-        :class="['flex items-center justify-center border px-6 py-3 rounded-[20px] cursor-pointer font-bold transition-colors text-sm shadow-sm', config.confirmBtn]"
+        :class="['flex items-center justify-center border px-5 sm:px-6 py-2.5 sm:py-3 rounded-[20px] cursor-pointer font-bold transition-colors text-xs sm:text-sm shadow-sm', config.confirmBtn]"
       >
         {{ config.confirmText }}
       </button>

@@ -1,36 +1,65 @@
 <!-- <script setup lang="ts">
 import { useFilter } from '@/presentation/stores/useFilter';
+import { useFiltered } from '@/presentation/stores/useFiltered';
+import { ref, computed, watch } from 'vue';
+import { useMenuItem } from '@/presentation/stores/useMenuItem';
 
-import { ref, computed } from 'vue';
+const filterStore = useFilter();
+const filteredStore = useFiltered();
 
-const {PriceRanges}=useFilter();
+let maxPrice: number = 0;
+let minPrice : number;
+const menuStore=useMenuItem();
+let tabLength =menuStore.menuItems.length;
+let tab=menuStore.menuItems;
+  for (let i=1 ; i<=tabLength ; i++){
+    maxPrice= tab[0]?.price ?? 0;
+    if(tab[i]?.price > maxPrice){
+      maxPrice = tab[i]?.price
+    }
+  }
+
+const priceRangeData = computed(() => filterStore.PriceRanges);
 
 const prixMin = computed(() => {
-  return price.value && price.value.length > 0 ? Math.min(...price.value) : 0;
+  return priceRangeData.value && priceRangeData.value.length > 0 ? Math.min(...priceRangeData.value) : minPrice;
 });
 
 const prixMax = computed(() => {
-  return price.value && price.value.length > 0 ? Math.max(...price.value) : 100;
+  return priceRangeData.value && priceRangeData.value.length > 0 ? Math.max(...priceRangeData.value) : maxPrice;
 });
 
-const valMin = ref(prixMin.value);
-const valMax = ref(prixMax.value);
+const valMin = ref<number>(filteredStore.price || prixMin.value);
+const valMax = ref<number>(filteredStore.price || prixMax.value);
+
+watch(prixMax, (newMax) => {
+  if (filteredStore.price === 1000 || filteredStore.price > newMax) {
+    valMax.value = newMax;
+    filteredStore.price = newMax;
+  }
+});
 
 const controlMin = () => {
   if (valMin.value > valMax.value) {
     valMin.value = valMax.value;
   }
+  filteredStore.price = valMin.value;
 };
 
 const controlMax = () => {
   if (valMax.value < valMin.value) {
     valMax.value = valMin.value;
   }
+  filteredStore.price = valMax.value;
 };
 
 const trackStyle = computed(() => {
-  const minPercent = ((valMin.value - prixMin.value) / (prixMax.value - prixMin.value)) * 100;
-  const maxPercent = ((valMax.value - prixMin.value) / (prixMax.value - prixMin.value)) * 100;
+  const currentMin = prixMin.value;
+  const currentMax = prixMax.value;
+  const range = currentMax - currentMin || 1;
+
+  const minPercent = ((valMin.value - currentMin) / range) * 100;
+  const maxPercent = ((valMax.value - currentMin) / range) * 100;
   
   return {
     background: `linear-gradient(to right, #d1d5db ${minPercent}%, #F5BE18 ${minPercent}%, #F5BE18 ${maxPercent}%, #d1d5db ${maxPercent}%)`
@@ -39,12 +68,13 @@ const trackStyle = computed(() => {
 </script>
 
 <template>
-  <div class="range-wrapper">
-    <label class="range-label">Price range  : {{ valMin }}€ - {{ valMax }}€</label>
+  <div class="w-full max-w-[350px] p-2.5 font-sans">
+    <label class="block mb-3.5 text-sm font-semibold text-gray-700">
+      Price range : {{ valMin }}$ - {{ valMax }}$
+    </label>
     
-    <div class="range-container">
-    
-      <div class="range-track" :style="trackStyle"></div>
+    <div class="relative w-full h-1.5">
+      <div class="absolute inset-0 rounded-[3px] pointer-events-none" :style="trackStyle"></div>
       
       <input 
         type="range" 
@@ -52,7 +82,7 @@ const trackStyle = computed(() => {
         :max="prixMax" 
         v-model.number="valMin" 
         @input="controlMin"
-        class="slider"
+        class="absolute -top-1.5 w-full h-[18px] appearance-none bg-transparent pointer-events-none m-0 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-[18px] [&::-webkit-slider-thumb]:w-[18px] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#F5BE18] [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-[0_1px_3px_rgba(0,0,0,0.3)] [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-moz-range-thumb]:h-[14px] [&::-moz-range-thumb]:w-[14px] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[#F5BE18] [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-[0_1px_3px_rgba(0,0,0,0.3)] [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto"
       />
       <input 
         type="range" 
@@ -60,75 +90,8 @@ const trackStyle = computed(() => {
         :max="prixMax" 
         v-model.number="valMax" 
         @input="controlMax"
-        class="slider"
+        class="absolute -top-1.5 w-full h-[18px] appearance-none bg-transparent pointer-events-none m-0 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-[18px] [&::-webkit-slider-thumb]:w-[18px] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#F5BE18] [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-[0_1px_3px_rgba(0,0,0,0.3)] [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-moz-range-thumb]:h-[14px] [&::-moz-range-thumb]:w-[14px] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[#F5BE18] [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-[0_1px_3px_rgba(0,0,0,0.3)] [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto"
       />
     </div>
   </div>
-</template>
-
-<style scoped>
-.range-wrapper {
-  font-family: sans-serif;
-  width: 100%;
-  max-width: 350px;
-  padding: 10px;
-}
-
-.range-label {
-  display: block;
-  margin-bottom: 15px;
-}
-
-.range-container {
-  position: relative;
-  width: 100%;
-  height: 6px;
-}
-
-.range-track {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 3px;
-  pointer-events: none;
-}
-
-.slider {
-  position: absolute;
-  top: -6px; 
-  width: 100%;
-  height: 18px;
-  appearance: none;
-  -webkit-appearance: none;
-  background: none;
-  pointer-events: none; 
-  margin: 0;
-}
-
-.slider::-webkit-slider-thumb {
-  appearance: none;
-  -webkit-appearance: none;
-  height: 18px;
-  width: 18px;
-  border-radius: 50%;
-  background: #F5BE18;
-  border: 2px solid white;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-  cursor: pointer;
-  pointer-events: auto; 
-}
-
-
-.slider::-moz-range-thumb {
-  height: 14px;
-  width: 14px;
-  border-radius: 50%;
-  background: #F5BE18;
-  border: 2px solid white;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-  cursor: pointer;
-  pointer-events: auto;
-}
-</style> -->
+</template> -->
