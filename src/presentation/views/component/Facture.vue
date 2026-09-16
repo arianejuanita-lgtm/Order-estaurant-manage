@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useOrder } from '@/presentation/stores/useOrder';
 import { Order } from '@/domain/entities/Order';
 import { router } from '@/router/routes';
@@ -9,137 +9,92 @@ const props = defineProps<{
 }>();
 
 const orderStore = useOrder();
-console.log("order store subtotal",orderStore.addItemToOrder);
+const isLoading = ref(false); 
+
 const tax = computed(() => props.subTotal * 0.1925);
 const packagingFee = 5;
 const total = computed(() => props.subTotal + tax.value + packagingFee);
 
 const handleConfirm = async () => {
-  const allItems = orderStore.orderMenuItem.flatMap(ord => ord.items);
+  if (isLoading.value) return;
+  isLoading.value = true;
 
-  const newOrder = new Order({
-    id: Date.now(),
-    items: allItems,
-    totalPrice: total.value,
-    status: "finish",
-    createdAt: new Date().toISOString()
-  });
+  try {
+    const allItems = orderStore.orderMenuItem.flatMap(ord => ord.items);
 
-  await orderStore.createOrderMenuItem(newOrder);
-  
-  orderStore.orderMenuItem = [];
-  
-  router.push('/');
+    const newOrder = new Order({
+      id: Date.now(),
+      items: allItems,
+      totalPrice: total.value,
+      status: "finish",
+      createdAt: new Date().toISOString()
+    });
+
+    await orderStore.createOrderMenuItem(newOrder);
+    
+    orderStore.orderMenuItem = [];
+    
+    router.push('/');
+  } catch (error) {
+    console.error("Erreur lors de la validation de la commande", error);
+  } finally {
+    isLoading.value = false;
+  }
 };
 </script>
 
 <template>
-  <div class="invoice-container">
-    <h3>Transparent Billing</h3>
-    <p class="subtitle">Payment Details</p>
+  <div class="w-full">
+    <h3 class="text-[1.2rem] font-bold mb-[0.2rem] text-neutral-900">Transparent Billing</h3>
+    <p class="text-[0.85rem] text-neutral-500 mb-6">Payment Details</p>
 
-    <div class="invoice-breakdown">
-      <div class="row">
-        <p>Items Subtotal</p>
-        <p>${{ subTotal.toFixed(2) }}</p>
+    <div class="flex flex-col gap-4">
+      <div class="flex justify-between items-center text-[0.95rem] text-neutral-700">
+        <p class="m-0">Items Subtotal</p>
+        <p class="m-0">${{ subTotal.toFixed(0) }}</p>
       </div>
 
-      <div class="row">
-        <p>Delivery</p>
-        <p class="free">Free</p>
+      <div class="flex justify-between items-center text-[0.95rem] text-neutral-700">
+        <p class="m-0">Delivery</p>
+        <p class="m-0 text-emerald-600 font-semibold">Free</p>
       </div>
 
-      <div class="row">
-        <p>Tax (VAT 19.25%)</p>
-        <p>${{ tax.toFixed(2) }}</p>
+      <div class="flex justify-between items-center text-[0.95rem] text-neutral-700">
+        <p class="m-0">Tax (VAT 19.25%)</p>
+        <p class="m-0">${{ tax.toFixed(0) }}</p>
       </div>
 
-      <div class="row">
-        <p>Packaging Service Fee</p>
-        <p>${{ packagingFee.toFixed(2) }}</p>
+      <div class="flex justify-between items-center text-[0.95rem] text-neutral-700">
+        <p class="m-0">Packaging Service Fee</p>
+        <p class="m-0">${{ packagingFee.toFixed(0) }}</p>
       </div>
 
-      <div class="divider"></div>
+      <div class="h-[1px] bg-neutral-200 my-2"></div>
 
-      <div class="row total-row">
-        <p>Net Total to Pay</p>
-        <p>${{ total.toFixed(2) }}</p>
+      <div class="flex justify-between items-center font-bold text-[1.1rem] text-neutral-900">
+        <p class="m-0">Net Total to Pay</p>
+        <p class="m-0">${{ total.toFixed(0) }}</p>
       </div>
 
-      <button class="pay-btn" @click="handleConfirm">
-        <span>Confirm & Pay ${{ total.toFixed(2) }}</span>
+      <button 
+        @click="handleConfirm"
+        :disabled="isLoading"
+        class="mt-4 w-full bg-[#F5BE18] hover:bg-[#e0ab12] active:scale-[0.98] border-none p-[0.85rem] rounded-[10px] text-base font-semibold cursor-pointer transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+      >
+        <!-- Spinner SVG du loader -->
+        <svg 
+          v-if="isLoading" 
+          class="animate-spin h-5 w-5 text-neutral-900" 
+          xmlns="http://www.w3.org/2000/svg" 
+          fill="none" 
+          viewBox="0 0 24 24"
+        >
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+
+        <span>{{ isLoading ? 'Processing...' : `Confirm & Pay $${total.toFixed(0)}` }}</span>
       </button>
     </div>
   </div>
 </template>
-
-<style scoped>
-.invoice-container h3 {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin-bottom: 0.2rem;
-  color: #1a1a1a;
-}
-
-.subtitle {
-  font-size: 0.85rem;
-  color: #666;
-  margin-bottom: 1.5rem;
-}
-
-.invoice-breakdown {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.95rem;
-  color: #444;
-}
-
-.row p {
-  margin: 0;
-}
-
-.free {
-  color: #2e7d32;
-  font-weight: 600;
-}
-
-.divider {
-  height: 1px;
-  background: #eee;
-  margin: 0.5rem 0;
-}
-
-.total-row {
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: #1a1a1a;
-}
-
-.pay-btn {
-  margin-top: 1rem;
-  width: 100%;
-  background: #F5BE18;
-  border: none;
-  padding: 0.85rem;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
-}
-
-.pay-btn:hover {
-  background: #e0ab12;
-}
-
-.pay-btn:active {
-  transform: scale(0.98);
-}
-</style>

@@ -4,81 +4,28 @@ import Dietary from './component/filters/dietary.vue';
 import Portion from './component/filters/portion.vue';
 import { useFiltered } from '../stores/useFiltered.ts';
 
-const filter=useFiltered();
+const filter = useFiltered();
 </script>
 
 <template>
-  <aside class="filters-container">
-    <div class="filters-header">
-      <h3 class="filters-title">Filters</h3>
-      <button class="clear-btn" type="button" @click="filter.clearFilter" >Clear All</button>
+  <aside class="bg-white rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] w-[250px] max-w-[280px] font-['Segoe_UI',Tahoma,Geneva,Verdana,sans-serif]">
+    <div class="flex justify-between items-center">
+      <h3 class="text-[1.1rem] font-bold text-gray-900 m-0">Filters</h3>
+      <button 
+        class="bg-transparent border-none text-gray-400 text-[0.85rem] font-semibold cursor-pointer px-2 py-1 rounded-md transition-all duration-200 hover:text-red-500 hover:bg-red-50" 
+        type="button" 
+        @click="filter.clearFilter"
+      >
+        Clear All
+      </button>
     </div>
 
-    <hr class="divider" />
+    <hr class="border-none h-[1px] bg-gray-100 my-4" />
 
-    <div class="filters-list">
-      <Categorie class="filter-item" />
-      <Portion class="filter-item" />
-      <Dietary class="filter-item" />
+    <div class="flex flex-col gap-4">
+      <Categorie class="w-full" />
+      <Portion class="w-full" />
+      <Dietary class="w-full" />
     </div>
   </aside>
 </template>
-
-<style scoped>
-.filters-container {
-  background-color: #ffffff;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  width: 250px;
-  max-width: 280px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.filters-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.filters-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #111827;
-  margin: 0;
-}
-
-.clear-btn {
-  background: none;
-  border: none;
-  color: #9ca3af;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-}
-
-.clear-btn:hover {
-  color: #ef4444; 
-  background-color: #fef2f2;
-}
-
-.divider {
-  border: none;
-  height: 1px;
-  background-color: #f3f4f6;
-  margin: 16px 0;
-}
-
-.filters-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px; 
-}
-
-.filter-item {
-  width: 100%;
-}
-</style>

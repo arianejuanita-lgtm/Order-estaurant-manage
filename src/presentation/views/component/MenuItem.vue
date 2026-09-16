@@ -122,7 +122,7 @@ const handleEditClick = () => {
       </div>
 
       <div class="flex justify-between items-center mt-auto pt-2 border-t border-gray-100">
-        <span class="text-lg font-bold text-gray-900">${{ totalPrice.toFixed(2) }}</span>
+        <span class="text-lg font-bold text-gray-900">${{ totalPrice.toFixed(0) }}</span>
         
         <div v-if="!checked" @click="handleclick">
           <Boutton title="Add" :haut="32" class="px-4 py-1 text-xs bg-amber-400 hover:bg-amber-500 font-bold rounded-xl shadow-xs" />

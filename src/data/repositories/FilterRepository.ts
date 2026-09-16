@@ -16,7 +16,6 @@ export class FilterRepository implements IFilterRepository {
   async getCategories(): Promise<Category[]> {
     const response = await apiClient.get(""); 
     const categories = response.data.record.filters.categories;
-    console.log('categories dans le repository',categories);
     
     return categories.map(
       (item: any) =>

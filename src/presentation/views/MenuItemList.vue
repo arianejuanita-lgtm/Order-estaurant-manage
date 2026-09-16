@@ -4,13 +4,20 @@ import { useMenuItem } from "@/presentation/stores/useMenuItem";
 import { onMounted, ref } from "vue";
 import { useFiltered } from "../stores/useFiltered.ts";
 import Add from "./add.vue";
+import { Plus } from "lucide-vue-next";
 import type { MenuItem as MenuItemType } from "@/domain/entities/MenuItem";
 
 const filter = useFiltered();
 const menu = useMenuItem();
+const isLoading = ref<boolean>(false); 
 
 onMounted(async () => {
-    await menu.fecthMenuItems();
+    isLoading.value = true;
+    try {
+        await menu.fecthMenuItems();
+    } finally {
+        isLoading.value = false;
+    }
 });
 
 const clicked = ref<boolean>(true);
@@ -35,18 +42,26 @@ const closeDrawer = () => {
 <template>
   <div class="max-w-[1200px] mx-auto p-5 font-sans relative">
     <div class="flex justify-between items-center px-6 py-4 bg-white rounded-xl shadow-xs mb-6">
-      <h2 class="text-xl font-bold text-gray-900 m-0">{{ filter.menu.length }} Menu Items</h2>
-      
-      <button 
-        type="button"
-        @click="openDrawer" 
-        class="flex items-center justify-center bg-amber-400 border border-amber-400 px-5 py-2.5 rounded-[20px] cursor-pointer font-bold text-black text-sm transition-colors hover:bg-amber-500 shadow-xs"
-      >
-        Add menu item
-      </button>
+    <h2 class="text-xl font-bold text-gray-900 m-0">{{ filter.menu.length }} Menu Items</h2>
+    
+    <button 
+      type="button"
+      @click="openDrawer" 
+      class="flex items-center justify-center gap-2 bg-amber-400 border border-amber-400 px-5 py-2.5 rounded-[20px] cursor-pointer font-bold text-black text-sm transition-colors hover:bg-amber-500 shadow-xs"
+    >
+      <Plus :size="18" /> Add menu item
+    </button>
+  </div>
+
+    <div v-if="isLoading" class="flex flex-col items-center justify-center py-20 gap-3">
+      <svg class="animate-spin h-10 w-10 text-amber-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <p class="text-gray-500 font-medium text-sm">Loading item...</p>
     </div>
 
-    <div class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-5">
+    <div v-else class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-5">
       <MenuItem v-for="item in filter.menu" :item="item" :key="item.id" @edit="openDrawerToEdit" />
     </div>
 
