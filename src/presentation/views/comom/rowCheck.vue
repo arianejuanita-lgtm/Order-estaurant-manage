@@ -1,0 +1,36 @@
+<script lang="ts" setup>
+import { Field } from 'vee-validate';
+
+defineProps<{
+    typeField?: string;
+    name: string;
+    modelvalue?: boolean;   
+    modelValue?: boolean;   
+    title: string;
+}>();
+
+defineEmits<{
+  (e: 'update:modelValue', value: boolean): void;
+  (e: 'update:modelvalue', value: boolean): void;
+}>();
+</script>
+
+<template>
+  <div class="flex flex-row items-center mb-4">
+    <label class="group flex items-center gap-3 cursor-pointer select-none">
+      <Field 
+        :type="typeField || 'checkbox'" 
+        :name="name" 
+        :model-value="modelValue ?? modelvalue"
+        @update:model-value="(val) => {
+          $emit('update:modelValue', val);
+          $emit('update:modelvalue', val);
+        }" 
+        class="w-4 h-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500 accent-amber-500 cursor-pointer transition-all" 
+      />
+      <span class="font-medium text-sm text-gray-800 group-hover:text-amber-900 transition-colors">
+        {{ title }}
+      </span>
+    </label>
+  </div>
+</template>

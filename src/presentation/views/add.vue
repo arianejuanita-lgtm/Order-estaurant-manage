@@ -1,43 +1,70 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
-import { useFilter } from '../stores/useFilter';
-import { useMenuItem } from '../stores/useMenuItem';
-import { MenuItem } from '@/domain/entities/MenuItem';
+import { reactive } from "vue";
+import { useFilter } from "../stores/useFilter";
+import { useMenuItem } from "../stores/useMenuItem";
+import { MenuItem } from "@/domain/entities/MenuItem";
+import FormGroup from "./comom/FormGroup.vue";
+import Boutton from "./comom/Boutton.vue";
+import CheckBoxGroup from "./comom/CheckBoxGroup.vue";
+import rowCheck from "./comom/rowCheck.vue";
+import SelectCategory from "./comom/SelectCategory.vue";
+import { Field, Form, ErrorMessage } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
+import * as zod from "zod";
+import FormTextArea from "./comom/FormTextArea.vue";
+import FormFile from "./comom/FormFile.vue";
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(["close"]);
 
 const filterStore = useFilter();
 const menuStore = useMenuItem();
 
 interface ProductForm {
-  id: number
-  name: string
-  description: string
-  price: number
-  rating: number
-  reviews: number
-  delivery_time: string
-  category: string
-  dietary: string[]
-  image: string
-  is_available: boolean
-  portion_sizes: string[]
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  rating: number;
+  reviews: number;
+  delivery_time: string;
+  category: string;
+  dietary: string[];
+  image: string;
+  is_available: boolean;
+  portion_sizes: string[];
 }
 
 const form = reactive<ProductForm>({
   id: Date.now(),
-  name: '',
-  description: '',
-  price: 0,
+  name: "",
+  description: "",
+  price: 1,
   rating: 0,
   reviews: 0,
-  delivery_time: '10 min',
-  category: '',
-  dietary: [] as string[],
-  image: '',
-  is_available: true,
-  portion_sizes: [] as string[]
+  delivery_time: "10 min",
+  category: "",
+  dietary: [],
+  image: "",
+  is_available: false,
+  portion_sizes: [],
 });
+
+const validationSchema = toTypedSchema(
+  zod.object({
+    name: zod.string().min(1, "Name is required"),
+    description: zod.string().min(1, "Description is required"),
+    price: zod.coerce
+      .number()
+      .min(1, "Price must be greater than or equal to 1"),
+    delivery: zod.string().min(1, "Delivery time is required"),
+    rating: zod.number().min(0).max(5),
+    reviews: zod.number().min(0),
+    category: zod.string().min(1, "Please select a category"),
+    image: zod.string().min(1, "Image is required"),
+    dietary: zod.array(zod.string()),
+    portion_sizes: zod.array(zod.string()).min(1, "Select at least one portion size"),
+  }),
+);
 
 const handleSubmit = async () => {
   const newItem = new MenuItem({
@@ -52,205 +79,174 @@ const handleSubmit = async () => {
     dietary: form.dietary,
     image: form.image,
     is_available: form.is_available,
-    portion_sizes: form.portion_sizes
+    portion_sizes: form.portion_sizes,
   });
 
   await menuStore.addMenuItem(newItem);
-  
-  form.id = Date.now();
-  form.name = '';
-  form.description = '';
-  form.price = 0;
-  form.image = '';
-  form.category = '';
-  form.dietary = [];
-  form.portion_sizes = [];
-
-  emit('close');
+  emit("close");
 };
 </script>
 
 <template>
-  <div class="form-container">
-    <h2>Add Menu Item</h2>
-    <form @submit.prevent="handleSubmit">
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" id="name" v-model="form.name" required />
+  <div class="max-w-full mx-auto p-4 bg-white font-sans">
+    <h2 class="text-2xl font-bold text-gray-900 mb-5">Add Menu Item</h2>
+
+    <Form
+      @submit="handleSubmit"
+      :validation-schema="validationSchema"
+      class="space-y-4"
+    >
+      <div class="flex flex-col">
+        <FormGroup
+          labelFor="name"
+          title="Name"
+          typeField="text"
+          name="name"
+          idu="name"
+          :modelValue="form.name"
+          @update:modelValue="form.name = $event"
+        />
+        <ErrorMessage name="name" class="text-red-500 text-xs mt-1" />
       </div>
 
-      <div class="form-group">
-        <label for="description">Description</label>
-        <textarea id="description" v-model="form.description" required></textarea>
+      <div class="flex flex-col">
+        <FormTextArea
+          idu="description"
+          title="Description"
+          name="description"
+          :modelValue="form.description"
+          @update:modelValue="form.description = $event"
+        />
+        <ErrorMessage name="description" class="text-red-500 text-xs mt-1" />
       </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label for="price">Price ($)</label>
-          <input type="number" step="0.01" id="price" v-model.number="form.price" required />
+      <div class="flex gap-4">
+        <div class="flex-1 flex flex-col">
+          <FormGroup
+            labelFor="price"
+            title="Price ($)"
+            typeField="number"
+            step="0.01"
+            name="price"
+            idu="price"
+            :modelValue="form.price"
+            @update:modelValue="form.price = Number($event)"
+          />
+          <ErrorMessage name="price" class="text-red-500 text-xs mt-1" />
         </div>
 
-        <div class="form-group">
-          <label for="delivery_time">Delivery Time</label>
-          <input type="text" id="delivery_time" v-model="form.delivery_time" required />
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="rating">Rating</label>
-          <input type="number" step="0.1" min="0" max="5" id="rating" v-model="form.rating" />
-        </div>
-
-        <div class="form-group">
-          <label for="reviews">Reviews</label>
-          <input type="number" id="reviews" v-model.number="form.reviews" />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="category">Category</label>
-        <select id="category" v-model="form.category" required>
-          <option disabled value="">Select a category</option>
-          <option v-for="cat in filterStore.categories" key="cat.label || cat" :value="cat">
-            {{ cat.label }}
-          </option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Dietary</label>
-        <div class="checkbox-group">
-          <label v-for="diet in filterStore.dietaries" key="diet.label || diet" class="checkbox-label">
-            <input type="checkbox" :value="diet" v-model="form.dietary" />
-            {{ diet.label }}
-          </label>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Portion Sizes</label>
-        <div class="checkbox-group">
-          <label v-for="portion in filterStore.portionSizes" key="portion.id || portion" class="checkbox-label">
-            <input type="checkbox" :value="portion.label || portion" v-model="form.portion_sizes" />
-            {{ portion.label || portion }}
-          </label>
+        <div class="flex-1 flex flex-col">
+          <FormGroup
+            labelFor="delivery_time"
+            title="Delivery Time"
+            typeField="time"
+            name="delivery"
+            idu="delivery_time"
+            :modelValue="form.delivery_time"
+            @update:modelValue="form.delivery_time = $event"
+          />
+          <ErrorMessage name="delivery" class="text-red-500 text-xs mt-1" />
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="image">Image URL</label>
-        <input type="url" id="image" v-model="form.image" placeholder="https://..." />
+      <div class="flex gap-4">
+        <div class="flex-1 flex flex-col">
+          <FormGroup
+            labelFor="rating"
+            title="Rating"
+            typeField="number"
+            name="rating"
+            idu="rating"
+            step="0.1"
+            min="0"
+            max="5"
+            :modelValue="form.rating"
+            @update:modelValue="form.rating = Number($event)"
+          />
+          <ErrorMessage name="rating" class="text-red-500 text-xs mt-1" />
+        </div>
+
+        <div class="flex-1 flex flex-col">
+          <FormGroup
+            labelFor="reviews"
+            title="Reviews"
+            typeField="number"
+            name="reviews"
+            idu="reviews"
+            :modelValue="form.reviews"
+            @update:modelValue="form.reviews = Number($event)"
+          />
+          <ErrorMessage name="reviews" class="text-red-500 text-xs mt-1" />
+        </div>
       </div>
 
-      <div class="form-group checkbox-row">
-        <label>
-          <input type="checkbox" v-model="form.is_available" />
-          Available
-        </label>
+      <div class="flex flex-col">
+        <SelectCategory
+          id="category"
+          label="Category"
+          placeholder="Select a category"
+          item-label="label"
+          item-key="label"
+          item-value="label"
+          name="category"
+          :options="filterStore.categories"
+          v-model="form.category"
+        />
+        <ErrorMessage name="category" class="text-red-500 text-xs mt-1" />
       </div>
 
-      <button type="submit" class="submit-btn">Save</button>
-    </form>
+      <div class="flex flex-col">
+        <CheckBoxGroup
+          label="Dietary"
+          name="dietary"
+          item-label="label"
+          item-key="label"
+          :options="filterStore.dietaries"
+          :model-value="form.dietary"
+          @update:modelValue="($event) => (form.dietary = $event)"
+        />
+        <ErrorMessage name="dietary" class="text-red-500 text-xs mt-1" />
+      </div>
+
+      <div class="flex flex-col">
+        <CheckBoxGroup
+          label="Portion Sizes"
+          name="portion_sizes"
+          item-label="label"
+          item-key="id"
+          :options="filterStore.portionSizes"
+          :modelValue="form.portion_sizes"
+          @update:modelValue="($event) => (form.portion_sizes = $event)"
+        />
+        <ErrorMessage name="portion_sizes" class="text-red-500 text-xs mt-1" />
+      </div>
+
+      <div class="flex flex-col">
+        <FormFile
+          label="Image File"
+          idu="image"
+          name="image"
+          v-model="form.image"
+        />
+        <ErrorMessage name="image" class="text-red-500 text-xs mt-1" />
+      </div>
+
+      <div class="flex flex-col">
+        <rowCheck
+          title="Available"
+          typeField="checkbox"
+          name="is_available"
+          :modelvalue="form.is_available"
+          @update:modelValue="($event) => (form.is_available = $event)"
+        />
+      </div>
+
+      <Boutton
+        class="block mx-auto w-48 p-3 bg-amber-400 border-none rounded-lg font-bold text-base cursor-pointer transition-colors hover:bg-amber-500 mt-4 text-black"
+        type="submit"
+        title="Save"
+        :haut="60"
+      />
+    </Form>
   </div>
 </template>
-
-<style scoped>
-.form-container {
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 10px;
-  background-color: #ffffff;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 20px;
-}
-
-.form-group {
-  margin-bottom: 16px;
-  display: flex;
-  flex-direction: column;
-}
-
-.form-row {
-  display: flex;
-  gap: 16px;
-}
-
-.form-row .form-group {
-  flex: 1;
-}
-
-label {
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: #374151;
-  margin-bottom: 6px;
-}
-
-input[type="text"],
-input[type="number"],
-input[type="url"],
-select,
-textarea {
-  padding: 10px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: #9ca3af;
-}
-
-textarea {
-  resize: vertical;
-  height: 80px;
-}
-
-.checkbox-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 4px;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: normal;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-.checkbox-row {
-  flex-direction: row;
-  align-items: center;
-}
-
-.submit-btn {
-  width: 100%;
-  padding: 12px;
-  background-color: #F5BE18;
-  border: none;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  margin-top: 10px;
-}
-.submit-btn:hover {
-  background-color: #e0ab12;
-}
-</style>
