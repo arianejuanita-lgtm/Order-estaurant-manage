@@ -1,5 +1,6 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { Field } from 'vee-validate';
+import { CheckCircle2 } from 'lucide-vue-next';
 
 defineProps<{
     typeField?: string;
@@ -16,11 +17,14 @@ defineEmits<{
 </script>
 
 <template>
-  <div class="flex flex-row items-center mb-4">
+  <div class="flex flex-row items-center mb-4 w-full">
     <label class="group flex items-center gap-3 cursor-pointer select-none">
+      <CheckCircle2 class="w-4 h-4 text-amber-500" />
       <Field 
-        :type="typeField || 'checkbox'" 
+        type="checkbox"
         :name="name" 
+        :value="true"
+        :unchecked-value="false"
         :model-value="modelValue ?? modelvalue"
         @update:model-value="(val) => {
           $emit('update:modelValue', val);

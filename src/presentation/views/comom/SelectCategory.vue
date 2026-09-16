@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Field } from 'vee-validate';
+import { LayoutGrid } from 'lucide-vue-next';
 
 interface SelectOption {
   [key: string]: any;
@@ -24,7 +25,10 @@ defineEmits<{
 
 <template>
   <div class="flex flex-col flex-1 mb-4">
-    <label :for="id" class="font-semibold text-sm text-gray-800 mb-1.5">{{ label }}</label>
+    <label :for="id" class="font-semibold text-sm text-gray-800 mb-1.5 flex items-center gap-2">
+      <LayoutGrid class="w-4 h-4 text-amber-500" />
+      {{ label }}
+    </label>
     
     <Field
       :id="id"

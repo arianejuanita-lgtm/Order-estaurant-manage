@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Field } from 'vee-validate';
+import { FileText } from 'lucide-vue-next';
 
 defineProps<{
   idu: string;              
@@ -16,7 +17,10 @@ defineEmits<{
 
 <template>
   <div class="flex flex-col flex-1 mb-4">
-    <label :for="idu" class="font-semibold text-sm text-gray-800 mb-1.5">{{ title }}</label>
+    <label :for="idu" class="font-semibold text-sm text-gray-800 mb-1.5 flex items-center gap-2">
+      <FileText class="w-4 h-4 text-amber-500" />
+      {{ title }}
+    </label>
     
     <Field
       :id="idu"

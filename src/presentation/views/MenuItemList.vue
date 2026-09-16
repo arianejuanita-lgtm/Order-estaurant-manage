@@ -4,6 +4,7 @@ import { useMenuItem } from "@/presentation/stores/useMenuItem";
 import { onMounted, ref } from "vue";
 import { useFiltered } from "../stores/useFiltered.ts";
 import Add from "./add.vue";
+import type { MenuItem as MenuItemType } from "@/domain/entities/MenuItem";
 
 const filter = useFiltered();
 const menu = useMenuItem();
@@ -13,120 +14,58 @@ onMounted(async () => {
 });
 
 const clicked = ref<boolean>(true);
+const selectedItem = ref<MenuItemType | null>(null);
 
 const openDrawer = () => {
+  selectedItem.value = null;
+  clicked.value = false;
+};
+
+const openDrawerToEdit = (item: MenuItemType) => {
+  selectedItem.value = item;
   clicked.value = false;
 };
 
 const closeDrawer = () => {
+  selectedItem.value = null;
   clicked.value = true;
 };
 </script>
 
 <template>
-  <div class="menu-container">
-    <div class="menu-header">
-      <h2 class="menu-title">{{ filter.menu.length }} Menu Items</h2>
-      <div class="menu-filter" @click="openDrawer" style="cursor: pointer;">
-        <h3>Add menu item</h3>
-      </div>
+  <div class="max-w-[1200px] mx-auto p-5 font-sans relative">
+    <div class="flex justify-between items-center px-6 py-4 bg-white rounded-xl shadow-xs mb-6">
+      <h2 class="text-xl font-bold text-gray-900 m-0">{{ filter.menu.length }} Menu Items</h2>
+      
+      <button 
+        type="button"
+        @click="openDrawer" 
+        class="flex items-center justify-center bg-amber-400 border border-amber-400 px-5 py-2.5 rounded-[20px] cursor-pointer font-bold text-black text-sm transition-colors hover:bg-amber-500 shadow-xs"
+      >
+        Add menu item
+      </button>
     </div>
 
-    <div class="menu-grid">
-      <MenuItem v-for="item in filter.menu" :item="item" :key="item.id" />
+    <div class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-5">
+      <MenuItem v-for="item in filter.menu" :item="item" :key="item.id" @edit="openDrawerToEdit" />
     </div>
 
-    
-    <div v-if="!clicked" class="drawer-overlay" @click="closeDrawer"></div>
+    <div 
+      v-if="!clicked" 
+      class="fixed inset-0 w-screen h-screen bg-black/40 z-[1000] transition-opacity duration-300" 
+      @click="closeDrawer"
+    ></div>
 
-
-    <div :class="['drawer', { 'drawer-open': !clicked }]">
-      <div class="drawer-content">
-        <button class="close-btn" @click="closeDrawer">&times;</button>
-        <Add @close="closeDrawer" />
+    <div :class="['fixed top-0 right-0 w-[450px] max-w-full h-screen bg-white shadow-2xl z-[1001] transition-all duration-300 ease-[cubic-bezier(0.25,0.8,0.25,1)] overflow-y-auto', clicked ? 'translate-x-full' : 'translate-x-0']">
+      <div class="p-5 relative">
+        <button 
+          class="absolute top-4 right-4 bg-transparent border-none text-3xl cursor-pointer text-gray-500 hover:text-gray-900 transition-colors" 
+          @click="closeDrawer"
+        >
+          &times;
+        </button>
+        <Add :initialItem="selectedItem" @close="closeDrawer" />
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.menu-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  position: relative;
-}
-
-.menu-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  margin-bottom: 24px;
-}
-
-.menu-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0;
-}
-
-.menu-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 20px;
-}
-
-.drawer-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: 1000;
-  transition: opacity 0.3s ease;
-}
-
-.drawer {
-  position: fixed;
-  top: 0;
-  right: -450px; 
-  width: 450px;
-  max-width: 100%;
-  height: 100vh;
-  background-color: #ffffff;
-  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.1);
-  z-index: 1001;
-  transition: right 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  overflow-y: auto;
-}
-
-.drawer-open {
-  right: 0; 
-}
-
-.drawer-content {
-  padding: 20px;
-  position: relative;
-}
-
-.close-btn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: none;
-  border: none;
-  font-size: 1.8rem;
-  cursor: pointer;
-  color: #6b7280;
-}
-.close-btn:hover {
-  color: #111827;
-}
-</style>

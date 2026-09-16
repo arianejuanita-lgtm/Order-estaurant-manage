@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Field } from 'vee-validate';
+import { Image as ImageIcon, Upload } from 'lucide-vue-next';
 
 defineProps<{
   label: string;
@@ -29,13 +30,17 @@ const handleFileChange = (event: Event) => {
 
 <template>
   <div class="flex flex-col flex-1 mb-4">
-    <label class="font-semibold text-sm text-gray-800 mb-1.5">{{ label }}</label>
+    <label class="font-semibold text-sm text-gray-800 mb-1.5 flex items-center gap-2">
+      <ImageIcon class="w-4 h-4 text-amber-500" />
+      {{ label }}
+    </label>
     
     <div class="flex items-center gap-3">
       <label 
         :for="idu" 
         class="px-4 py-2.5 bg-white hover:bg-amber-50/50 hover:border-amber-500 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:text-amber-800 cursor-pointer transition-all duration-200 shadow-2xs inline-flex items-center gap-2"
       >
+        <Upload class="w-4 h-4 text-gray-500" />
         <span>Choose an image</span>
       </label>
       

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Field } from 'vee-validate';
+import { ListChecks } from 'lucide-vue-next';
 
 interface CheckboxOption {
   [key: string]: any; 
@@ -21,7 +22,10 @@ defineEmits<{
 
 <template>
   <div class="flex flex-col flex-1 mb-4">
-    <label class="font-semibold text-sm text-gray-800 mb-2">{{ label }}</label>
+    <label class="font-semibold text-sm text-gray-800 mb-2 flex items-center gap-2">
+      <ListChecks class="w-4 h-4 text-amber-500" />
+      {{ label }}
+    </label>
     
     <div class="flex flex-wrap gap-2.5">
       <label

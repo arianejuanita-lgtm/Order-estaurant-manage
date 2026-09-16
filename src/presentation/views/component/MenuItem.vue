@@ -3,30 +3,21 @@ import { Star, Pencil, Trash2 } from "lucide-vue-next";
 import Boutton from "../comom/Boutton.vue";
 import logo from '../../../assets/logo.png';
 import { useMenuItem } from "@/presentation/stores/useMenuItem";
-import { RouterLink } from "vue-router";
 import { useOrder } from "@/presentation/stores/useOrder.ts";
 import { ref, computed, onMounted } from "vue";
+import DialogBox from "../comom/DialogBox.vue";
+import type { MenuItem } from "@/domain/entities/MenuItem";
 
 const orderStore = useOrder();
 const menu = useMenuItem();
 const checked = ref<boolean>(false);
+const isDialogOpen = ref<boolean>(false);
 
 const props = defineProps<{
-    item: {
-        id: number;
-        name: string;
-        description: string;
-        price: number;
-        rating: number;
-        reviews: number;
-        image: string;
-        category: string;
-        dietary: string[];
-        deliveryTime?: string;
-        isAvailable?: boolean;
-        portionSizes: string[];
-    }
+    item: MenuItem;
 }>();
+
+const emit = defineEmits(["edit"]);
 
 const currentQuantity = computed(() => {
   const existingOrder = orderStore.orderMenuItem.find(ord => 
@@ -77,174 +68,72 @@ const handleImageError = (event: Event) => {
     const target = event.target as HTMLImageElement;
     target.src = logo;
 };
+
+const openDeleteDialog = () => {
+  isDialogOpen.value = true;
+};
+
+const handleConfirmDelete = () => {
+  menu.deleteMenuItem(props.item.id);
+  isDialogOpen.value = false;
+};
+
+const handleEditClick = () => {
+  emit("edit", props.item);
+};
 </script>
 
 <template>
-  <div class="food-card">
-    <div class="food-image-wrapper">
+  <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1 flex flex-col p-3">
+    <div class="w-full h-40 rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center relative">
       <img 
         :src="item.image || logo" 
         :alt="item.name" 
         @error="handleImageError" 
+        class="w-full h-full object-cover"
       />
-      <div class="card-actions">
-        <RouterLink :to="`/updateMenuItem/${item.id}`" class="action-btn">
-            <Pencil :size="16" />
-        </RouterLink>
-        <div class="action-btn" @click="menu.deleteMenuItem(item.id)">
+      <div class="absolute top-2 left-2 right-2 flex justify-between pointer-events-none">
+        <div @click="handleEditClick" class="w-8 h-8 bg-white/85 hover:bg-white rounded-full flex items-center justify-center cursor-pointer pointer-events-auto shadow-md transition-colors">
+            <Pencil :size="16" class="text-gray-700" />
+        </div>
+        <div @click="openDeleteDialog" class="w-8 h-8 bg-white/85 hover:bg-white rounded-full flex items-center justify-center cursor-pointer pointer-events-auto shadow-md transition-colors text-red-500">
             <Trash2 :size="16" />        
         </div>
       </div>
     </div>
 
-    <div class="food-info">
-      <h3 class="food-name">{{ item.name }}</h3>
-      <p class="food-description">{{ item.description }}</p>
+    <DialogBox 
+      :item="item" 
+      :isOpen="isDialogOpen"
+      mode="delete"
+      @close="isDialogOpen = false"
+      @confirm="handleConfirmDelete"
+    />
 
-      <div class="food-meta">
-        <div class="rating">
-          <Star class="star-icon" :size="16" fill="#f59e0b" color="#f59e0b" />
-          <span>{{ item.rating }} <small>({{ item.reviews }})</small></span>
+    <div class="pt-3 px-1 pb-1 flex flex-col flex-grow">
+      <h3 class="text-base font-semibold text-gray-900 mb-1.5 line-clamp-1">{{ item.name }}</h3>
+      <p class="text-xs text-gray-500 mb-3 line-clamp-2">{{ item.description }}</p>
+
+      <div class="flex items-center mb-3">
+        <div class="flex items-center gap-1 text-xs font-semibold text-gray-700">
+          <Star :size="16" fill="#f59e0b" color="#f59e0b" />
+          <span>{{ item.rating }} <span class="text-gray-400 font-normal">({{ item.reviews }})</span></span>
         </div>
       </div>
 
-      <div class="food-footer">
-        <span class="price">${{ totalPrice.toFixed(2) }}</span>
+      <div class="flex justify-between items-center mt-auto pt-2 border-t border-gray-100">
+        <span class="text-lg font-bold text-gray-900">${{ totalPrice.toFixed(2) }}</span>
         
         <div v-if="!checked" @click="handleclick">
-          <Boutton title="Add" :haut="20" />
+          <Boutton title="Add" :haut="32" class="px-4 py-1 text-xs bg-amber-400 hover:bg-amber-500 font-bold rounded-xl shadow-xs" />
         </div>
 
-        <div v-else class="qty-control">
-          <div @click="removeQte" class="qty-btn">-</div>
-          <span>{{ currentQuantity }}</span>
-          <div @click="addQte" class="qty-btn">+</div>
+        <div v-else class="flex items-center gap-2.5 font-semibold text-sm">
+          <div @click="removeQte" class="cursor-pointer px-2 py-0.5 bg-gray-100 hover:bg-gray-200 rounded-md select-none transition-colors">-</div>
+          <span class="text-gray-800">{{ currentQuantity }}</span>
+          <div @click="addQte" class="cursor-pointer px-2 py-0.5 bg-gray-100 hover:bg-gray-200 rounded-md select-none transition-colors">+</div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.food-card {
-  background-color: #ffffff;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  padding: 12px;
-}
-.food-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-}
-.food-image-wrapper {
-  width: 100%;
-  height: 160px;
-  border-radius: 12px;
-  overflow: hidden;
-  background-color: #f9fafb;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-.food-image-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.card-actions {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  right: 8px;
-  display: flex;
-  justify-content: space-between;
-  pointer-events: none;
-}
-.action-btn {
-  background-color: rgba(255, 255, 255, 0.85);
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  pointer-events: auto;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  transition: background-color 0.2s ease;
-}
-.action-btn:hover {
-  background-color: #ffffff;
-}
-.food-info {
-  padding: 12px 4px 4px 4px;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-.food-name {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #111827;
-  margin: 0 0 6px 0;
-}
-.food-description {
-  font-size: 0.85rem;
-  color: #6b7280;
-  margin: 0 0 12px 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.food-meta {
-  display: flex;
-  align-items: center;
-  margin-bottom: 12px;
-}
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #374151;
-}
-.rating small {
-  color: #9ca3af;
-  font-weight: normal;
-}
-.food-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
-  padding-top: 8px;
-  border-top: 1px solid #f3f4f6;
-}
-.price {
-  font-size: 1.15rem;
-  font-weight: 700;
-}
-.qty-control {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 600;
-}
-.qty-btn {
-  cursor: pointer;
-  padding: 2px 8px;
-  background-color: #f3f4f6;
-  border-radius: 4px;
-  user-select: none;
-}
-.qty-btn:hover {
-  background-color: #e5e7eb;
-}
-</style>

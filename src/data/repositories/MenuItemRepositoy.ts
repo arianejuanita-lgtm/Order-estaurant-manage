@@ -44,7 +44,6 @@ export class MenuItemRepository implements IMenuItemRepository {
       menu_items: updatedItems
     });
 
-alert("Création d'un menuitem : " + menuItem.name);
 
     return menuItem;
   }
@@ -65,7 +64,6 @@ alert("Création d'un menuitem : " + menuItem.name);
       menu_items: updatedItems
     });
 
-    alert("modification d'un menuitem : " + menuItem.name);
 
     return menuItem;
   }

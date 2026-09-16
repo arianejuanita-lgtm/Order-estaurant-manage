@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from "vue";
+import { reactive, ref, watch } from "vue";
 import { useFilter } from "../stores/useFilter";
 import { useMenuItem } from "../stores/useMenuItem";
 import { MenuItem } from "@/domain/entities/MenuItem";
@@ -8,16 +8,25 @@ import Boutton from "./comom/Boutton.vue";
 import CheckBoxGroup from "./comom/CheckBoxGroup.vue";
 import rowCheck from "./comom/rowCheck.vue";
 import SelectCategory from "./comom/SelectCategory.vue";
-import { Field, Form, ErrorMessage } from "vee-validate";
+import { Form, ErrorMessage } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as zod from "zod";
 import FormTextArea from "./comom/FormTextArea.vue";
 import FormFile from "./comom/FormFile.vue";
+import DialogBox from "./comom/DialogBox.vue";
+
+const props = defineProps<{
+  initialItem?: MenuItem | null;
+}>();
 
 const emit = defineEmits(["close"]);
 
 const filterStore = useFilter();
 const menuStore = useMenuItem();
+const isDialogOpen = ref(false);
+const pendingItem = ref<MenuItem | null>(null);
+
+const isEditMode = ref(false);
 
 interface ProductForm {
   id: number;
@@ -41,13 +50,53 @@ const form = reactive<ProductForm>({
   price: 1,
   rating: 0,
   reviews: 0,
-  delivery_time: "10 min",
+  delivery_time: "",
   category: "",
   dietary: [],
   image: "",
   is_available: false,
   portion_sizes: [],
 });
+
+const updateFormValues = (item: MenuItem | null | undefined) => {
+  if (item) {
+    isEditMode.value = true;
+    form.id = item.id;
+    form.name = item.name;
+    form.description = item.description;
+    form.price = item.price;
+    form.rating = item.rating;
+    form.reviews = item.reviews;
+    form.delivery_time = item.deliveryTime || "";
+    form.category = item.category;
+    form.dietary = item.dietary ? [...item.dietary] : [];
+    form.image = item.image;
+    form.is_available = item.isAvailable ?? false;
+    form.portion_sizes = item.portionSizes ? [...item.portionSizes] : [];
+  } else {
+    isEditMode.value = false;
+    form.id = Date.now();
+    form.name = "";
+    form.description = "";
+    form.price = 1;
+    form.rating = 0;
+    form.reviews = 0;
+    form.delivery_time = "";
+    form.category = "";
+    form.dietary = [];
+    form.image = "";
+    form.is_available = false;
+    form.portion_sizes = [];
+  }
+};
+
+watch(
+  () => props.initialItem,
+  (newItem) => {
+    updateFormValues(newItem);
+  },
+  { immediate: true }
+);
 
 const validationSchema = toTypedSchema(
   zod.object({
@@ -62,12 +111,15 @@ const validationSchema = toTypedSchema(
     category: zod.string().min(1, "Please select a category"),
     image: zod.string().min(1, "Image is required"),
     dietary: zod.array(zod.string()),
-    portion_sizes: zod.array(zod.string()).min(1, "Select at least one portion size"),
+    portion_sizes: zod
+      .array(zod.string())
+      .min(1, "Select at least one portion size"),
+    available: zod.boolean(),
   }),
 );
 
-const handleSubmit = async () => {
-  const newItem = new MenuItem({
+const handleFormSubmit = () => {
+  pendingItem.value = new MenuItem({
     id: form.id,
     name: form.name,
     description: form.description,
@@ -82,18 +134,47 @@ const handleSubmit = async () => {
     portion_sizes: form.portion_sizes,
   });
 
-  await menuStore.addMenuItem(newItem);
+  isDialogOpen.value = true;
+};
+
+const handleConfirmAction = async () => {
+  if (pendingItem.value) {
+    if (isEditMode.value) {
+      await menuStore.updatedMenuItem(pendingItem.value);
+    } else {
+      await menuStore.addMenuItem(pendingItem.value);
+    }
+  }
+  isDialogOpen.value = false;
   emit("close");
 };
+
+
 </script>
 
 <template>
   <div class="max-w-full mx-auto p-4 bg-white font-sans">
-    <h2 class="text-2xl font-bold text-gray-900 mb-5">Add Menu Item</h2>
+    <h2 class="text-2xl font-bold text-gray-900 mb-5">
+      {{ isEditMode ? "Update Menu Item" : "Add Menu Item" }}
+    </h2>
 
     <Form
-      @submit="handleSubmit"
+      :key="form.id"
+      @submit="handleFormSubmit"
       :validation-schema="validationSchema"
+      :initial-values="{
+        name: form.name,
+        description: form.description,
+        price: form.price,
+        delivery: form.delivery_time,
+        rating: form.rating,
+        reviews: form.reviews,
+        category: form.category,
+        image: form.image,
+        dietary: form.dietary,
+        portion_sizes: form.portion_sizes,
+        available: form.is_available
+      }"
       class="space-y-4"
     >
       <div class="flex flex-col">
@@ -235,18 +316,29 @@ const handleSubmit = async () => {
         <rowCheck
           title="Available"
           typeField="checkbox"
-          name="is_available"
+          name="available"
           :modelvalue="form.is_available"
           @update:modelValue="($event) => (form.is_available = $event)"
         />
+        <ErrorMessage name="available" class="text-red-500 text-xs mt-1" />
       </div>
 
-      <Boutton
-        class="block mx-auto w-48 p-3 bg-amber-400 border-none rounded-lg font-bold text-base cursor-pointer transition-colors hover:bg-amber-500 mt-4 text-black"
-        type="submit"
-        title="Save"
-        :haut="60"
+      <DialogBox 
+        :item="pendingItem" 
+        :isOpen="isDialogOpen"
+        :mode="isEditMode ? 'edit' : 'add'"
+        @close="isDialogOpen = false"
+        @confirm="handleConfirmAction"
       />
+
+      <div class="flex justify-center items-center w-full mt-6">
+        <Boutton
+          class="w-48 p-3 bg-amber-400 border-none rounded-lg font-bold text-base cursor-pointer transition-colors hover:bg-amber-500 text-black text-center"
+          type="submit"
+          :haut="60"
+          :title="isEditMode ? 'Update' : 'Save'"
+        />
+      </div>
     </Form>
   </div>
 </template>

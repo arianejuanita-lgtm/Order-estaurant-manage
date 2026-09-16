@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { Field } from 'vee-validate';
+import { PenLine } from 'lucide-vue-next';
 
 defineProps<{
     labelFor?: string;
@@ -18,7 +19,10 @@ defineEmits(['update:modelValue']);
 
 <template>
   <div class="flex flex-col flex-1 mb-4">
-    <label :for="labelFor" class="font-semibold text-sm text-gray-800 mb-1.5">{{ title }}</label>
+    <label :for="labelFor" class="font-semibold text-sm text-gray-800 mb-1.5 flex items-center gap-2">
+      <PenLine class="w-4 h-4 text-amber-500" />
+      {{ title }}
+    </label>
     <Field 
       :type="typeField" 
       :name="name" 
