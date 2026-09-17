@@ -14,6 +14,7 @@ const cate = ref<string>('');
 
 watch(cate, (newValue) => {
     filter.catego = newValue;
+    console.log('newValue',newValue);
 });
 </script>
 

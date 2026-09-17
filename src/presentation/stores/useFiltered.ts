@@ -19,12 +19,15 @@ export const useFiltered = defineStore("filtered", () => {
       result = result.filter(
         (item) =>
           item.name.toLowerCase().includes(searchTerm) ||
-          item.description.toLowerCase().includes(searchTerm)
+          item.description.toLowerCase().includes(searchTerm),
       );
     }
 
     if (catego.value) {
-      result = result.filter((item) => item.category === catego.value);
+      result = result.filter((item) => {
+        console.log("item.category:", item.category);
+        return item.category === catego.value;
+      });
     }
 
     if (diate.value) {
@@ -37,7 +40,7 @@ export const useFiltered = defineStore("filtered", () => {
 
     if (price.value) {
       result = result.filter(
-        (x) => Math.round(x.price) === Number(price.value)
+        (x) => Math.round(x.price) === Number(price.value),
       );
     }
 

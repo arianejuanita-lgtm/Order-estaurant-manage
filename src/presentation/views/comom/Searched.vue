@@ -53,7 +53,7 @@ watch(text, (newValue) => {
 
       <input
         ref="inputRef"
-        type="search"
+        type="text"
         name="search"
         id="search"
         placeholder="Pizza, burger..."

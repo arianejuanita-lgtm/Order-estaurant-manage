@@ -22,10 +22,7 @@ const handleImageError = (event: Event) => {
 <template>
   <Teleport to="body">
     <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-3 overflow-y-auto animate-fadeIn">
-      <!-- 
-        Téléphone : max-w-[300px] et hauteur augmentée (max-h-[92vh])
-        Ordinateur (sm et +) : max-w-[500px] et hauteur diminuée (max-h-[65vh])
-      -->
+  
       <div class="bg-white w-full max-w-[300px] sm:max-w-[500px] rounded-2xl overflow-hidden shadow-2xl flex flex-col relative max-h-[92vh] sm:max-h-[65vh]">
         
         <button 
@@ -36,7 +33,6 @@ const handleImageError = (event: Event) => {
           <ArrowLeft :size="16" />
         </button>
 
-        <!-- Hauteur de l'image ajustée -->
         <div class="w-full h-36 sm:h-40 bg-gray-100 relative overflow-hidden flex items-center justify-center shrink-0">
           <img 
             :src="item.image || logo" 
