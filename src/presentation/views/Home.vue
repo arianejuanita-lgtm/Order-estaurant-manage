@@ -5,8 +5,8 @@ import MenuItemList from "./MenuItemList.vue";
 </script>
 
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-[max-content_1fr] w-screen box-border px-2.5 mt-[15px] gap-5">
-    <div class="flex items-center justify-between md:contents ml-5">
+  <div class="grid grid-cols-1 md:grid-cols-[max-content_1fr] w-screen box-border px-2.5 mt-[0px] gap-5">
+    <div class="flex items-center justify-between md:contents ml-5 mb-0 ">
       <div>
         <Filter class="bg-slate-100 rounded-[20px] border border-gray-400" />
       </div>
@@ -16,7 +16,7 @@ import MenuItemList from "./MenuItemList.vue";
       </div>
     </div>
     
-    <div class="flex flex-col gap-5">
+    <div class="flex flex-col gap-5 mt--10">
       <div class="hidden md:flex justify-end w-full">
         <Searched />
       </div>

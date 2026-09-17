@@ -40,7 +40,7 @@ const closeDrawer = () => {
 </script>
 
 <template>
-  <div class="max-w-[1200px] mx-auto p-5 font-sans relative">
+  <div class="max-w-[1200px] mx-auto p-3 font-sans relative" >
   <div class="flex justify-between items-center px-4 sm:px-6 py-4 bg-white rounded-xl shadow-xs mb-6 gap-3">
     <h2 class="text-sm sm:text-base md:text-xl font-bold text-gray-900 m-0 truncate">
       {{ filter.menu.length }} Menu Items

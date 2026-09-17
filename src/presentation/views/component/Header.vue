@@ -30,7 +30,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="w-full h-[80px] px-5 sm:px-[25px] lg:px-[50px] box-border flex items-center justify-between bg-white sticky top-0 z-[1000]">
+  <div class="w-full h-[80px] px-5 sm:px-[25px] lg:px-[30px] box-border flex items-center justify-between bg-white sticky top-0 z-[1000]">
 
     <RouterLink to="/" class="no-underline">
       <div class="flex items-center gap-[10px] min-w-auto lg:min-w-[180px]">

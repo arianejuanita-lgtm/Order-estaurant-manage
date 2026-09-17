@@ -2,16 +2,11 @@
 import Boutton from './Boutton.vue';
 import { Search } from 'lucide-vue-next';
 import { useFiltered } from '@/presentation/stores/useFiltered.ts';
-import { ref, watch, nextTick } from 'vue';
+import { ref, nextTick } from 'vue';
 
 const filter = useFiltered();
-const text = ref<string>('');
 const isExpanded = ref<boolean>(false);
 const inputRef = ref<HTMLInputElement | null>(null);
-
-const handleSearch = () => {
-  filter.title = text.value;
-};
 
 const openSearch = async () => {
   isExpanded.value = true;
@@ -20,16 +15,13 @@ const openSearch = async () => {
 };
 
 const handleBlur = () => {
-    text.value='';
-    isExpanded.value = false;
-    
+  // Petit délai pour laisser le temps de cliquer sans tout fermer brutalement
+  setTimeout(() => {
+    if (document.activeElement !== inputRef.value && !filter.title) {
+      isExpanded.value = false;
+    }
+  }, 200);
 };
-
-watch(text, (newValue) => {
-  if (!newValue.trim() && document.activeElement !== inputRef.value) {
-    isExpanded.value = false;
-  }
-});
 </script>
 
 <template>
@@ -57,8 +49,7 @@ watch(text, (newValue) => {
         name="search"
         id="search"
         placeholder="Pizza, burger..."
-        v-model="text"
-        @input="handleSearch"
+        v-model="filter.title"
         @blur="handleBlur"
         class="flex-1 h-full px-3 border-none outline-none bg-transparent text-sm text-gray-800 placeholder-gray-400 w-full"
       />
