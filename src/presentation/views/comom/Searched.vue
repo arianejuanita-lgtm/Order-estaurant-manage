@@ -15,7 +15,6 @@ const openSearch = async () => {
 };
 
 const handleBlur = () => {
-  // Petit délai pour laisser le temps de cliquer sans tout fermer brutalement
   setTimeout(() => {
     if (document.activeElement !== inputRef.value && !filter.title) {
       isExpanded.value = false;

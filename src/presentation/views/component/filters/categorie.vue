@@ -15,6 +15,9 @@ const cate = ref<string>('');
 watch(cate, (newValue) => {
     filter.catego = newValue;
     console.log('newValue',newValue);
+    if (!newValue) {
+    cate.value = "";
+  }
 });
 </script>
 
@@ -30,6 +33,7 @@ watch(cate, (newValue) => {
                         :id="'cat-' + cat.id" 
                         v-model="cate"
                         :true-value="cat.label"
+                        :checked="filter.catego === cat.label"
                         false-value=""
                         class="w-4 h-4 rounded border-gray-300 accent-[#F5BE18] cursor-pointer"
                     /> 

@@ -17,6 +17,12 @@ watch(porte, (newport) => {
     filter.port = newport;
 });
 
+watch(() => filter.port, (newStorePort) => {
+    if (!newStorePort) {
+        porte.value = '';
+    }
+});
+
 const selectPortion = (label: string) => {
     if (porte.value === label) {
         porte.value = '';

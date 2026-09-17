@@ -31,6 +31,7 @@ watch(dia, (newdiate) => {
                         v-model="dia"
                         :id="'dia-' + diat.id" 
                         :true-value="diat.label"
+                        :checked="filter.diate === diat.label"
                         false-value=""
                         class="w-4 h-4 rounded border-gray-300 accent-[#F5BE18] cursor-pointer" 
                     /> 
