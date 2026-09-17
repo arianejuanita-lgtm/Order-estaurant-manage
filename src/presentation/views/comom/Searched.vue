@@ -2,7 +2,7 @@
 import Boutton from './Boutton.vue';
 import { Search } from 'lucide-vue-next';
 import { useFiltered } from '@/presentation/stores/useFiltered.ts';
-import { ref, nextTick } from 'vue';
+import { ref, watch, nextTick } from 'vue';
 
 const filter = useFiltered();
 const isExpanded = ref<boolean>(false);
@@ -21,6 +21,12 @@ const handleBlur = () => {
     }
   }, 200);
 };
+
+watch(() => filter.title, (newValue) => {
+  if (newValue.trim().length > 0 && window.innerWidth < 768) {
+    window.scrollBy({ top: 100, behavior: 'smooth' });
+  }
+});
 </script>
 
 <template>
