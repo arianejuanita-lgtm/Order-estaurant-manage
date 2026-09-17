@@ -6,12 +6,14 @@ import { useMenuItem } from "@/presentation/stores/useMenuItem";
 import { useOrder } from "@/presentation/stores/useOrder.ts";
 import { ref, computed, onMounted } from "vue";
 import DialogBox from "../comom/DialogBox.vue";
+import DetailsItem from "../DetailsItem.vue";
 import type { MenuItem } from "@/domain/entities/MenuItem";
 
 const orderStore = useOrder();
 const menu = useMenuItem();
 const checked = ref<boolean>(false);
 const isDialogOpen = ref<boolean>(false);
+const isDetailsOpen = ref<boolean>(false); 
 
 const props = defineProps<{
     item: MenuItem;
@@ -24,8 +26,8 @@ const currentQuantity = computed(() => {
     ord.items.some(i => i.menuItemId === props.item.id)
   );
   if (existingOrder) {
-    const item = existingOrder.items.find(i => i.menuItemId === props.item.id); 
-    return item ? item.quantity : 1;
+    const orderItem = existingOrder.items.find(i => i.menuItemId === props.item.id); 
+    return orderItem ? orderItem.quantity : 1;
   }
   return 1;
 });
@@ -85,22 +87,42 @@ const handleEditClick = () => {
 
 <template>
   <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1 flex flex-col p-3">
-    <div class="w-full h-40 rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center relative">
+    
+    <div 
+      @click="isDetailsOpen = true" 
+      class="w-full h-40 rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center relative cursor-pointer group"
+    >
       <img 
         :src="item.image || logo" 
         :alt="item.name" 
         @error="handleImageError" 
-        class="w-full h-full object-cover"
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
       />
+      
+      <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+        <span class="bg-white/90 text-gray-800 text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">View details</span>
+      </div>
+
       <div class="absolute top-2 left-2 right-2 flex justify-between pointer-events-none">
-        <div @click="handleEditClick" class="w-8 h-8 bg-white/85 hover:bg-white rounded-full flex items-center justify-center cursor-pointer pointer-events-auto shadow-md transition-colors">
+        <div @click.stop.prevent="handleEditClick" class="w-8 h-8 bg-white/85 hover:bg-white rounded-full flex items-center justify-center cursor-pointer pointer-events-auto shadow-md transition-colors">
             <Pencil :size="16" class="text-gray-700" />
         </div>
-        <div @click="openDeleteDialog" class="w-8 h-8 bg-white/85 hover:bg-white rounded-full flex items-center justify-center cursor-pointer pointer-events-auto shadow-md transition-colors text-red-500">
+        <div @click.stop.prevent="openDeleteDialog" class="w-8 h-8 bg-white/85 hover:bg-white rounded-full flex items-center justify-center cursor-pointer pointer-events-auto shadow-md transition-colors text-red-500">
             <Trash2 :size="16" />        
         </div>
       </div>
     </div>
+
+    <DetailsItem
+      :item="item"
+      :isOpen="isDetailsOpen"
+      :currentQuantity="currentQuantity"
+      :totalPrice="totalPrice"
+      :checked="checked"
+      @close="isDetailsOpen = false"
+      @add="handleclick"
+      @remove="removeQte"
+    />
 
     <DialogBox 
       :item="item" 

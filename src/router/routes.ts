@@ -4,7 +4,8 @@ import OrderMenuItem from "@/presentation/views/OrderMenuItem.vue";
 
 const routes = [
     { path: '/', component: Home },
-    { path: '/orderMenuItem', component: OrderMenuItem }
+    { path: '/orderMenuItem', component: OrderMenuItem },
+    { path: '/menu-item/:id', redirect: '/' }
 ];
 
 export const router = createRouter({

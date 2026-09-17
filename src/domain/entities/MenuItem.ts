@@ -12,6 +12,36 @@ export interface IMenuItemProps {
   is_available: boolean;
   portion_sizes: string[];
 }
+// export interface MenuItem {
+//   id: number;
+//   name: string;
+//   description: string;
+//   price: number;
+//   rating: number;
+//   reviews: number;
+//   delivery_time: string;
+//   preparation_time: number;
+//   category: string;
+//   category_id: string;
+//   dietary: string[];
+//   image: string;
+//   gallery: string[];
+//   is_available: boolean;
+//   is_popular: boolean;
+//   is_new: boolean;
+//   status: ItemStatus;
+//   stock: Stock;
+//   vat: number;
+//   portion_sizes: string[];
+//   sales_modes: SalesModes;
+//   variants: Variant[];
+//   supplements: Supplement[];
+//   stats: ItemStats;
+//   created_at: string;
+//   updated_at: string;
+// }
+
+export type ItemStatus = 'available' | 'out_of_stock' | 'hidden';
 
 export class MenuItem {
   public id: number;
