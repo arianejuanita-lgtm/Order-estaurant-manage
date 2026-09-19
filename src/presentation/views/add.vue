@@ -232,36 +232,38 @@ const handleConfirmAction = async () => {
   </div>
 </div>
 
-      <div class="flex gap-4">
-        <div class="flex-1 flex flex-col">
-          <FormGroup
-            labelFor="rating"
-            title="Rating"
-            typeField="number"
-            name="rating"
-            idu="rating"
-            step="0.1"
-            min="0"
-            max="5"
-            :modelValue="form.rating"
-            @update:modelValue="form.rating = Number($event)"
-          />
-          <ErrorMessage name="rating" class="text-red-500 text-xs mt-1" />
-        </div>
+  <div class="flex gap-2 w-full max-w-full box-border">
+  <div class="flex-1 flex flex-col min-w-0">
+    <FormGroup
+      labelFor="rating"
+      title="Rating"
+      typeField="number"
+      name="rating"
+      idu="rating"
+      step="0.1"
+      min="0"
+      max="5"
+      :modelValue="form.rating"
+      @update:modelValue="form.rating = Number($event)"
+      class="w-full text-sm"
+    />
+    <ErrorMessage name="rating" class="text-red-500 text-xs mt-1 truncate" />
+  </div>
 
-        <div class="flex-1 flex flex-col">
-          <FormGroup
-            labelFor="reviews"
-            title="Reviews"
-            typeField="number"
-            name="reviews"
-            idu="reviews"
-            :modelValue="form.reviews"
-            @update:modelValue="form.reviews = Number($event)"
-          />
-          <ErrorMessage name="reviews" class="text-red-500 text-xs mt-1" />
-        </div>
-      </div>
+  <div class="flex-1 flex flex-col min-w-0">
+    <FormGroup
+      labelFor="reviews"
+      title="Reviews"
+      typeField="number"
+      name="reviews"
+      idu="reviews"
+      :modelValue="form.reviews"
+      @update:modelValue="form.reviews = Number($event)"
+      class="w-full text-sm"
+    />
+    <ErrorMessage name="reviews" class="text-red-500 text-xs mt-1 truncate" />
+  </div>
+</div>
 
       <div class="flex flex-col">
         <SelectCategory
@@ -333,14 +335,14 @@ const handleConfirmAction = async () => {
         @confirm="handleConfirmAction"
       />
 
-      <div class="flex justify-center items-center w-full mt-6">
-        <Boutton
-          class="w-48 p-3 bg-amber-400 border-none rounded-lg font-bold text-base cursor-pointer transition-colors hover:bg-amber-500 text-black text-center"
-          type="submit"
-          :haut="60"
-          :title="isEditMode ? 'Update' : 'Save'"
-        />
-      </div>
+ <div class="flex justify-center items-center w-full mt-6 box-border px-2">
+  <Boutton
+    class="w-full p-3 bg-amber-400 border-none rounded-2xl font-bold text-base cursor-pointer transition-colors hover:bg-amber-500 text-black text-center"
+    type="submit"
+    :haut="60"
+    :title="isEditMode ? 'Update' : 'Save'"
+  />
+</div>
     </Form>
   </div>
 </template>
