@@ -201,34 +201,36 @@ const handleConfirmAction = async () => {
         <ErrorMessage name="description" class="text-red-500 text-xs mt-1" />
       </div>
 
-      <div class="flex gap-4">
-        <div class="flex-1 flex flex-col">
-          <FormGroup
-            labelFor="price"
-            title="Price ($)"
-            typeField="number"
-            step="0.01"
-            name="price"
-            idu="price"
-            :modelValue="form.price"
-            @update:modelValue="form.price = Number($event)"
-          />
-          <ErrorMessage name="price" class="text-red-500 text-xs mt-1" />
-        </div>
+   <div class="flex gap-2 w-full max-w-full box-border">
+  <div class="flex-1 flex flex-col min-w-0">
+    <FormGroup
+      labelFor="price"
+      title="Price ($)"
+      typeField="number"
+      step="0.01"
+      name="price"
+      idu="price"
+      :modelValue="form.price"
+      @update:modelValue="form.price = Number($event)"
+      class="w-full text-sm"
+    />
+    <ErrorMessage name="price" class="text-red-500 text-xs mt-1 truncate" />
+  </div>
 
-        <div class="flex-1 flex flex-col">
-          <FormGroup
-            labelFor="delivery_time"
-            title="Delivery Time"
-            typeField="time"
-            name="delivery"
-            idu="delivery_time"
-            :modelValue="form.delivery_time"
-            @update:modelValue="form.delivery_time = $event"
-          />
-          <ErrorMessage name="delivery" class="text-red-500 text-xs mt-1" />
-        </div>
-      </div>
+  <div class="flex-1 flex flex-col min-w-0">
+    <FormGroup
+      labelFor="delivery_time"
+      title="Delivery Time"
+      typeField="time"
+      name="delivery"
+      idu="delivery_time"
+      :modelValue="form.delivery_time"
+      @update:modelValue="form.delivery_time = $event"
+      class="w-full text-sm"
+    />
+    <ErrorMessage name="delivery" class="text-red-500 text-xs mt-1 truncate" />
+  </div>
+</div>
 
       <div class="flex gap-4">
         <div class="flex-1 flex flex-col">
