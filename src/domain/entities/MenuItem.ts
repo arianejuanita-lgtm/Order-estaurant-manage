@@ -1,3 +1,12 @@
+export interface Variants{
+  id:string;
+  label:string;
+  subtitle:string;
+  price:number;
+  status:string;
+  is_default:boolean;
+  is_popular:boolean;
+}
 export interface IMenuItemProps {
   id: number;
   name: string;
