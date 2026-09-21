@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { reactive, ref, watch } from "vue";
 import { useFilter } from "../stores/useFilter";
 import { useMenuItem } from "../stores/useMenuItem";
@@ -345,4 +345,7 @@ const handleConfirmAction = async () => {
 </div>
     </Form>
   </div>
-</template>
+</template> -->
+
+<script setup lang="ts"></script>
+<template></template>
