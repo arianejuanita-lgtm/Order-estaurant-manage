@@ -4,11 +4,13 @@ import { ArrowRight, Check } from 'lucide-vue-next';
 
 const props = withDefaults(
     defineProps<{
-        label: string;                        
+        label: string;                                    
         variant?: 'next' | 'finish';         
+        type?: 'button' | 'submit' | 'reset'; 
     }>(),
     {
-        variant: 'next'
+        variant: 'next',
+        type: 'submit' 
     }
 );
 
@@ -26,7 +28,7 @@ const variantClasses = computed(() => {
 
 <template>
     <button 
-        type="button"
+        :type="type"
         class="flex items-center gap-2 px-5 py-2.5 rounded-xl transition-all cursor-pointer"
         :class="variantClasses"
     >
