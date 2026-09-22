@@ -1,28 +1,28 @@
 export interface IStep{
-    id :number;
-    title:string;
-    description:string;
+    id: number;
+    title: string;
+    description: string;
 }
 
-export const steps : IStep[] =[
+export const steps: IStep[] = [
     { 
-        id:1,
-        title:"Informations de base",
-        description:"Commencer par les informations principales de votre produit"
+        id: 1,
+        title: "Basic Information",
+        description: "Start with the main details of your product"
     },
-        { 
-        id:2,
-        title:"Prix et variantes",
-        description:"Definissez le prix de base des options si necessaire"
+    { 
+        id: 2,
+        title: "Pricing and Variants",
+        description: "Define the base price and options if necessary"
     },
-        { 
-        id:3,
-        title:"Disponibilite et vente",
-        description:"Choisissez ou et comment vous allez vendre ce produit "
+    { 
+        id: 3,
+        title: "Availability and Sales",
+        description: "Choose where and how you will sell this product"
     },
-        { 
-        id:4,
-        title:"Informations avancees",
-        description:"Ajoutez des details supplementaires pour mieux gerer votre produits"
+    { 
+        id: 4,
+        title: "Advanced Information",
+        description: "Add extra details to better manage your product"
     },
 ];

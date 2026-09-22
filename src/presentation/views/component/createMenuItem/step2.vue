@@ -20,8 +20,8 @@ const emit = defineEmits(["next", "prev"]);
 const validationSchema = toTypedSchema(
   zod.object({
     price: zod
-      .number({ invalid_type_error: "Le prix est requis" })
-      .min(0, "Le prix ne peut pas être négatif"),
+      .number({ invalid_type_error: "Price is required" })
+      .min(0, "Price cannot be negative"),
     supplements: zod.array(zod.string()).optional(),
   }),
 );
@@ -47,7 +47,7 @@ const onSubmit = (values: any) => {
     variants: variantsList.value,
   });
 
-  console.log("Données validées et enregistrées de l'étape 2 :", createStore.formState);
+  console.log("Validated and saved data from step 2:", createStore.formState);
   emit("next");
 };
 </script>
@@ -70,7 +70,7 @@ const onSubmit = (values: any) => {
       <div class="w-full">
         <InputField
           name="price"
-          label="Prix de vente"
+          label="Selling price"
           placeholder="Ex: 2500"
           :required="true"
           type="number"
@@ -80,7 +80,7 @@ const onSubmit = (values: any) => {
       <VariantInput v-model="variantsList" />
 
       <div class="flex flex-col gap-2.5">
-        <label class="text-sm font-medium text-gray-700">Suppléments disponibles</label>
+        <label class="text-sm font-medium text-gray-700">Available supplements</label>
 
         <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
           <label
@@ -108,7 +108,7 @@ const onSubmit = (values: any) => {
 
       <div class="flex justify-between pt-4 border-t border-gray-100">
         <RetourButton type="button" @click="emit('prev')" />
-        <ActionButton label="Suivant" variant="next" type="submit" />
+        <ActionButton label="Next" variant="next" type="submit" />
       </div>
     </Form>
   </div>

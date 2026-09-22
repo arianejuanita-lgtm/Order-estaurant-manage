@@ -24,10 +24,10 @@ const prevStep = () => {
 };
 
 const finishForm = () => {
-    console.log("Produit créé avec succès !");
+    console.log("Product successfully created!");
 };
 
-const redirect=()=>{
+const redirect = () => {
     router.push("/");
 }
 </script>
@@ -37,14 +37,15 @@ const redirect=()=>{
         
         <div class="flex flex-col gap-6">
 
-            
+            <!-- Back to products link -->
             <div @click="redirect" class="flex items-center gap-2 text-gray-600 cursor-pointer hover:text-black w-fit">
                 <CircleArrowLeft class="w-5 h-5" />
-                <p class="font-medium">Retour aux produits</p>
+                <p class="font-medium">Back to products</p>
             </div>
 
+            <!-- Header & Stepper navigation -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <h2 class="text-3xl font-bold text-gray-900">Créer un produit</h2>
+                <h2 class="text-3xl font-bold text-gray-900">Create a product</h2>
                 
                 <div class="flex items-center gap-3 overflow-x-auto pb-2">
                     <div 
@@ -66,8 +67,10 @@ const redirect=()=>{
             </div>
         </div>
 
+        <!-- Main content layout -->
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
             
+            <!-- Dynamic Form Step Container -->
             <div class="lg:col-span-3 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <Step1 v-if="currentStepId === 1" :itemStep="steps[0]!" @next="nextStep" />
                 <Step2 v-else-if="currentStepId === 2" :itemStep="steps[1]!" @next="nextStep" @prev="prevStep" />
@@ -75,6 +78,7 @@ const redirect=()=>{
                 <Step4 v-else-if="currentStepId === 4" :itemStep="steps[3]!" @prev="prevStep" @finish="finishForm" />
             </div>
 
+            <!-- Live Product Preview Sidebar -->
             <div class="lg:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-gray-100 sticky top-6">
                 <ApercueItem />
             </div>

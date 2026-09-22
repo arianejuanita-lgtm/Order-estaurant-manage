@@ -22,9 +22,9 @@ const menuItemStore = useMenuItem();
 
 const validationSchema = toTypedSchema(
   zod.object({
-    quantity: zod.number({ invalid_type_error: "Requis" }).min(0, "Doit être positif"),
-    seuil: zod.number({ invalid_type_error: "Requis" }).min(0, "Doit être positif"),
-    temps: zod.string().min(1, "Le temps est requis"),
+    quantity: zod.number({ invalid_type_error: "Required" }).min(0, "Must be positive"),
+    seuil: zod.number({ invalid_type_error: "Required" }).min(0, "Must be positive"),
+    temps: zod.string().min(1, "Preparation time is required"),
   })
 );
 
@@ -50,9 +50,9 @@ const onSubmit = (values: any) => {
 
   menuItemStore.addMenuItem(createStore.formState);
   router.push("/sucess");
+  createStore.resetForm();
 
-
-  console.log("Produit final créé avec succès :", createStore.formState);
+  console.log("Final product successfully created:", createStore.formState);
   emit("finish");
 };
 </script>
@@ -80,14 +80,14 @@ const onSubmit = (values: any) => {
             <InputField 
               name="quantity" 
               type="number"
-              label="Quantité en stock" 
+              label="Stock quantity" 
               placeholder="100" 
               :required="true"
             />
             <InputField 
               name="seuil" 
               type="number"
-              label="Seuil d'alerte" 
+              label="Alert threshold" 
               placeholder="5" 
               :required="true"
             />
@@ -98,7 +98,7 @@ const onSubmit = (values: any) => {
           <InputField 
             name="temps" 
             type="time"
-            label="Temps de préparation" 
+            label="Preparation time" 
             :required="true"
           />
         </div>
@@ -112,7 +112,7 @@ const onSubmit = (values: any) => {
       <div class="flex justify-between pt-4 border-t border-gray-100">
         <RetourButton type="button" @click="emit('prev')" />
         <ActionButton
-          label="Créer le produit"
+          label="Create product"
           variant="finish"
           type="submit"
         />

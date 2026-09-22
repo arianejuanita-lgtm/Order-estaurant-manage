@@ -24,9 +24,9 @@ const createStore = useCreateMenuItem();
 
 const validationSchema = toTypedSchema(
     zod.object({
-        name: zod.string().min(1, "Le nom du produit est requis").max(100, "Maximum 100 caractères"),
-        category: zod.string().min(1, "La catégorie est requise"),
-        description: zod.string().max(500, "Maximum 500 caractères").optional(),
+        name: zod.string().min(1, "Product name is required").max(100, "Maximum 100 characters"),
+        category: zod.string().min(1, "Category is required"),
+        description: zod.string().max(500, "Maximum 500 characters").optional(),
     })
 );
 
@@ -43,8 +43,8 @@ const nameValue = ref<string>(createStore.formState.name);
 const categoryValue = ref<string>(createStore.formState.category);
 const descValue = ref<string>(createStore.formState.description);
 const isAvailable = ref<boolean>(createStore.formState.isAvailable);
-const dietaryValue=ref<string[]>(createStore.formState.dietary);
-const portionSizeValue=ref<string[]>(createStore.formState.portionSizes)
+const dietaryValue = ref<string[]>(createStore.formState.dietary);
+const portionSizeValue = ref<string[]>(createStore.formState.portionSizes)
 
 const triggerFileInput = () => {
     fileInputRef.value?.click();
@@ -70,12 +70,12 @@ const onSubmit = (values: any) => {
         portionSizes: portionSizeValue.value,
     });
 
-    console.log("Formulaire valide, passage à l'étape suivante :", createStore.formState);
+    console.log("Valid form, moving to next step:", createStore.formState);
     emit('next');
 };
 
 const onInvalidSubmit = ({ errors }: { errors: any }) => {
-    console.log("Validation Zod échouée. Erreurs :", errors);
+    console.log("Zod validation failed. Errors:", errors);
 };
 </script>
 
@@ -114,8 +114,8 @@ const onInvalidSubmit = ({ errors }: { errors: any }) => {
                         <Camera class="w-6 h-6" />
                     </div>
                     <div class="flex flex-col gap-1">
-                        <p class="font-semibold text-gray-800 text-sm">Ajouter une photo</p>
-                        <p class="text-xs text-gray-400">Glisser et déposer une image ou cliquer pour choisir JPG, PNG (max 5 Mo)</p>
+                        <p class="font-semibold text-gray-800 text-sm">Add a photo</p>
+                        <p class="text-xs text-gray-400">Drag and drop an image or click to browse JPG, PNG (max 5 MB)</p>
                     </div>
                 </div>
                 
@@ -130,19 +130,19 @@ const onInvalidSubmit = ({ errors }: { errors: any }) => {
                             <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-400">
                                 <Camera class="w-5 h-5" />
                             </div>
-                            <p class="text-xs">Aucune image sélectionnée</p>
+                            <p class="text-xs">No image selected</p>
                         </div>
                     </template>
 
                     <template v-else>
-                        <img :src="previewImage" alt="Aperçu" class="w-full h-full object-cover rounded-xl absolute inset-0" />
+                        <img :src="previewImage" alt="Preview" class="w-full h-full object-cover rounded-xl absolute inset-0" />
                         <button 
                             type="button"
                             @click="triggerFileInput"
                             class="absolute bottom-4 right-4 flex items-center gap-2 bg-white/90 hover:bg-white text-gray-800 text-xs font-semibold px-4 py-2 rounded-xl shadow-md backdrop-blur-sm transition-all cursor-pointer"
                         >
                             <RefreshCw class="w-3.5 h-3.5 text-amber-500" />
-                            <span>Changer</span>
+                            <span>Change</span>
                         </button>
                     </template>
                 </div>
@@ -150,8 +150,8 @@ const onInvalidSubmit = ({ errors }: { errors: any }) => {
 
             <InputField 
                 name="name" 
-                label="Nom du produit" 
-                placeholder="Ex: Burger Deluxe" 
+                label="Product name" 
+                placeholder="Ex: Deluxe Burger" 
                 :required="true"
                 v-model="nameValue"
                 :max-length="100"
@@ -170,49 +170,49 @@ const onInvalidSubmit = ({ errors }: { errors: any }) => {
             />
             <ErrorMessage name="category" class="text-xs text-red-500 mt-0.5" />
 
-                 <div class="flex flex-col">
-        <CheckBoxGroup
-          label="Dietary"
-          name="dietary"
-          item-label="label"
-          item-key="label"
-          :options="filterStore.dietaries"
-          :model-value="dietaryValue"
-          @update:modelValue="($event) => (dietaryValue = $event)"
-        />
-        <ErrorMessage name="dietary" class="text-red-500 text-xs mt-1" />
-      </div>
+            <div class="flex flex-col">
+                <CheckBoxGroup
+                    label="Dietary"
+                    name="dietary"
+                    item-label="label"
+                    item-key="label"
+                    :options="filterStore.dietaries"
+                    :model-value="dietaryValue"
+                    @update:modelValue="($event) => (dietaryValue = $event)"
+                />
+                <ErrorMessage name="dietary" class="text-red-500 text-xs mt-1" />
+            </div>
 
-      <div class="flex flex-col">
-        <CheckBoxGroup
-          label="Portion Sizes"
-          name="portion_sizes"
-          item-label="label"
-          item-key="id"
-          :options="filterStore.portionSizes"
-          :modelValue="portionSizeValue"
-          @update:modelValue="($event) => (portionSizeValue = $event)"
-        />
-        <ErrorMessage name="portion_sizes" class="text-red-500 text-xs mt-1" />
-      </div>
+            <div class="flex flex-col">
+                <CheckBoxGroup
+                    label="Portion Sizes"
+                    name="portion_sizes"
+                    item-label="label"
+                    item-key="id"
+                    :options="filterStore.portionSizes"
+                    :modelValue="portionSizeValue"
+                    @update:modelValue="($event) => (portionSizeValue = $event)"
+                />
+                <ErrorMessage name="portion_sizes" class="text-red-500 text-xs mt-1" />
+            </div>
 
             <TextareaField 
                 name="description" 
                 label="Description" 
-                placeholder="Décrivez votre produit..." 
+                placeholder="Describe your product..." 
                 v-model="descValue"
                 :max-length="500"
             />
 
             <Disponibility
                 v-model="isAvailable"
-                title="Produit disponible"
-                description="Le produit est visible dans votre menu"
+                title="Product available"
+                description="The product is visible in your menu"
             />
 
             <div class="flex justify-end pt-4 border-t border-gray-100">
                 <ActionButton 
-                    label="Suivant" 
+                    label="Next" 
                     variant="next" 
                 />
             </div>

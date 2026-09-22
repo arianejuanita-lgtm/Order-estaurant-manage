@@ -31,7 +31,7 @@ const onSubmit = () => {
         },
     });
 
-    console.log("Données validées et enregistrées de l'étape 3 :", createStore.formState);
+    console.log("Validated and saved data from step 3:", createStore.formState);
     emit('next');
 };
 </script>
@@ -48,28 +48,28 @@ const onSubmit = () => {
                 
                 <Disponibility
                     v-model="isAvailable"
-                    title="Disponible à la vente"
-                    description="Le produit est visible dans votre menu"
+                    title="Available for sale"
+                    description="The product is visible in your menu"
                 />
 
                 <div class="flex flex-col gap-2">
-                    <label class="text-sm font-medium text-gray-700">Mode de vente</label>
+                    <label class="text-sm font-medium text-gray-700">Sales mode</label>
                     
                     <ModeVente
                         v-model="isSurPlace"
-                        title="Sur place"
+                        title="Dine-in"
                         :icon="Store"
                     />
 
                     <ModeVente
                         v-model="isEmporter"
-                        title="À emporter"
+                        title="Takeaway"
                         :icon="Store"
                     />
 
                     <ModeVente
                         v-model="isLivraison"
-                        title="Livraison"
+                        title="Delivery"
                         :icon="Truck"
                     />
                 </div>
@@ -79,7 +79,7 @@ const onSubmit = () => {
             <div class="flex justify-between pt-4 border-t border-gray-100">
                 <RetourButton type="button" @click="emit('prev')" />
                 <ActionButton 
-                    label="Suivant" 
+                    label="Next" 
                     variant="next" 
                     type="submit"
                 />
