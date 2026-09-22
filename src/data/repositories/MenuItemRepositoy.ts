@@ -33,7 +33,7 @@ export class MenuItemRepository implements IMenuItemRepository {
       is_popular: item.isPopular,
       status: item.status,
       sales_modes: item.sales_modes,
-      variants: item.variants,
+      // variants: item.variants,
       stock: item.stock,
       vat: item.vat,
       supplements: item.supplements,

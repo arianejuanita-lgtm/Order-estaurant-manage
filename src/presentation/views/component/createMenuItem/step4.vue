@@ -12,11 +12,10 @@ const emit = defineEmits(['prev', 'finish']);
 <template>
     <div class="flex flex-col gap-6">
         <div>
-            <h3 class="text-xl font-bold text-gray-900">{{ itemStep.title }}</h3>
+            <h3 class="text-xl font-bold text-gray-900">{{itemStep.id}}. {{ itemStep.title }}</h3>
             <p class="text-sm text-gray-500 mt-1">{{ itemStep.description }}</p>
         </div>
 
-        <!-- Vos derniers champs de formulaire -->
         <div class="py-8 text-gray-400 border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center">
             Formulaire Étape Finale
         </div>
