@@ -32,6 +32,8 @@ const validationSchema = toTypedSchema(
 
 onMounted(async () => {
     await filterStore.fecthCategoryMenuItems();
+    await filterStore.fecthPortionSizeMenuItems();
+    await filterStore.fecthdietariesMenuItems();
 });
 
 const fileInputRef = ref<HTMLInputElement | null>(null);
