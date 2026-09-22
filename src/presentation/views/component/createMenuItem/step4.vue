@@ -1,40 +1,122 @@
 <script lang="ts" setup>
-import type { IStep } from '@/data/repositories/StepRepository';
-import { Check, ArrowLeft } from 'lucide-vue-next';
+import { ref } from "vue";
+import type { IStep } from "@/data/repositories/StepRepository";
+import RetourButton from "../../comom/RetourButton.vue";
+import ActionButton from "../../comom/ActionButton.vue";
+import InputField from "../../comom/InputField.vue";
+import IngredientInput from "../../comom/IngredientInput.vue";
+import { Form } from "vee-validate";
+import * as zod from "zod";
+import { toTypedSchema } from "@vee-validate/zod";
+import { useMenuItem } from "@/presentation/stores/useMenuItem.ts";
+import { useCreateMenuItem } from "@/presentation/stores/useCreateMenuItem";
+import { useRouter } from 'vue-router'
 
 defineProps<{
-    itemStep: IStep
+  itemStep: IStep;
 }>();
 
-const emit = defineEmits(['prev', 'finish']);
+const emit = defineEmits(["prev", "finish"]);
+const createStore = useCreateMenuItem();
+const menuItemStore = useMenuItem();
+
+const validationSchema = toTypedSchema(
+  zod.object({
+    quantity: zod.number({ invalid_type_error: "Requis" }).min(0, "Doit être positif"),
+    seuil: zod.number({ invalid_type_error: "Requis" }).min(0, "Doit être positif"),
+    temps: zod.string().min(1, "Le temps est requis"),
+  })
+);
+
+const initialValues = {
+  quantity: createStore.formState.stock?.quantity ?? 0,
+  seuil: createStore.formState.stock?.alert_threshold ?? 0,
+  temps: createStore.formState.preparationTime ?? "",
+};
+
+const dietaryList = ref<string[]>(createStore.formState.dietary || []);
+const router = useRouter()
+const onSubmit = (values: any) => {
+  createStore.updateForm({
+    stock: {
+      quantity: values.quantity,
+      alert_threshold: values.seuil,
+      sold_by_unit: createStore.formState.stock?.sold_by_unit ?? true,
+      in_stock: values.quantity > 0,
+    },
+    preparationTime: values.temps,
+    dietary: dietaryList.value,
+  });
+
+  menuItemStore.addMenuItem(createStore.formState);
+  router.push("/sucess");
+
+
+  console.log("Produit final créé avec succès :", createStore.formState);
+  emit("finish");
+};
 </script>
 
 <template>
-    <div class="flex flex-col gap-6">
-        <div>
-            <h3 class="text-xl font-bold text-gray-900">{{itemStep.id}}. {{ itemStep.title }}</h3>
-            <p class="text-sm text-gray-500 mt-1">{{ itemStep.description }}</p>
-        </div>
-
-        <div class="py-8 text-gray-400 border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center">
-            Formulaire Étape Finale
-        </div>
-
-        <div class="flex justify-between pt-4 border-t border-gray-100">
-            <button 
-                @click="emit('prev')"
-                class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium px-5 py-2.5 rounded-xl transition-all cursor-pointer"
-            >
-                <ArrowLeft class="w-4 h-4" />
-                <span>Retour</span>
-            </button>
-            <button 
-                @click="emit('finish')"
-                class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-5 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer"
-            >
-                <span>Créer le produit</span>
-                <Check class="w-4 h-4" />
-            </button>
-        </div>
+  <div class="flex flex-col gap-6">
+    <div>
+      <h3 class="text-xl font-bold text-gray-950">
+        {{ itemStep.id }}. {{ itemStep.title }}
+      </h3>
+      <p class="text-sm text-gray-500 mt-1">{{ itemStep.description }}</p>
     </div>
+
+    <Form 
+      @submit="onSubmit" 
+      :validation-schema="validationSchema"
+      :initial-values="initialValues"
+      class="flex flex-col gap-6"
+    >
+      <div class="flex flex-col gap-6 p-6 bg-white border border-gray-200 rounded-2xl shadow-sm">
+        
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-semibold text-gray-700">Stock</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <InputField 
+              name="quantity" 
+              type="number"
+              label="Quantité en stock" 
+              placeholder="100" 
+              :required="true"
+            />
+            <InputField 
+              name="seuil" 
+              type="number"
+              label="Seuil d'alerte" 
+              placeholder="5" 
+              :required="true"
+            />
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-gray-100">
+          <InputField 
+            name="temps" 
+            type="time"
+            label="Temps de préparation" 
+            :required="true"
+          />
+        </div>
+
+        <div class="pt-4 border-t border-gray-100">
+          <IngredientInput v-model="dietaryList" />
+        </div>
+
+      </div>
+
+      <div class="flex justify-between pt-4 border-t border-gray-100">
+        <RetourButton type="button" @click="emit('prev')" />
+        <ActionButton
+          label="Créer le produit"
+          variant="finish"
+          type="submit"
+        />
+      </div>
+    </Form>
+  </div>
 </template>

@@ -4,12 +4,15 @@ import type { IStep } from '@/data/repositories/StepRepository';
 import ActionButton from '../../comom/ActionButton.vue';
 import InputField from '../../comom/InputField.vue';
 import TextareaField from '../../comom/TextareaField.vue';
-import { Form, Field, ErrorMessage } from 'vee-validate';
+import { Form, ErrorMessage } from 'vee-validate';
 import * as zod from "zod";
 import { toTypedSchema } from '@vee-validate/zod';
 import { useFilter } from '@/presentation/stores/useFilter.ts';
+import { useCreateMenuItem } from '@/presentation/stores/useCreateMenuItem';
 import Disponibility from '../../comom/disponibility.vue';
-import { Camera, RefreshCw, ToggleLeft, ToggleRight } from 'lucide-vue-next';
+import { Camera, RefreshCw } from 'lucide-vue-next';
+import SelectCategory from '../../comom/SelectCategory.vue';
+import CheckBoxGroup from '../../comom/CheckBoxGroup.vue';
 
 defineProps<{
     itemStep: IStep
@@ -17,6 +20,7 @@ defineProps<{
 const emit = defineEmits(['next']);
 
 const filterStore = useFilter();
+const createStore = useCreateMenuItem();
 
 const validationSchema = toTypedSchema(
     zod.object({
@@ -31,7 +35,14 @@ onMounted(async () => {
 });
 
 const fileInputRef = ref<HTMLInputElement | null>(null);
-const previewImage = ref<string | null>(null);
+
+const previewImage = ref<string>(createStore.formState.image);
+const nameValue = ref<string>(createStore.formState.name);
+const categoryValue = ref<string>(createStore.formState.category);
+const descValue = ref<string>(createStore.formState.description);
+const isAvailable = ref<boolean>(createStore.formState.isAvailable);
+const dietaryValue=ref<string[]>(createStore.formState.dietary);
+const portionSizeValue=ref<string[]>(createStore.formState.portionSizes)
 
 const triggerFileInput = () => {
     fileInputRef.value?.click();
@@ -42,15 +53,27 @@ const onFileSelected = (event: Event) => {
     if (target.files && target.files[0]) {
         const file = target.files[0];
         previewImage.value = URL.createObjectURL(file);
+        createStore.updateForm({ image: previewImage.value });
     }
 };
 
-const nameValue = ref('');
-const descValue = ref('');
-const isAvailable = ref(true);
+const onSubmit = () => {
+    createStore.updateForm({
+        name: nameValue.value,
+        category: categoryValue.value,
+        description: descValue.value,
+        image: previewImage.value,
+        isAvailable: isAvailable.value,
+        dietary:dietaryValue.value,
+        portionSizes:portionSizeValue.value
+    });
 
-const onSubmit = (values: any) => {
-    console.log("Formulaire valide, passage à l'étape suivante :", { ...values, image: previewImage.value, isAvailable: isAvailable.value });
+    console.log("Formulaire valide, passage à l'étape suivante :", {  
+        category: categoryValue.value, 
+        image: previewImage.value, 
+        isAvailable: isAvailable.value 
+    });
+    
     emit('next');
 };
 
@@ -137,27 +160,44 @@ const onInvalidSubmit = ({ errors }: { errors: any }) => {
                 :max-length="100"
             />
 
-            <div class="flex flex-col gap-1.5 w-full overflow-hidden">
-                <label for="category" class="text-sm font-medium text-gray-700">Category <span class="text-amber-500">*</span></label>
-                <div class="relative w-full px-0.5">
-                    <Field 
-                        name="category" 
-                        as="select" 
-                        class="w-full max-w-full truncate px-4 py-3 rounded-2xl border border-gray-200 focus:border-amber-400 focus:outline-none transition-all text-gray-800 bg-white shadow-sm box-border text-sm"
-                    >
-                        <option value="" disabled selected>Sélectionnez une catégorie</option>
-                        <option
-                            v-for="option in filterStore.categories"
-                            :key="option.id"
-                            :value="option.label"
-                            class="truncate"
-                        >
-                            {{ option.icon }} {{ option.label }}
-                        </option>
-                    </Field>
-                </div>
-                <ErrorMessage name="category" class="text-xs text-red-500 mt-0.5" />
-            </div>
+            <SelectCategory
+                id="category"
+                label="Category"
+                placeholder="Select a category"
+                item-label="label"
+                item-key="label"
+                item-value="label"
+                name="category"
+                :options="filterStore.categories"
+                v-model="categoryValue"
+            />
+            <ErrorMessage name="category" class="text-xs text-red-500 mt-0.5" />
+
+                 <div class="flex flex-col">
+        <CheckBoxGroup
+          label="Dietary"
+          name="dietary"
+          item-label="label"
+          item-key="label"
+          :options="filterStore.dietaries"
+          :model-value="dietaryValue"
+          @update:modelValue="($event) => (dietaryValue = $event)"
+        />
+        <ErrorMessage name="dietary" class="text-red-500 text-xs mt-1" />
+      </div>
+
+      <div class="flex flex-col">
+        <CheckBoxGroup
+          label="Portion Sizes"
+          name="portion_sizes"
+          item-label="label"
+          item-key="id"
+          :options="filterStore.portionSizes"
+          :modelValue="portionSizeValue"
+          @update:modelValue="($event) => (portionSizeValue = $event)"
+        />
+        <ErrorMessage name="portion_sizes" class="text-red-500 text-xs mt-1" />
+      </div>
 
             <TextareaField 
                 name="description" 
@@ -168,9 +208,9 @@ const onInvalidSubmit = ({ errors }: { errors: any }) => {
             />
 
             <Disponibility
-            :isAvailable="isAvailable"
-            title="Produit disponible"
-            description="Le produit est visible dans votre menu"
+                v-model="isAvailable"
+                title="Disponible à la vente"
+                description="Le produit est visible dans votre menu"
             />
 
             <div class="flex justify-end pt-4 border-t border-gray-100">

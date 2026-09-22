@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SVG from '../../../assets/SVG.png'
+import Restaurant from '../../../assets/Restaurant.png'
 import boutton from '../comom/Boutton.vue';
 import { Search, User, ShoppingBag, Menu as MenuIcon, X } from 'lucide-vue-next';
 import { RouterLink } from 'vue-router';
@@ -35,7 +35,7 @@ onUnmounted(() => {
     <RouterLink to="/" class="no-underline">
       <div class="flex items-center gap-[10px] min-w-auto lg:min-w-[180px]">
         <div class="w-[42px] h-[42px] lg:w-[30px] lg:h-[30px] flex items-center justify-center rounded-[12px] overflow-hidden">
-          <img :src="SVG" alt="SVG" class="w-[42px] h-[42px] lg:w-[20px] lg:h-[20px] object-contain">
+          <img :src="Restaurant" alt="Restaurant" class="w-[42px] h-[42px] lg:w-[20px] lg:h-[20px] object-contain">
         </div>
         <div>
           <p class="m-0 leading-none text-[18px] lg:text-[22px] font-extrabold tracking-[-0.5px]">Foodly</p>

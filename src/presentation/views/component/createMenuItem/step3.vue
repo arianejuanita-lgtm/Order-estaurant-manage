@@ -4,40 +4,79 @@ import type { IStep } from '@/data/repositories/StepRepository';
 import RetourButton from '../../comom/RetourButton.vue';
 import ActionButton from '../../comom/ActionButton.vue';
 import Disponibility from '../../comom/disponibility.vue';
+import ModeVente from '../../comom/ModeVente.vue';
+import { Truck, Store } from 'lucide-vue-next';
+import { Form } from 'vee-validate';
+import { useCreateMenuItem } from '@/presentation/stores/useCreateMenuItem';
+
 defineProps<{
     itemStep: IStep
 }>();
-const isAvailable = ref(true);
 
 const emit = defineEmits(['next', 'prev']);
+const createStore = useCreateMenuItem();
+
+const isAvailable = ref<boolean>(createStore.formState.isAvailable);
+const isSurPlace = ref<boolean>(createStore.formState.salesModes.dine_in);
+const isEmporter = ref<boolean>(createStore.formState.salesModes.takeaway);
+const isLivraison = ref<boolean>(createStore.formState.salesModes?.delivery);
+
+const onSubmit = () => {
+    createStore.updateForm({
+        isAvailable: isAvailable.value,
+        salesModes: { 
+            dine_in: isSurPlace.value, 
+            takeaway: isEmporter.value, 
+            delivery: isLivraison.value 
+        },
+    });
+
+    console.log("Données validées et enregistrées de l'étape 3 :", createStore.formState);
+    emit('next');
+};
 </script>
 
 <template>
     <div class="flex flex-col gap-6">
         <div>
-            <h3 class="text-xl font-bold text-gray-900">{{itemStep.id}}. {{ itemStep.title }}</h3>
+            <h3 class="text-xl font-bold text-gray-900">{{ itemStep.id }}. {{ itemStep.title }}</h3>
             <p class="text-sm text-gray-500 mt-1">{{ itemStep.description }}</p>
         </div>
 
-        <div class="py-8 text-gray-400  border-gray-200 rounded-xl flex items-center justify-center">
-            
- 
-            <Disponibility
-            :isAvailable="isAvailable"
-            title="Produit disponible"
-            description="Le produit est visible dans votre menu"
-            />
-
-            <div>
-                <label for="mode">Mode de vente </label>
-
+        <Form @submit="onSubmit" class="flex flex-col gap-6">
+            <div class="flex flex-col gap-4">
                 
+                <Disponibility
+                    v-model="isAvailable"
+                    title="Disponible à la vente"
+                    description="Le produit est visible dans votre menu"
+                />
+
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-medium text-gray-700">Mode de vente</label>
+                    
+                    <ModeVente
+                        v-model="isSurPlace"
+                        title="Sur place"
+                        :icon="Store"
+                    />
+
+                    <ModeVente
+                        v-model="isEmporter"
+                        title="À emporter"
+                        :icon="Store"
+                    />
+
+                    <ModeVente
+                        v-model="isLivraison"
+                        title="Livraison"
+                        :icon="Truck"
+                    />
+                </div>
+
             </div>
 
-
-        </div>
-
-          <div class="flex justify-between pt-4 border-t border-gray-100">
+            <div class="flex justify-between pt-4 border-t border-gray-100">
                 <RetourButton type="button" @click="emit('prev')" />
                 <ActionButton 
                     label="Suivant" 
@@ -45,5 +84,6 @@ const emit = defineEmits(['next', 'prev']);
                     type="submit"
                 />
             </div>
+        </Form>
     </div>
 </template>

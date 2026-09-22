@@ -27,9 +27,17 @@ defineEmits(['update:modelValue']);
             :rows="rows || 3"
             :placeholder="placeholder"
             :model-value="modelValue"
-            @input="$emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"
-            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-amber-400 focus:outline-none transition-all text-gray-800 resize-none"
-        />
+            v-slot="{ field }"
+        >
+            <textarea
+                v-bind="field"
+                :rows="rows || 3"
+                :placeholder="placeholder"
+                :value="modelValue"
+                @input="$emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"
+                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-amber-400 focus:outline-none transition-all text-gray-800 resize-none bg-white"
+            ></textarea>
+        </Field>
         <ErrorMessage :name="name" class="text-xs text-red-500" />
     </div>
 </template>

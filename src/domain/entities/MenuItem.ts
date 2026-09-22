@@ -1,13 +1,13 @@
 import { Supplement } from "./Supplement";
-// export interface IVariants {
-//   id: string;
-//   label: string;
-//   subtitle: string;
-//   price: number;
-//   status: string;
-//   is_default: boolean;
-//   is_popular: boolean;
-// }
+export interface IVariants {
+  id: string;
+  label: string;
+  subtitle: string;
+  price: number;
+  status: string;
+  is_default: boolean;
+  is_popular: boolean;
+}
 
 export interface IStock {
   quantity: number;
@@ -47,8 +47,8 @@ export interface IMenuItemProps {
   stock: IStock;
   vat: number;
   portion_sizes: string[];
-  sales_modes: ISalesModes[];
-  // variants: IVariants[];
+  sales_modes: ISalesModes;
+  variants: IVariants[];
   supplements: Supplement[];
   stats: IStats;
   created_at: string;
@@ -77,8 +77,8 @@ export class MenuItem {
   public stock: IStock;
   public vat: number;
   public portionSizes: string[];
-  public salesModes: ISalesModes[];
-  // public variants: IVariants[];
+  public salesModes: ISalesModes;
+  public variants: IVariants[];
   public supplements: Supplement[];
   public stats: IStats;
   public createdAt: string;
@@ -103,7 +103,7 @@ export class MenuItem {
     this.isPopular = props.is_popular;
     this.status = props.status;
     this.salesModes = props.sales_modes;
-    // this.variants = props.variants;
+    this.variants = props.variants;
     this.stock = props.stock;
     this.vat = props.vat;
     this.supplements = props.supplements;
@@ -138,7 +138,7 @@ export class MenuItem {
       is_popular: this.isPopular,
       status: this.status,
       sales_modes: this.salesModes,
-      // variants: this.variants,
+      variants: this.variants,
       stock: this.stock,
       vat: this.vat,
       supplements: this.supplements,

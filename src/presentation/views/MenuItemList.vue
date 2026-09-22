@@ -7,6 +7,7 @@ import Add from "./add.vue";
 import { Plus } from "lucide-vue-next";
 import type { MenuItem as MenuItemType } from "@/domain/entities/MenuItem";
 import { router } from "@/router/routes.ts";
+import clickBoutton from "./comom/clickBoutton.vue";
 
 const filter = useFiltered();
 const menu = useMenuItem();
@@ -50,15 +51,13 @@ const direction=()=>{
     <h2 class="text-sm sm:text-base md:text-xl font-bold text-gray-900 m-0 truncate">
       {{ filter.menu.length }} Menu Items
     </h2>
+
+    <clickBoutton
+    :click="direction"
+    :icon="Plus"
+    title="Add menu item"
+    />
     
-    <button 
-      type="button"
-     @click="direction"
-      class="flex items-center justify-center shrink-0 gap-2 bg-amber-400 border border-amber-400 px-3 sm:px-5 py-2.5 rounded-[20px] cursor-pointer font-bold text-black text-sm transition-colors hover:bg-amber-500 shadow-xs"
-    >
-      <Plus :size="18" /> 
-      <span class="max-[420px]:hidden">Add menu item</span>
-    </button>
   </div>
 
     <div v-if="isLoading" class="flex flex-col items-center justify-center py-20 gap-3">
