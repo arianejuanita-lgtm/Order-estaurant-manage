@@ -59,23 +59,18 @@ const onFileSelected = (event: Event) => {
     }
 };
 
-const onSubmit = () => {
+const onSubmit = (values: any) => {
     createStore.updateForm({
-        name: nameValue.value,
+        name: values.name || nameValue.value,
         category: categoryValue.value,
-        description: descValue.value,
+        description: values.description || descValue.value,
         image: previewImage.value,
         isAvailable: isAvailable.value,
-        dietary:dietaryValue.value,
-        portionSizes:portionSizeValue.value
+        dietary: dietaryValue.value,
+        portionSizes: portionSizeValue.value,
     });
 
-    console.log("Formulaire valide, passage à l'étape suivante :", {  
-        category: categoryValue.value, 
-        image: previewImage.value, 
-        isAvailable: isAvailable.value 
-    });
-    
+    console.log("Formulaire valide, passage à l'étape suivante :", createStore.formState);
     emit('next');
 };
 
@@ -211,7 +206,7 @@ const onInvalidSubmit = ({ errors }: { errors: any }) => {
 
             <Disponibility
                 v-model="isAvailable"
-                title="Disponible à la vente"
+                title="Produit disponible"
                 description="Le produit est visible dans votre menu"
             />
 

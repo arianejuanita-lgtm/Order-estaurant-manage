@@ -56,9 +56,6 @@ export class MenuItemRepository implements IMenuItemRepository {
       ...currentData,
       menu_items: updatedItems
     });
-
-    alert("menuitem cree avec succes ")
-
     return menuItem;
   }
 
