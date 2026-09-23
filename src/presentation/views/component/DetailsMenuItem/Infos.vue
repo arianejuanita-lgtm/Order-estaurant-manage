@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, watch } from "vue";
 import { MenuItem } from "@/domain/entities/MenuItem";
 import Suppersed from "../../comom/Suppersed.vue";
 import Pencilc from "../../comom/Pencilc.vue";
@@ -6,39 +7,55 @@ import Sticker from "../../comom/sticker.vue";
 import Smallimage from "../../comom/Smallimage.vue";
 import { Dot, Utensils } from "lucide-vue-next";
 import Reviews from "../../comom/Reviews.vue";
-import Information from "../../comom/Information.vue";
+import PrepCom from "../../comom/prepCom.vue";
+import { LayoutGrid, HandCoins, ShoppingBag, Clock5, Warehouse, GamepadDirectional } from 'lucide-vue-next';
+import logo from '../../../../assets/logo.png';
 
-defineProps<{
+const props = defineProps<{
   item: MenuItem;
 }>();
+
+const currentImage = ref(props.item.image);
+
+watch(() => props.item.image, (newImg) => {
+  currentImage.value = newImg;
+});
+
+const changeImage = (url: string) => {
+  currentImage.value = url;
+};
+
+const handleImageError = (event: Event) => {
+  const target = event.target as HTMLImageElement;
+  target.src = logo;
+};
 </script>
 
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch bg-white p-6 rounded-3xl">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch bg-white p-3 rounded-3xl">
     
     <div class="flex flex-col justify-between h-full gap-4">
-      <div class="relative w-full h-[360px] rounded-2xl overflow-hidden shadow-sm bg-gray-50">
-        <Suppersed>
+      <div class="relative w-full h-[180px] md:h-[360px] rounded-2xl overflow-hidden shadow-sm bg-gray-50">
+        <!-- <Suppersed>
           <template #left>
             <div v-if="item.isPopular">
-              <Sticker name="Populaire" color="white" back-color="#F5BE18" />
+              <Sticker name="Popular" color="white" back-color="#F5BE18" />
             </div>
           </template>
           <template #right>
             <Pencilc />
           </template>
-        </Suppersed>
+        </Suppersed> -->
         
-        <img :src="item.image" :alt="item.name" class="w-full h-full object-cover" />
+        <img :src="currentImage || logo" :alt="item.name" @error="handleImageError" class="w-full h-full object-cover transition-all duration-300" />
       </div>
 
       <div v-if="item.gallery && item.gallery.length > 0" class="mt-auto">
-        <Smallimage :gallery="item.gallery" />
+        <Smallimage :gallery="item.gallery" @select-image="changeImage" />
       </div>
     </div>
 
     <div class="flex flex-col justify-between h-full gap-4">
-      
       <div class="flex flex-col gap-2">
         <h2 class="text-2xl font-bold text-gray-900 tracking-tight">{{ item.name }}</h2>
         
@@ -65,7 +82,7 @@ defineProps<{
           <div v-if="item.isAvailable">
             <Sticker
               :icon="Dot"
-              name="Disponible"
+              name="Available"
               color="#065f46"
               border-color="#a7f3d0"
               back-color="#ecfdf5"
@@ -74,7 +91,7 @@ defineProps<{
           <div v-else>
             <Sticker
               :icon="Dot"
-              name="Indisponible"
+              name="Unavailable"
               color="#991b1b"
               border-color="#fecaca"
               back-color="#fef2f2"
@@ -87,10 +104,56 @@ defineProps<{
         <Reviews :rating="item.rating" :reviews="item.reviews" />
       </div>
 
-      <Information :item="item" />
+      <div class="flex flex-wrap items-center gap-4">
+        <PrepCom 
+            title="Preparation time" 
+            :item="item.preparationTime" 
+            :icon="Clock5" 
+            label="min"
+        />
+        
+        <PrepCom
+            title="Available stock"
+            :item="item.stock.quantity"
+            :icon="Warehouse"
+            label="units"
+        />
+        
+        <PrepCom
+            title="VAT"
+            label="%"
+            :icon="GamepadDirectional"
+            :item="item.vat"
+        />
+      </div>
 
       <div class="flex gap-2 p-1 bg-[#fffbeb]/40 border border-[#fef3c7] rounded-xl">
-        <Information :item="item" title="Informations principales" colorIcone="#F5BE18" />
+        <div class="flex flex-col gap-1">
+          <h2 class="text-base font-bold text-gray-800 tracking-wide text-[14px]">Main information</h2>
+          <div class="flex flex-wrap items-center gap-4">
+            <PrepCom 
+                title="Category" 
+                :item="item.category" 
+                :icon="LayoutGrid" 
+                colorIcone="#F5BE18"
+            />
+            
+            <PrepCom
+                title="Sale Price"
+                :item="item.price"
+                :icon="HandCoins"
+                label="FCFA"
+                colorIcone="#F5BE18"
+            />
+            
+            <PrepCom
+                title="Disponibility"
+                :label="item.isAvailable ? 'Available to sale' : 'Unavailable to sale'"
+                :icon="ShoppingBag"
+                colorIcone="#F5BE18"
+            />
+          </div>
+        </div>
       </div>
 
     </div>
