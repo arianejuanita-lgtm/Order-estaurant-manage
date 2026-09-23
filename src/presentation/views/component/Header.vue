@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Restaurant from '../../../assets/Restaurant.png'
-import boutton from '../comom/Boutton.vue';
+import Restaurant from '../../../assets/Restaurant.png';
+import HeaderIconButton from '../comom/HeaderIconButton.vue'; // Ajustez le chemin selon votre structure
 import { Search, User, ShoppingBag, Menu as MenuIcon, X } from 'lucide-vue-next';
 import { RouterLink } from 'vue-router';
 import { useOrder } from '@/presentation/stores/useOrder.ts';
@@ -9,6 +9,15 @@ import { ref, onMounted, onUnmounted } from 'vue';
 const orderStore = useOrder();
 const isMobileMenuOpen = ref<boolean>(false);
 const menuContainerRef = ref<HTMLElement | null>(null);
+
+const navLinks = [
+  { name: 'Home', path: '/' },
+  { name: 'Menu', path: '/menu' },
+  { name: 'Categorie', path: '/categories' },
+  { name: 'About', path: '/about' },
+  { name: 'Blog', path: '/blog' },
+  { name: 'Contact', path: '/contact' },
+];
 
 const toggleMobileMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value;
@@ -45,36 +54,24 @@ onUnmounted(() => {
     </RouterLink>
 
     <div class="hidden md:flex items-center gap-[18px] lg:gap-[35px]">
-      <div class="relative text-[14px] lg:text-[15px] font-medium text-[#333] cursor-pointer transition-colors duration-300 hover:text-[#F5BE18] after:absolute after:left-0 after:-bottom-[8px] after:w-0 after:h-[2px] after:bg-[#F5BE18] after:rounded-[10px] hover:after:w-full after:transition-all after:duration-300">
-        Home
-      </div>
-      <div class="relative text-[14px] lg:text-[15px] font-medium text-[#333] cursor-pointer transition-colors duration-300 hover:text-[#F5BE18] after:absolute after:left-0 after:-bottom-[8px] after:w-0 after:h-[2px] after:bg-[#F5BE18] after:rounded-[10px] hover:after:w-full after:transition-all after:duration-300">
-        Menu
-      </div>
-      <div class="relative text-[14px] lg:text-[15px] font-medium text-[#333] cursor-pointer transition-colors duration-300 hover:text-[#F5BE18] after:absolute after:left-0 after:-bottom-[8px] after:w-0 after:h-[2px] after:bg-[#F5BE18] after:rounded-[10px] hover:after:w-full after:transition-all after:duration-300">
-        Categorie
-      </div>
-      <div class="relative text-[14px] lg:text-[15px] font-medium text-[#333] cursor-pointer transition-colors duration-300 hover:text-[#F5BE18] after:absolute after:left-0 after:-bottom-[8px] after:w-0 after:h-[2px] after:bg-[#F5BE18] after:rounded-[10px] hover:after:w-full after:transition-all after:duration-300">
-        About
-      </div>
-      <div class="relative text-[14px] lg:text-[15px] font-medium text-[#333] cursor-pointer transition-colors duration-300 hover:text-[#F5BE18] after:absolute after:left-0 after:-bottom-[8px] after:w-0 after:h-[2px] after:bg-[#F5BE18] after:rounded-[10px] hover:after:w-full after:transition-all after:duration-300">
-        Blog
-      </div>
-      <div class="relative text-[14px] lg:text-[15px] font-medium text-[#333] cursor-pointer transition-colors duration-300 hover:text-[#F5BE18] after:absolute after:left-0 after:-bottom-[8px] after:w-0 after:h-[2px] after:bg-[#F5BE18] after:rounded-[10px] hover:after:w-full after:transition-all after:duration-300">
-        Contact
+      <div 
+        v-for="link in navLinks" 
+        :key="link.name"
+        class="relative text-[14px] lg:text-[15px] font-medium text-[#333] cursor-pointer transition-colors duration-300 hover:text-[#F5BE18] after:absolute after:left-0 after:-bottom-[8px] after:w-0 after:h-[2px] after:bg-[#F5BE18] after:rounded-[10px] hover:after:w-full after:transition-all after:duration-300"
+      >
+        {{ link.name }}
       </div>
     </div>
 
     <div class="flex items-center gap-[6px] lg:gap-[12px] min-w-auto lg:min-w-[220px] justify-end">
-      <div class="w-[36px] h-[36px] lg:w-[40px] lg:h-[40px] flex items-center justify-center rounded-full cursor-pointer text-[#333] bg-[#f7f7f7] hover:bg-[#F5BE18] hover:text-black hover:-translate-y-[2px] transition-all duration-300">
-        <User class="w-[19px] h-[19px] stroke-[2]" />
-      </div>
       
-      <RouterLink to="/orderMenuItem" class="relative w-[36px] h-[36px] lg:w-[40px] lg:h-[40px] flex items-center justify-center rounded-full cursor-pointer text-[#333] bg-[#f7f7f7] no-underline hover:bg-[#F5BE18] hover:text-black hover:-translate-y-[2px] transition-all duration-300">
-        <ShoppingBag class="w-[19px] h-[19px] stroke-[2]" />
-        <span v-if="orderStore.orderMenuItem.length > 0" class="absolute -top-1 -right-1 bg-[#e85d04] text-white text-[11px] font-bold px-[6px] py-[2px] rounded-full min-w-[18px] h-[18px] flex items-center justify-center shadow-[0_2px_4px_rgba(0,0,0,0.2)]">
-          {{ orderStore.orderMenuItem.length }}
-        </span>
+      <HeaderIconButton :icon="User" label="User profile" />
+      <RouterLink to="/orderMenuItem" class="no-underline">
+        <HeaderIconButton 
+          :icon="ShoppingBag" 
+          :badge-count="orderStore.orderMenuItem.length" 
+          label="Shopping cart" 
+        />
       </RouterLink>
 
       <div ref="menuContainerRef" class="relative md:hidden">
@@ -91,26 +88,17 @@ onUnmounted(() => {
           v-if="isMobileMenuOpen"
           class="absolute right-0 top-[45px] w-[180px] bg-white border border-gray-100 rounded-2xl shadow-xl p-4 flex flex-col gap-3 z-50 animate-fadeIn"
         >
-          <div @click="isMobileMenuOpen = false" class="text-[14px] font-medium text-[#333] cursor-pointer hover:text-[#F5BE18] transition-colors">
-            Home
-          </div>
-          <div @click="isMobileMenuOpen = false" class="text-[14px] font-medium text-[#333] cursor-pointer hover:text-[#F5BE18] transition-colors">
-            Menu
-          </div>
-          <div @click="isMobileMenuOpen = false" class="text-[14px] font-medium text-[#333] cursor-pointer hover:text-[#F5BE18] transition-colors">
-            Categorie
-          </div>
-          <div @click="isMobileMenuOpen = false" class="text-[14px] font-medium text-[#333] cursor-pointer hover:text-[#F5BE18] transition-colors">
-            About
-          </div>
-          <div @click="isMobileMenuOpen = false" class="text-[14px] font-medium text-[#333] cursor-pointer hover:text-[#F5BE18] transition-colors">
-            Blog
-          </div>
-          <div @click="isMobileMenuOpen = false" class="text-[14px] font-medium text-[#333] cursor-pointer hover:text-[#F5BE18] transition-colors">
-            Contact
+          <div 
+            v-for="link in navLinks" 
+            :key="link.name"
+            @click="isMobileMenuOpen = false" 
+            class="text-[14px] font-medium text-[#333] cursor-pointer hover:text-[#F5BE18] transition-colors"
+          >
+            {{ link.name }}
           </div>
         </div>
       </div>
+
     </div>
 
   </div>

@@ -8,6 +8,8 @@ import { Plus } from "lucide-vue-next";
 import type { MenuItem as MenuItemType } from "@/domain/entities/MenuItem";
 import { router } from "@/router/routes.ts";
 import clickBoutton from "./comom/clickBoutton.vue";
+import { useCreateMenuItem } from "../stores/useCreateMenuItem.ts";
+const createStore=useCreateMenuItem();
 
 const filter = useFiltered();
 const menu = useMenuItem();
@@ -41,6 +43,7 @@ const closeDrawer = () => {
 };
 
 const direction=()=>{
+  createStore.resetForm();
   router.push('/create-menu-item');
 }
 </script>

@@ -6,7 +6,7 @@ withDefaults(
         label?: string;
     }>(),
     {
-        label: 'Retour'
+        label: 'Back'
     }
 );
 </script>

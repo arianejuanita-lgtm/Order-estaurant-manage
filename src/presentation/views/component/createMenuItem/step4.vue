@@ -50,8 +50,6 @@ const onSubmit = (values: any) => {
 
   menuItemStore.addMenuItem(createStore.formState);
   router.push("/sucess");
-  createStore.resetForm();
-
   console.log("Final product successfully created:", createStore.formState);
   emit("finish");
 };
@@ -82,14 +80,14 @@ const onSubmit = (values: any) => {
               type="number"
               label="Stock quantity" 
               placeholder="100" 
-              :required="true"
+              
             />
             <InputField 
               name="seuil" 
               type="number"
               label="Alert threshold" 
               placeholder="5" 
-              :required="true"
+              
             />
           </div>
         </div>

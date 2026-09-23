@@ -23,13 +23,19 @@ const labelInput = ref('');
 const priceInput = ref<number | undefined>(undefined);
 const errorMessage = ref('');
 
+const filterKeys = (event: KeyboardEvent) => {
+  if (['e', 'E', '+', '-'].includes(event.key)) {
+    event.preventDefault();
+  }
+};
+
 const addVariant = () => {
   if (!labelInput.value.trim()) {
-    errorMessage.value = "Le label est requis.";
+    errorMessage.value = "The label is required.";
     return;
   }
-  if (priceInput.value === undefined || priceInput.value < 0) {
-    errorMessage.value = "Le prix est requis et doit être valide.";
+  if (priceInput.value === undefined || isNaN(priceInput.value) || priceInput.value < 0) {
+    errorMessage.value = "A valid positive price is required.";
     return;
   }
 
@@ -61,25 +67,27 @@ const removeVariant = (index: number) => {
 
 <template>
   <div class="flex flex-col gap-3">
-    <label class="text-sm font-medium text-gray-700">Ajout de variantes (Label & Prix requis)</label>
+    <label class="text-sm font-medium text-gray-700">Add variants (Label & Price required)</label>
     
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
       <input
         type="text"
         v-model="labelInput"
-        placeholder="Nom (Ex: XL, Épicée...)"
+        placeholder="Name (Ex: XL, Spicy...)"
         class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-amber-400 focus:outline-none transition-all text-gray-800 bg-white text-sm"
       />
 
       <input
         type="number"
+        min="0"
         v-model.number="priceInput"
-        placeholder="Prix (Ex: 500)"
+        placeholder="Price (Ex: 500)"
+        @keydown="filterKeys"
         @keydown.enter.prevent="addVariant"
         class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-amber-400 focus:outline-none transition-all text-gray-800 bg-white text-sm"
       />
 
-      <clickBoutton :click="addVariant" :icon="Plus" title="Ajouter" />
+      <clickBoutton :click="addVariant" :icon="Plus" title="Add" />
     </div>
 
     <span v-if="errorMessage" class="text-xs text-red-500">{{ errorMessage }}</span>

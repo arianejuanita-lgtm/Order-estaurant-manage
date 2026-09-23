@@ -10,9 +10,9 @@ import { toTypedSchema } from '@vee-validate/zod';
 import { useFilter } from '@/presentation/stores/useFilter.ts';
 import { useCreateMenuItem } from '@/presentation/stores/useCreateMenuItem';
 import Disponibility from '../../comom/disponibility.vue';
-import { Camera, RefreshCw } from 'lucide-vue-next';
 import SelectCategory from '../../comom/SelectCategory.vue';
 import CheckBoxGroup from '../../comom/CheckBoxGroup.vue';
+import ImageUpload from '../../comom/ImageUpload.vue';
 
 defineProps<{
     itemStep: IStep
@@ -36,27 +36,18 @@ onMounted(async () => {
     await filterStore.fecthdietariesMenuItems();
 });
 
-const fileInputRef = ref<HTMLInputElement | null>(null);
-
 const previewImage = ref<string>(createStore.formState.image);
 const nameValue = ref<string>(createStore.formState.name);
 const categoryValue = ref<string>(createStore.formState.category);
 const descValue = ref<string>(createStore.formState.description);
 const isAvailable = ref<boolean>(createStore.formState.isAvailable);
 const dietaryValue = ref<string[]>(createStore.formState.dietary);
-const portionSizeValue = ref<string[]>(createStore.formState.portionSizes)
+const portionSizeValue = ref<string[]>(createStore.formState.portionSizes);
 
-const triggerFileInput = () => {
-    fileInputRef.value?.click();
-};
-
-const onFileSelected = (event: Event) => {
-    const target = event.target as HTMLInputElement;
-    if (target.files && target.files[0]) {
-        const file = target.files[0];
-        previewImage.value = URL.createObjectURL(file);
-        createStore.updateForm({ image: previewImage.value });
-    }
+// Met à jour le store en temps réel lorsque l'image change
+const handleImageUpdate = (newImage: string) => {
+    previewImage.value = newImage;
+    createStore.updateForm({ image: newImage });
 };
 
 const onSubmit = (values: any) => {
@@ -92,61 +83,10 @@ const onInvalidSubmit = ({ errors }: { errors: any }) => {
             :validation-schema="validationSchema"
             class="flex flex-col gap-6"
         >
-            
-            <input 
-                ref="fileInputRef" 
-                type="file" 
-                accept="image/png, image/jpeg" 
-                class="hidden" 
-                @change="onFileSelected"
+            <ImageUpload 
+                :model-value="previewImage" 
+                @update:model-value="handleImageUpdate" 
             />
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                
-                <div 
-                    @click="triggerFileInput"
-                    :class="[
-                        'border-2 border-dashed border-gray-300 hover:border-amber-400 bg-gray-50 hover:bg-amber-50/20 rounded-2xl p-6 flex-col items-center justify-center text-center cursor-pointer transition-all h-52 gap-3',
-                        previewImage ? 'hidden md:flex' : 'flex'
-                    ]"
-                >
-                    <div class="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center text-amber-500">
-                        <Camera class="w-6 h-6" />
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <p class="font-semibold text-gray-800 text-sm">Add a photo</p>
-                        <p class="text-xs text-gray-400">Drag and drop an image or click to browse JPG, PNG (max 5 MB)</p>
-                    </div>
-                </div>
-                
-                <div 
-                    :class="[
-                        'border border-gray-200 bg-gray-50 rounded-2xl p-4 flex-col items-center justify-center relative h-52 overflow-hidden shadow-sm w-full',
-                        previewImage ? 'flex' : 'hidden md:flex'
-                    ]"
-                >
-                    <template v-if="!previewImage">
-                        <div class="flex flex-col items-center justify-center text-gray-400 text-center gap-2">
-                            <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-400">
-                                <Camera class="w-5 h-5" />
-                            </div>
-                            <p class="text-xs">No image selected</p>
-                        </div>
-                    </template>
-
-                    <template v-else>
-                        <img :src="previewImage" alt="Preview" class="w-full h-full object-cover rounded-xl absolute inset-0" />
-                        <button 
-                            type="button"
-                            @click="triggerFileInput"
-                            class="absolute bottom-4 right-4 flex items-center gap-2 bg-white/90 hover:bg-white text-gray-800 text-xs font-semibold px-4 py-2 rounded-xl shadow-md backdrop-blur-sm transition-all cursor-pointer"
-                        >
-                            <RefreshCw class="w-3.5 h-3.5 text-amber-500" />
-                            <span>Change</span>
-                        </button>
-                    </template>
-                </div>
-            </div>
 
             <InputField 
                 name="name" 

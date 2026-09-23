@@ -19,7 +19,7 @@ const emit = defineEmits(["next", "prev"]);
 
 const validationSchema = toTypedSchema(
   zod.object({
-    price: zod
+    price: zod.coerce
       .number({ invalid_type_error: "Price is required" })
       .min(0, "Price cannot be negative"),
     supplements: zod.array(zod.string()).optional(),

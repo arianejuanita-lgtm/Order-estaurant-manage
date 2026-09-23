@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 import { useOrder } from '@/presentation/stores/useOrder';
 import { Order } from '@/domain/entities/Order';
 import { router } from '@/router/routes';
+import BillingRow from '../comom/BillingRow.vue'; 
 
 const props = defineProps<{
   subTotal: number;
@@ -14,6 +15,13 @@ const isLoading = ref(false);
 const tax = computed(() => props.subTotal * 0.1925);
 const packagingFee = 5;
 const total = computed(() => props.subTotal + tax.value + packagingFee);
+
+const billingItems = computed(() => [
+  { label: 'Items Subtotal', value: `$${props.subTotal.toFixed(0)}` },
+  { label: 'Delivery', value: 'Free', valueClass: 'text-emerald-600 font-semibold' },
+  { label: 'Tax (VAT 19.25%)', value: `$${tax.value.toFixed(0)}` },
+  { label: 'Packaging Service Fee', value: `$${packagingFee.toFixed(0)}` },
+]);
 
 const handleConfirm = async () => {
   if (isLoading.value) return;
@@ -49,25 +57,14 @@ const handleConfirm = async () => {
     <p class="text-[0.85rem] text-neutral-500 mb-6">Payment Details</p>
 
     <div class="flex flex-col gap-4">
-      <div class="flex justify-between items-center text-[0.95rem] text-neutral-700">
-        <p class="m-0">Items Subtotal</p>
-        <p class="m-0">${{ subTotal.toFixed(0) }}</p>
-      </div>
-
-      <div class="flex justify-between items-center text-[0.95rem] text-neutral-700">
-        <p class="m-0">Delivery</p>
-        <p class="m-0 text-emerald-600 font-semibold">Free</p>
-      </div>
-
-      <div class="flex justify-between items-center text-[0.95rem] text-neutral-700">
-        <p class="m-0">Tax (VAT 19.25%)</p>
-        <p class="m-0">${{ tax.toFixed(0) }}</p>
-      </div>
-
-      <div class="flex justify-between items-center text-[0.95rem] text-neutral-700">
-        <p class="m-0">Packaging Service Fee</p>
-        <p class="m-0">${{ packagingFee.toFixed(0) }}</p>
-      </div>
+      
+      <BillingRow 
+        v-for="(item, index) in billingItems" 
+        :key="index"
+        :label="item.label"
+        :value="item.value"
+        :value-class="item.valueClass"
+      />
 
       <div class="h-[1px] bg-neutral-200 my-2"></div>
 
