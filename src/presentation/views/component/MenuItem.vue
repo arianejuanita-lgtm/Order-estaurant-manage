@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Star, Pencil, Trash2 } from "lucide-vue-next";
 import Boutton from "../comom/Boutton.vue";
-import logo from '../../../assets/logo.png';
+import logo from "../../../assets/logo.png";
 import { useMenuItem } from "@/presentation/stores/useMenuItem";
 import { useOrder } from "@/presentation/stores/useOrder.ts";
 import { ref, computed, onMounted } from "vue";
@@ -9,34 +9,40 @@ import DialogBox from "../comom/DialogBox.vue";
 import DetailsItem from "../DetailsItem.vue";
 import type { MenuItem } from "@/domain/entities/MenuItem";
 import { useRouter } from "vue-router";
+import Suppersed from "../comom/Suppersed.vue";
+import Pencilc from "../comom/Pencilc.vue";
+import Truckc from "../comom/Truckc.vue";
+import Reviews from "../comom/Reviews.vue";
 
 const orderStore = useOrder();
 const menu = useMenuItem();
 const checked = ref<boolean>(false);
 const isDialogOpen = ref<boolean>(false);
-const isDetailsOpen = ref<boolean>(false); 
-const router=useRouter();
+const isDetailsOpen = ref<boolean>(false);
+const router = useRouter();
 
 const props = defineProps<{
-    item: MenuItem;
+  item: MenuItem;
 }>();
 
 const emit = defineEmits(["edit"]);
 
 const currentQuantity = computed(() => {
-  const existingOrder = orderStore.orderMenuItem.find(ord => 
-    ord.items.some(i => i.menuItemId === props.item.id)
+  const existingOrder = orderStore.orderMenuItem.find((ord) =>
+    ord.items.some((i) => i.menuItemId === props.item.id),
   );
   if (existingOrder) {
-    const orderItem = existingOrder.items.find(i => i.menuItemId === props.item.id); 
+    const orderItem = existingOrder.items.find(
+      (i) => i.menuItemId === props.item.id,
+    );
     return orderItem ? orderItem.quantity : 1;
   }
   return 1;
 });
 
 onMounted(() => {
-  const exists = orderStore.orderMenuItem.some(ord => 
-    ord.items.some(i => i.menuItemId === props.item.id)
+  const exists = orderStore.orderMenuItem.some((ord) =>
+    ord.items.some((i) => i.menuItemId === props.item.id),
   );
   if (exists) checked.value = true;
 });
@@ -53,11 +59,13 @@ const addQte = () => {
 };
 
 const removeQte = () => {
-  const existingOrder = orderStore.orderMenuItem.find(ord => 
-    ord.items.some(i => i.menuItemId === props.item.id)
+  const existingOrder = orderStore.orderMenuItem.find((ord) =>
+    ord.items.some((i) => i.menuItemId === props.item.id),
   );
   if (existingOrder) {
-    const existingItem = existingOrder.items.find(i => i.menuItemId === props.item.id);
+    const existingItem = existingOrder.items.find(
+      (i) => i.menuItemId === props.item.id,
+    );
     if (existingItem && existingItem.quantity > 1) {
       existingItem.quantity--;
       existingOrder.totalPrice = existingItem.price * existingItem.quantity;
@@ -69,8 +77,8 @@ const removeQte = () => {
 };
 
 const handleImageError = (event: Event) => {
-    const target = event.target as HTMLImageElement;
-    target.src = logo;
+  const target = event.target as HTMLImageElement;
+  target.src = logo;
 };
 
 const openDeleteDialog = () => {
@@ -86,37 +94,43 @@ const handleEditClick = () => {
   emit("edit", props.item);
 };
 
-const goToDetails =(menuId:number) =>{
+const goToDetails = (menuId: number) => {
   router.push(`/detail-menu-item/${menuId}`);
 };
 </script>
 
 <template>
-  <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1 flex flex-col p-3">
-    
-    <div 
-      @click="goToDetails(item.id)" 
+  <div
+    class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1 flex flex-col p-3"
+  >
+    <div
+      @click="goToDetails(item.id)"
       class="w-full h-40 rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center relative cursor-pointer group"
     >
-      <img 
-        :src="item.image || logo" 
-        :alt="item.name" 
-        @error="handleImageError" 
+      <img
+        :src="item.image || logo"
+        :alt="item.name"
+        @error="handleImageError"
         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
       />
-      
-      <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-        <span class="bg-white/90 text-gray-800 text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">View details</span>
+
+      <div
+        class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+      >
+        <span
+          class="bg-white/90 text-gray-800 text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm"
+          >View details</span
+        >
       </div>
 
-      <div class="absolute top-2 left-2 right-2 flex justify-between pointer-events-none">
-        <div @click.stop.prevent="handleEditClick" class="w-8 h-8 bg-white/85 hover:bg-white rounded-full flex items-center justify-center cursor-pointer pointer-events-auto shadow-md transition-colors">
-            <Pencil :size="16" class="text-gray-700" />
-        </div>
-        <div @click.stop.prevent="openDeleteDialog" class="w-8 h-8 bg-white/85 hover:bg-white rounded-full flex items-center justify-center cursor-pointer pointer-events-auto shadow-md transition-colors text-red-500">
-            <Trash2 :size="16" />        
-        </div>
-      </div>
+      <Suppersed>
+        <template #left>
+          <Pencilc :click="handleEditClick" />
+        </template>
+        <template #right>
+          <Truckc :click="openDeleteDialog" />
+        </template>
+      </Suppersed>
     </div>
 
     <DetailsItem
@@ -130,8 +144,8 @@ const goToDetails =(menuId:number) =>{
       @remove="removeQte"
     />
 
-    <DialogBox 
-      :item="item" 
+    <DialogBox
+      :item="item"
       :isOpen="isDialogOpen"
       mode="delete"
       @close="isDialogOpen = false"
@@ -139,27 +153,44 @@ const goToDetails =(menuId:number) =>{
     />
 
     <div class="pt-3 px-1 pb-1 flex flex-col flex-grow">
-      <h3 class="text-base font-semibold text-gray-900 mb-1.5 line-clamp-1">{{ item.name }}</h3>
-      <p class="text-xs text-gray-500 mb-3 line-clamp-2">{{ item.description }}</p>
+      <h3 class="text-base font-semibold text-gray-900 mb-1.5 line-clamp-1">
+        {{ item.name }}
+      </h3>
+      <p class="text-xs text-gray-500 mb-3 line-clamp-2">
+        {{ item.description }}
+      </p>
 
-      <div class="flex items-center mb-3">
-        <div class="flex items-center gap-1 text-xs font-semibold text-gray-700">
-          <Star :size="16" fill="#f59e0b" color="#f59e0b" />
-          <span>{{ item.rating }} <span class="text-gray-400 font-normal">({{ item.reviews }})</span></span>
-        </div>
-      </div>
+      <Reviews :rating="item.rating" :reviews="item.reviews"/>
 
-      <div class="flex justify-between items-center mt-auto pt-2 border-t border-gray-100">
-        <span class="text-lg font-bold text-gray-900">${{ totalPrice.toFixed(0) }}</span>
-        
+      <div
+        class="flex justify-between items-center mt-auto pt-2 border-t border-gray-100"
+      >
+        <span class="text-lg font-bold text-gray-900"
+          >${{ totalPrice.toFixed(0) }}</span
+        >
+
         <div v-if="!checked" @click="handleclick">
-          <Boutton title="Add" :haut="32" class="px-4 py-1 text-xs bg-amber-400 hover:bg-amber-500 font-bold rounded-xl shadow-xs" />
+          <Boutton
+            title="Add"
+            :haut="32"
+            class="px-4 py-1 text-xs bg-amber-400 hover:bg-amber-500 font-bold rounded-xl shadow-xs"
+          />
         </div>
 
         <div v-else class="flex items-center gap-2.5 font-semibold text-sm">
-          <div @click="removeQte" class="cursor-pointer px-2 py-0.5 bg-gray-100 hover:bg-gray-200 rounded-md select-none transition-colors">-</div>
+          <div
+            @click="removeQte"
+            class="cursor-pointer px-2 py-0.5 bg-gray-100 hover:bg-gray-200 rounded-md select-none transition-colors"
+          >
+            -
+          </div>
           <span class="text-gray-800">{{ currentQuantity }}</span>
-          <div @click="addQte" class="cursor-pointer px-2 py-0.5 bg-gray-100 hover:bg-gray-200 rounded-md select-none transition-colors">+</div>
+          <div
+            @click="addQte"
+            class="cursor-pointer px-2 py-0.5 bg-gray-100 hover:bg-gray-200 rounded-md select-none transition-colors"
+          >
+            +
+          </div>
         </div>
       </div>
     </div>

@@ -51,16 +51,16 @@ const handleImageError = (event: Event) => {
             <h2 class="text-base sm:text-lg font-extrabold text-gray-900 leading-tight">
               {{ item.name }}
             </h2>
-            <span class="text-base sm:text-lg font-black text-amber-500 whitespace-nowrap">
+            <span class="text-base sm:text-lg font-black text-amber-400 whitespace-nowrap">
               ${{ item.price.toFixed(0) }}
             </span>
           </div>
 
           <div class="flex flex-wrap items-center gap-2 mb-2.5 text-[11px]">
-            <div class="flex items-center gap-1 bg-amber-50 px-2 py-0.5 rounded-lg text-amber-700 font-semibold">
+            <div class="flex items-center gap-1 bg-amber-50 px-2 py-0.5 rounded-lg text-amber-400 font-semibold">
               <Star :size="12" fill="#f59e0b" color="#f59e0b" />
               <span>{{ item.rating }}</span>
-              <span class="text-amber-600/70 font-normal">({{ item.reviews }})</span>
+              <span class="text-amber-400/70 font-normal">({{ item.reviews }})</span>
             </div>
 
             <div class="flex items-center gap-1 bg-gray-100 px-2 py-0.5 rounded-lg text-gray-700 font-medium">

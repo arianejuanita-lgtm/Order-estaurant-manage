@@ -44,7 +44,6 @@ const isAvailable = ref<boolean>(createStore.formState.isAvailable);
 const dietaryValue = ref<string[]>(createStore.formState.dietary);
 const portionSizeValue = ref<string[]>(createStore.formState.portionSizes);
 
-// Met à jour le store en temps réel lorsque l'image change
 const handleImageUpdate = (newImage: string) => {
     previewImage.value = newImage;
     createStore.updateForm({ image: newImage });

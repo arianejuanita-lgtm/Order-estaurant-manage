@@ -4,4 +4,9 @@ defineProps<{
     item:MenuItem
 }>();
 </script>
-<template></template>
+<template>
+    <div>
+        <h2>Rapid action</h2>
+        
+    </div>
+</template>

@@ -50,7 +50,6 @@ const currentMenuItem = computed(() => {
             </div>
 
             <div class="lg:col-span-1 flex flex-col gap-6">
-                <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex flex-col gap-4">
                     <div>
                         <Status :item="currentMenuItem" />
                     </div>
@@ -58,7 +57,7 @@ const currentMenuItem = computed(() => {
                     <div>
                         <ActionMenu :item="currentMenuItem" />
                     </div>
-                </div>
+                
  
                 <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                     <Statistique :item="currentMenuItem" />

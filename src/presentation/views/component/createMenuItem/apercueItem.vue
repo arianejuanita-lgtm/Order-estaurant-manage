@@ -19,7 +19,7 @@ const createStore = useCreateMenuItem();
             </div>
 
             <div class="flex flex-col gap-1">
-                <span class="text-xs font-semibold text-amber-600 uppercase tracking-wider">
+                <span class="text-xs font-semibold text-amber-400 uppercase tracking-wider">
                     {{ createStore.formState.category || 'Category' }}
                 </span>
                 <h4 class="font-bold text-gray-900 text-base">
