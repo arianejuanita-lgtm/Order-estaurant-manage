@@ -22,7 +22,7 @@ const validationSchema = toTypedSchema(
     price: zod.coerce
       .number({ invalid_type_error: "Price is required" })
       .min(0, "Price cannot be negative"),
-    supplements: zod.array(zod.string()).optional(),
+    supplements: zod.array(zod.union([zod.string(), zod.number()])).optional(),
   }),
 );
 

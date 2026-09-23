@@ -40,7 +40,7 @@ const handleImageError = (event: Event) => {
 
         <div class="flex items-baseline gap-1">
             <span class="text-sm font-extrabold text-gray-900">{{ variant.price }}</span>
-            <span class="text-[10px] font-semibold text-gray-400">FCFA</span>
+            <span class="text-[10px] font-semibold text-gray-400">$</span>
         </div>
 
         <div class="flex items-center gap-6">

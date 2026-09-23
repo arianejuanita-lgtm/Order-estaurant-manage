@@ -29,7 +29,7 @@ defineProps<{
                 title="Sale Price"
                 :item="item.price"
                 :icon="HandCoins"
-                label="FCFA"
+                label="$"
                 :colorIcone="colorIcone"
             />
             

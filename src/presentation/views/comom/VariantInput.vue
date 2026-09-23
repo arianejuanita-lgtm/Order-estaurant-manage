@@ -100,7 +100,7 @@ const removeVariant = (index: number) => {
       >
         <div class="flex flex-col">
           <span class="font-bold">{{ variant.label }}</span>
-          <span class="text-[10px] text-amber-700">+{{ variant.price }} XAF</span>
+          <span class="text-[10px] text-amber-700">+{{ variant.price }} $</span>
         </div>
 
         <clickBoutton :click="() => removeVariant(index)" :icon="X" />

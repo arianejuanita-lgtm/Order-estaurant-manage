@@ -13,6 +13,7 @@ import Suppersed from "../comom/Suppersed.vue";
 import Pencilc from "../comom/Pencilc.vue";
 import Truckc from "../comom/Truckc.vue";
 import Reviews from "../comom/Reviews.vue";
+import Plusmoin from "../comom/Plusmoin.vue";
 
 const orderStore = useOrder();
 const menu = useMenuItem();
@@ -25,19 +26,33 @@ const props = defineProps<{
   item: MenuItem;
 }>();
 
-const emit = defineEmits(["edit"]);
-
-const currentQuantity = computed(() => {
-  const existingOrder = orderStore.orderMenuItem.find((ord) =>
-    ord.items.some((i) => i.menuItemId === props.item.id),
-  );
-  if (existingOrder) {
-    const orderItem = existingOrder.items.find(
-      (i) => i.menuItemId === props.item.id,
+const currentQuantity = computed({
+  get: () => {
+    const existingOrder = orderStore.orderMenuItem.find((ord) =>
+      ord.items.some((i) => i.menuItemId === props.item.id),
     );
-    return orderItem ? orderItem.quantity : 1;
+    if (existingOrder) {
+      const orderItem = existingOrder.items.find(
+        (i) => i.menuItemId === props.item.id,
+      );
+      return orderItem ? orderItem.quantity : 1;
+    }
+    return 1;
+  },
+  set: (newVal: number) => {
+    const existingOrder = orderStore.orderMenuItem.find((ord) =>
+      ord.items.some((i) => i.menuItemId === props.item.id),
+    );
+    if (existingOrder) {
+      const existingItem = existingOrder.items.find(
+        (i) => i.menuItemId === props.item.id,
+      );
+      if (existingItem) {
+        existingItem.quantity = newVal < 1 ? 1 : newVal;
+        existingOrder.totalPrice = existingItem.price * existingItem.quantity;
+      }
+    }
   }
-  return 1;
 });
 
 onMounted(() => {
@@ -70,8 +85,7 @@ const removeQte = () => {
       existingItem.quantity--;
       existingOrder.totalPrice = existingItem.price * existingItem.quantity;
     } else if (existingItem && existingItem.quantity === 1) {
-      orderStore.deleteOrderMenu(existingOrder.id!);
-      checked.value = false;
+      
     }
   }
 };
@@ -90,8 +104,8 @@ const handleConfirmDelete = () => {
   isDialogOpen.value = false;
 };
 
-const handleEditClick = () => {
-  emit("edit", props.item);
+const handleEditClick = (menuId: number) => {
+   router.push(`/edit-menu-item/${menuId}`);
 };
 
 const goToDetails = (menuId: number) => {
@@ -125,7 +139,7 @@ const goToDetails = (menuId: number) => {
 
       <Suppersed>
         <template #left>
-          <Pencilc :click="handleEditClick" />
+          <Pencilc :click="()=>handleEditClick(item.id)" />
         </template>
         <template #right>
           <Truckc :click="openDeleteDialog" />
@@ -178,19 +192,10 @@ const goToDetails = (menuId: number) => {
         </div>
 
         <div v-else class="flex items-center gap-2.5 font-semibold text-sm">
-          <div
-            @click="removeQte"
-            class="cursor-pointer px-2 py-0.5 bg-gray-100 hover:bg-gray-200 rounded-md select-none transition-colors"
-          >
-            -
-          </div>
-          <span class="text-gray-800">{{ currentQuantity }}</span>
-          <div
-            @click="addQte"
-            class="cursor-pointer px-2 py-0.5 bg-gray-100 hover:bg-gray-200 rounded-md select-none transition-colors"
-          >
-            +
-          </div>
+          <Plusmoin
+           v-model:current-quantity="currentQuantity"
+           @add="addQte"
+           @remove="removeQte"/>
         </div>
       </div>
     </div>

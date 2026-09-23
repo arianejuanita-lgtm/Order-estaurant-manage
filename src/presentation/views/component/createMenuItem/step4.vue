@@ -48,9 +48,7 @@ const onSubmit = (values: any) => {
     dietary: dietaryList.value,
   });
 
-  menuItemStore.addMenuItem(createStore.formState);
-  router.push("/sucess");
-  console.log("Final product successfully created:", createStore.formState);
+ 
   emit("finish");
 };
 </script>

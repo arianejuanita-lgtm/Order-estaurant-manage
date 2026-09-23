@@ -18,7 +18,7 @@ defineProps<{
 
         <div class="flex items-baseline gap-1 bg-[#fffbeb]/60 px-3 py-1.5 rounded-xl border border-[#fef3c7]">
             <span class="text-xs font-extrabold text-[#F5BE18]">+{{ item.price }}</span>
-            <span class="text-[10px] font-bold text-gray-400">FCFA</span>
+            <span class="text-[10px] font-bold text-gray-400">$</span>
         </div>
     </div>
 </template>

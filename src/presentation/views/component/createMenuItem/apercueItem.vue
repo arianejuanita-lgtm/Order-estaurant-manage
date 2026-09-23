@@ -32,7 +32,7 @@ const createStore = useCreateMenuItem();
 
             <div class="flex items-center justify-between pt-2 border-t border-gray-200">
                 <span class="text-xs text-gray-500">Price:</span>
-                <span class="font-bold text-gray-900">{{ createStore.formState.price || 0 }} XAF</span>
+                <span class="font-bold text-gray-900">{{ createStore.formState.price || 0 }} $</span>
             </div>
         </div>
     </div>

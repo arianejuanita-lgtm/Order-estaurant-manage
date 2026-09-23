@@ -26,6 +26,11 @@ const handleConfirmDelete = () => {
   isDialogOpen.value = false;
   redirect();
 };
+
+const handleEditClick = (menuId: number) => {
+   router.push(`/edit-menu-item/${menuId}`);
+};
+
 </script>
 
 <template>
@@ -40,6 +45,7 @@ const handleConfirmDelete = () => {
                 borderColor="#fde68a" 
                 color="#92400e" 
                 iconColor="#F5BE18" 
+                :click="()=>handleEditClick(item.id)"
             />
             
             <!-- <RapidActionComp 

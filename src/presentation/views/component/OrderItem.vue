@@ -4,6 +4,7 @@ import { Trash2 } from "lucide-vue-next";
 import { useOrder } from "@/presentation/stores/useOrder";
 import { useMenuItem } from "@/presentation/stores/useMenuItem";
 import { computed } from "vue";
+import Plusmoin from "../comom/Plusmoin.vue";
 
 const props = defineProps<{
   item: {
@@ -71,23 +72,11 @@ console.log("prix de chaque order", props.item.price);
       </div>
 
       <div class="flex justify-between items-center">
-        <div class="flex items-center gap-[10px] bg-white border border-[#ddd] px-2 py-[2px] rounded-lg font-semibold">
-          <button 
-            @click="removeQuantity" 
-            class="bg-transparent border-none cursor-pointer text-base font-bold text-[#F5BE18] px-1 hover:text-[#F5BE18]" 
-            aria-label="Decrease quantity"
-          >
-            -
-          </button>
-          <span>{{ item.quantity }}</span>
-          <button 
-            @click="addQuantity" 
-            class="bg-transparent border-none cursor-pointer text-base font-bold text-[#F5BE18] px-1 hover:text-[#F5BE18]" 
-            aria-label="Increase quantity"
-          >
-            +
-          </button>
-        </div>
+               <Plusmoin
+           v-model:current-quantity="item.quantity"
+    @add="addQuantity"
+    @remove="removeQuantity"/>
+     
 
         <div>
           <p class="font-bold text-[#1a1a1a] m-0">${{ (item.price * item.quantity).toFixed(0) }}</p>
