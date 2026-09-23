@@ -4,7 +4,7 @@ import { ArrowRight, Check } from 'lucide-vue-next';
 
 const props = withDefaults(
     defineProps<{
-        label: string;                                    
+        label?: string;                                    
         variant?: 'next' | 'finish';         
         type?: 'button' | 'submit' | 'reset'; 
     }>(),

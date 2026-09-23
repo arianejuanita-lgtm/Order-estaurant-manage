@@ -2,6 +2,7 @@
 import { Star, Clock, CheckCircle2, XCircle, ArrowLeft, ShoppingBag, Plus, Minus } from "lucide-vue-next";
 import logo from '../../assets/logo.png';
 import type { MenuItem } from "@/domain/entities/MenuItem";
+import ClickBoutton from "./comom/clickBoutton.vue";
 
 defineProps<{
   item: MenuItem;
@@ -114,6 +115,7 @@ const handleImageError = (event: Event) => {
             </div>
 
             <div v-if="!checked">
+              
               <button 
                 @click.stop="emit('add')"
                 :disabled="!item.isAvailable"

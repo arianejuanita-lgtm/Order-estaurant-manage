@@ -8,12 +8,14 @@ import { ref, computed, onMounted } from "vue";
 import DialogBox from "../comom/DialogBox.vue";
 import DetailsItem from "../DetailsItem.vue";
 import type { MenuItem } from "@/domain/entities/MenuItem";
+import { useRouter } from "vue-router";
 
 const orderStore = useOrder();
 const menu = useMenuItem();
 const checked = ref<boolean>(false);
 const isDialogOpen = ref<boolean>(false);
 const isDetailsOpen = ref<boolean>(false); 
+const router=useRouter();
 
 const props = defineProps<{
     item: MenuItem;
@@ -83,13 +85,17 @@ const handleConfirmDelete = () => {
 const handleEditClick = () => {
   emit("edit", props.item);
 };
+
+const goToDetails =(menuId:number) =>{
+  router.push(`/detail-menu-item/${menuId}`);
+};
 </script>
 
 <template>
   <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1 flex flex-col p-3">
     
     <div 
-      @click="isDetailsOpen = true" 
+      @click="goToDetails(item.id)" 
       class="w-full h-40 rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center relative cursor-pointer group"
     >
       <img 

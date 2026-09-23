@@ -5,9 +5,8 @@ import Step2 from './component/createMenuItem/step2.vue';
 import Step3 from './component/createMenuItem/step3.vue';
 import Step4 from './component/createMenuItem/step4.vue';
 import ApercueItem from './component/createMenuItem/apercueItem.vue';
-import { CircleArrowLeft } from 'lucide-vue-next';
 import { steps } from '@/data/repositories/StepRepository.ts';
-import { router } from '@/router/routes.ts';
+import BackProduct from './comom/BackProduct.vue';
 
 const currentStepId = ref(1);
 
@@ -27,9 +26,7 @@ const finishForm = () => {
     console.log("Product successfully created!");
 };
 
-const redirect = () => {
-    router.push("/");
-}
+
 </script>
 
 <template>
@@ -37,10 +34,7 @@ const redirect = () => {
         
         <div class="flex flex-col gap-6">
 
-            <div @click="redirect" class="flex items-center gap-2 text-gray-600 cursor-pointer hover:text-black w-fit">
-                <CircleArrowLeft class="w-5 h-5" />
-                <p class="font-medium">Back to products</p>
-            </div>
+      <BackProduct/>
 
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <h2 class="text-3xl font-bold text-gray-900">Create a product</h2>

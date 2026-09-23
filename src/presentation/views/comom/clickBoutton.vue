@@ -4,7 +4,7 @@ import type { Component } from 'vue';
 defineProps<{
   click: () => void;
   title?:string;
-  icon:Component
+  icon?:Component
 }>();
 </script>
 
