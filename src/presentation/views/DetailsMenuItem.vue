@@ -59,9 +59,9 @@ const currentMenuItem = computed(() => {
                     </div>
                 
  
-                <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+                <!-- <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                     <Statistique :item="currentMenuItem" />
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
