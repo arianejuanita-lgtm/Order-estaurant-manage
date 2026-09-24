@@ -5,7 +5,7 @@ import Portion from './component/filters/portion.vue';
 import { useFiltered } from '../stores/useFiltered.ts';
 import { SlidersHorizontal } from 'lucide-vue-next';
 import { ref, onMounted, onUnmounted } from 'vue';
-// import Price from './component/filters/price.vue';
+import Price from './component/filters/price.vue';
 
 const filter = useFiltered();
 const isOpen = ref<boolean>(false);
@@ -64,7 +64,7 @@ onUnmounted(() => {
       <div class="flex flex-col gap-4">
         <Categorie class="w-full" />
         <Portion class="w-full" />
-        <!-- <Price class="w-full" /> -->
+        <Price class="w-full" />
         <Dietary class="w-full" />
       </div>
     </aside>

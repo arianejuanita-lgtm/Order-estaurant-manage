@@ -76,7 +76,7 @@ const handleImageError = (event: Event) => {
       <div class="flex items-center justify-between py-1">
         <div class="flex items-baseline gap-1.5">
           <span class="text-2xl font-extrabold text-[#F5BE18]">{{ item.price }}</span>
-          <span class="text-xs font-semibold text-gray-400">$</span>
+          <span class="text-xs font-semibold text-gray-400"></span>
         </div>
 
         <div>

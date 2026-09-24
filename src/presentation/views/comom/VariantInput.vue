@@ -105,7 +105,7 @@ const removeVariant = (index: number) => {
       >
         <div class="flex flex-col">
           <span class="font-bold">{{ variant.label }}</span>
-          <span class="text-[10px] text-amber-600">+{{ variant.price }} $</span>
+          <span class="text-[10px] text-amber-600">+${{ variant.price }}</span>
         </div>
 
         <clickBoutton 
