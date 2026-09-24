@@ -2,7 +2,7 @@
 import { ref, watch, onMounted } from 'vue';
 import { useFilter } from '@/presentation/stores/useFilter';
 import { useFiltered } from '@/presentation/stores/useFiltered.ts';
-import portionComponent from '../../comom/Portion.vue';
+import Portion from '../../comom/Portion.vue';
 
 const filterStore = useFilter();
 const filter = useFiltered();
@@ -11,7 +11,7 @@ onMounted(async () => {
     await filterStore.fecthPortionSizeMenuItems();
 });
 
-const porte = ref<string>('');
+const porte = ref<string[]>([]);
 
 watch(porte, (newport) => {
     filter.port = newport;
@@ -19,15 +19,16 @@ watch(porte, (newport) => {
 
 watch(() => filter.port, (newStorePort) => {
     if (!newStorePort) {
-        porte.value = '';
+        porte.value = [];
     }
 });
 
 const selectPortion = (label: string) => {
-    if (porte.value === label) {
-        porte.value = '';
+    console.log("selected portion", label);
+    if (porte.value.includes(label)) {
+       porte.value = porte.value.filter(item => item !== label);
     } else {
-        porte.value = label;
+        porte.value.push(label);
     }
 };
 </script>
@@ -37,10 +38,10 @@ const selectPortion = (label: string) => {
         <label for="portion" class="text-xs font-bold uppercase tracking-wider text-gray-500">Portion</label>
         <div class="flex flex-wrap gap-2 items-start">
             <div v-for="p in filterStore.portionSizes" :key="p.id">
-                <portionComponent 
+                <Portion
                     :title="p.label"
                     :ontap="() => selectPortion(p.label)"
-                    :is-selected="porte === p.label"
+                    :is-selected="porte.includes(p.label)"
                     :id="'part' + p.id" 
                 />
             </div>

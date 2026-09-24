@@ -15,6 +15,8 @@ const filter = useFiltered();
 const menu = useMenuItem();
 const isLoading = ref<boolean>(false); 
 
+console.log('taille du tableau des menu',menu.menuItems.length);  
+
 onMounted(async () => {
     isLoading.value = true;
     try {

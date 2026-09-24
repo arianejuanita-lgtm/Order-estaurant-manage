@@ -5,9 +5,9 @@ import { useMenuItem } from "./useMenuItem";
 export const useFiltered = defineStore("filtered", () => {
   const menuStore = useMenuItem();
 
-  const catego = ref<string>("");
-  const diate = ref<string>("");
-  const port = ref<string>("");
+  const catego = ref<string[]>([]);
+  const diate = ref<string[]>([]);
+  const port = ref<string[]>([]);
   const price = ref<number>(0);
   const title = ref<string>("");
 
@@ -23,19 +23,22 @@ export const useFiltered = defineStore("filtered", () => {
       );
     }
 
-    if (catego.value) {
+    if (catego.value.length > 0) {
       result = result.filter((item) => {
-        console.log("item.category:", item.category);
-        return item.category === catego.value;
+        return catego.value.includes(item.category);
       });
     }
 
-    if (diate.value) {
-      result = result.filter((x) => x.dietary.includes(diate.value));
+    if (diate.value.length > 0) {
+      result = result.filter((item) => {
+        return diate.value.some((d) => item.dietary.includes(d));
+      });
     }
 
-    if (port.value) {
-      result = result.filter((x) => x.portionSizes.includes(port.value));
+    if (port.value.length > 0) {
+      result = result.filter((item) => {
+        return port.value.some((p) => item.portionSizes?.includes(p));
+      });
     }
 
     if (price.value) {
@@ -48,9 +51,9 @@ export const useFiltered = defineStore("filtered", () => {
   });
 
   const clearFilter = () => {
-    catego.value = "";
-    diate.value = "";
-    port.value = "";
+    catego.value = []; 
+    diate.value = [];
+    port.value = [];
     price.value = 0;
     title.value = "";
   };

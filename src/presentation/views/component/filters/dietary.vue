@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import { useFilter } from '@/presentation/stores/useFilter';
 import { onMounted } from 'vue';
+import { useFilter } from '@/presentation/stores/useFilter';
 import { useFiltered } from '@/presentation/stores/useFiltered';
 
 const filterStore = useFilter();
@@ -9,13 +8,6 @@ const filter = useFiltered();
 
 onMounted(async () => {
     await filterStore.fecthdietariesMenuItems();
-    console.log('filter diatery', filterStore.dietaries.values);
-});
-
-const dia = ref<string>('');
-
-watch(dia, (newdiate) => {
-    filter.diate = newdiate;
 });
 </script>
 
@@ -28,11 +20,9 @@ watch(dia, (newdiate) => {
                     <input 
                         type="checkbox"
                         name="diat" 
-                        v-model="dia"
+                        v-model="filter.diate"
                         :id="'dia-' + diat.id" 
-                        :true-value="diat.label"
-                        :checked="filter.diate === diat.label"
-                        false-value=""
+                        :value="diat.label"
                         class="w-4 h-4 rounded border-gray-300 accent-[#F5BE18] cursor-pointer" 
                     /> 
                     {{ diat.label }}
