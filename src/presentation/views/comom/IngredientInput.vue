@@ -53,7 +53,7 @@ const removeIngredient = (index: number) => {
           :click="addIngredient" 
           :icon="Plus" 
           title="Add" 
-          class="w-8 h-8 flex items-center justify-center rounded-lg bg-amber-400 hover:bg-amber-500 transition-colors"
+          class="w-8 h-8 flex items-center justify-center rounded-lg bg-amber-400 hover:bg-amber-400 transition-colors"
         />
       </div>
     </div>
@@ -67,7 +67,7 @@ const removeIngredient = (index: number) => {
         class="flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-900 px-3 py-1.5 rounded-xl text-xs font-semibold shadow-xs"
       >
         <span>{{ ingredient }}</span>
-        <clickBoutton :click="() => removeIngredient(index)" :icon="X" />
+        <clickBoutton :click="() => removeIngredient(index)" :icon="X" size="h-4 px-2 rounded-xl text-xs" />
       </div>
     </div>
   </div>

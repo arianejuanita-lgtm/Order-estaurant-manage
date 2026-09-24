@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import type { IStep } from "@/data/repositories/StepRepository";
 import RetourButton from "../../comom/RetourButton.vue";
 import ActionButton from "../../comom/ActionButton.vue";
@@ -22,7 +22,13 @@ const validationSchema = toTypedSchema(
     price: zod.coerce
       .number({ invalid_type_error: "Price is required" })
       .min(0, "Price cannot be negative"),
-    supplements: zod.array(zod.union([zod.string(), zod.number()])).optional(),
+    supplements: zod.array(
+      zod.union([
+        zod.string(), 
+        zod.number(), 
+        zod.object({ id: zod.union([zod.string(), zod.number()]) }).passthrough()
+      ])
+    ).optional(),
   }),
 );
 
@@ -33,10 +39,10 @@ onMounted(async () => {
   await supplementStore.fetchSupplement();
 });
 
-const initialValues = {
-  price: createStore.formState.price || 0,
-  supplements: createStore.formState.supplements || [],
-};
+const initialValues = computed(() => ({
+  price: createStore.formState.price ?? 0,
+  supplements: createStore.formState.supplements ?? [],
+}));
 
 const variantsList = ref<IVariants[]>(createStore.formState.variants || []);
 
@@ -50,6 +56,10 @@ const onSubmit = (values: any) => {
   console.log("Validated and saved data from step 2:", createStore.formState);
   emit("next");
 };
+
+const onInvalidSubmit = ({ errors }: { errors: any }) => {
+  console.warn("Validation failed in Step 2:", errors);
+};
 </script>
 
 <template>
@@ -61,10 +71,12 @@ const onSubmit = (values: any) => {
       <p class="text-sm text-gray-500 mt-1">{{ itemStep.description }}</p>
     </div>
 
-    <Form
+  <Form
       @submit="onSubmit"
+      @invalid-submit="onInvalidSubmit"
       :validation-schema="validationSchema"
       :initial-values="initialValues"
+      :keep-values="true"
       class="flex flex-col gap-6"
     >
       <div class="w-full">

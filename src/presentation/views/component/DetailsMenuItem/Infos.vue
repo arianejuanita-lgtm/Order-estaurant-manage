@@ -10,6 +10,7 @@ import Reviews from "../../comom/Reviews.vue";
 import PrepCom from "../../comom/prepCom.vue";
 import { LayoutGrid, HandCoins, ShoppingBag, Clock5, Warehouse, GamepadDirectional } from 'lucide-vue-next';
 import logo from '../../../../assets/logo.png';
+import DietComp from "../../comom/dietComp.vue";
 
 const props = defineProps<{
   item: MenuItem;
@@ -99,6 +100,8 @@ const handleImageError = (event: Event) => {
           </div>
         </div>
       </div>
+      <DietComp :item="item.dietary"/>
+      <DietComp :item="item.portionSizes"/>
 
       <div>
         <Reviews :rating="item.rating" :reviews="item.reviews" />
