@@ -56,7 +56,7 @@ const isDialogOpen = ref(false);
 const finishForm = () => {
     if (isEditMode.value) {
         isDialogOpen.value = true;
-        router.push("/");
+        router.push("/home");
     } else {
         menuStore.addMenuItem(createStore.formState);
         router.push("/success");

@@ -12,8 +12,8 @@ const menuContainerRef = ref<HTMLElement | null>(null);
 
 const navLinks = [
   { name: 'Home', path: '/' },
-  { name: 'Menu', path: '/menu' },
-  { name: 'Categorie', path: '/categories' },
+  { name: 'Menu', path: '/home' },
+  { name: 'Categorie', path: '/categorie' },
   { name: 'About', path: '/about' },
   { name: 'Blog', path: '/blog' },
   { name: 'Contact', path: '/contact' },
@@ -58,8 +58,8 @@ onUnmounted(() => {
         v-for="link in navLinks" 
         :key="link.name"
         class="relative text-[14px] lg:text-[15px] font-medium text-[#333] cursor-pointer transition-colors duration-300 hover:text-[#F5BE18] after:absolute after:left-0 after:-bottom-[8px] after:w-0 after:h-[2px] after:bg-[#F5BE18] after:rounded-[10px] hover:after:w-full after:transition-all after:duration-300"
-      >
-        {{ link.name }}
+      ><RouterLink :to="link.path">
+        {{ link.name }}</RouterLink>
       </div>
     </div>
 
@@ -93,8 +93,8 @@ onUnmounted(() => {
             :key="link.name"
             @click="isMobileMenuOpen = false" 
             class="text-[14px] font-medium text-[#333] cursor-pointer hover:text-[#F5BE18] transition-colors"
-          >
-            {{ link.name }}
+          ><RouterLink :to="link.path">
+            {{ link.name }}</RouterLink>
           </div>
         </div>
       </div>

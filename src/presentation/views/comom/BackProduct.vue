@@ -3,7 +3,7 @@ import { router } from '@/router/routes.ts';
 import { CircleArrowLeft } from 'lucide-vue-next';
 
 const redirect = () => {
-    router.push("/");
+    router.push("/home");
 }
 </script>
 <template>

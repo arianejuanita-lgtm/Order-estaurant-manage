@@ -98,7 +98,7 @@ onMounted(() => {
 
       <div class="w-full flex flex-col gap-2">
         <RouterLink 
-          to="/"
+          to="/home"
           class="w-full py-2.5 px-4 bg-amber-400 hover:bg-amber-400 text-white font-semibold rounded-xl shadow-sm shadow-amber-400/20 transition-all flex items-center justify-center gap-2 group cursor-pointer text-xs sm:text-sm"
         >
           <span>View product</span>
@@ -115,7 +115,7 @@ onMounted(() => {
       </div>
 
       <RouterLink 
-        to="/"
+        to="/home"
         class="text-[11px] font-semibold text-gray-400 hover:text-gray-600 transition-colors"
       >
         Back to products
