@@ -3,7 +3,6 @@ import MenuItem from "./component/MenuItem.vue";
 import { useMenuItem } from "@/presentation/stores/useMenuItem";
 import { onMounted, ref } from "vue";
 import { useFiltered } from "../stores/useFiltered.ts";
-import Add from "./add.vue";
 import { Plus } from "lucide-vue-next";
 import type { MenuItem as MenuItemType } from "@/domain/entities/MenuItem";
 import { router } from "@/router/routes.ts";
