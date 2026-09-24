@@ -18,7 +18,7 @@ defineEmits<{
 <template>
   <div class="flex flex-col flex-1 mb-4">
     <label :for="idu" class="font-semibold text-sm text-gray-800 mb-1.5 flex items-center gap-2">
-      <FileText class="w-4 h-4 text-amber-500" />
+      <FileText class="w-4 h-4 text-amber-400" />
       {{ title }}
     </label>
     
@@ -28,7 +28,7 @@ defineEmits<{
       :model-value="modelValue"
       as="textarea"
       @update:model-value="$emit('update:modelValue', $event)"
-      class="p-3 border border-gray-200 bg-white rounded-xl text-sm outline-none hover:border-amber-400 focus:border-amber-500 focus:ring-2 focus:ring-amber-100 transition-all duration-200 resize-y h-24 shadow-2xs"
+      class="p-3 border border-gray-200 bg-white rounded-xl text-sm outline-none hover:border-amber-400 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition-all duration-200 resize-y h-24 shadow-2xs"
     />
   </div>
 </template>

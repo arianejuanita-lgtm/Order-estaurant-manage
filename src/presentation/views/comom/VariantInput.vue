@@ -69,7 +69,7 @@ const removeVariant = (index: number) => {
   <div class="flex flex-col gap-3">
     <label class="text-sm font-medium text-gray-700">Add variants (Label & Price required)</label>
     
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center">
       <input
         type="text"
         v-model="labelInput"
@@ -87,7 +87,12 @@ const removeVariant = (index: number) => {
         class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-amber-400 focus:outline-none transition-all text-gray-800 bg-white text-sm"
       />
 
-      <clickBoutton :click="addVariant" :icon="Plus" title="Add" />
+      <clickBoutton 
+        :click="addVariant" 
+        :icon="Plus" 
+        title="Add" 
+        size="h-10 px-4 rounded-xl text-xs" 
+      />
     </div>
 
     <span v-if="errorMessage" class="text-xs text-red-500">{{ errorMessage }}</span>
@@ -100,10 +105,14 @@ const removeVariant = (index: number) => {
       >
         <div class="flex flex-col">
           <span class="font-bold">{{ variant.label }}</span>
-          <span class="text-[10px] text-amber-700">+{{ variant.price }} $</span>
+          <span class="text-[10px] text-amber-600">+{{ variant.price }} $</span>
         </div>
 
-        <clickBoutton :click="() => removeVariant(index)" :icon="X" />
+        <clickBoutton 
+          :click="() => removeVariant(index)" 
+          :icon="X" 
+          size="w-6 h-6 rounded-md p-0" 
+        />
       </div>
     </div>
   </div>

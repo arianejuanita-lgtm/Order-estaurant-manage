@@ -28,10 +28,7 @@ onMounted(async () => {
 const clicked = ref<boolean>(true);
 const selectedItem = ref<MenuItemType | null>(null);
 
-const openDrawer = () => {
-  selectedItem.value = null;
-  clicked.value = false;
-};
+
 
 const openDrawerToEdit = (item: MenuItemType) => {
   selectedItem.value = item;

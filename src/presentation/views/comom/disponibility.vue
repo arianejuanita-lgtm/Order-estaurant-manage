@@ -26,7 +26,7 @@ defineEmits(['update:modelValue']);
             <component 
                 :is="modelValue ? ToggleRight : ToggleLeft" 
                 class="w-7 h-7 transition-colors"
-                :class="modelValue ? 'text-amber-500' : 'text-gray-300'" 
+                :class="modelValue ? 'text-amber-400' : 'text-gray-300'" 
             />
         </div>
     </div>

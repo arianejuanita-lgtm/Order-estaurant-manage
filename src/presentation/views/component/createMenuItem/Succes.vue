@@ -20,7 +20,7 @@ const confettiPieces = ref<ConfettiPiece[]>([]);
 
 onMounted(() => {
   const pieces: ConfettiPiece[] = [];
-  const colors = ['bg-amber-500', 'bg-emerald-500', 'bg-blue-500', 'bg-pink-500', 'bg-purple-500', 'bg-orange-500'];
+  const colors = ['bg-amber-400', 'bg-emerald-500', 'bg-blue-500', 'bg-pink-500', 'bg-purple-500', 'bg-orange-500'];
   
   for (let i = 0; i < 40; i++) {
     const isLeft = i % 2 === 0;
@@ -62,7 +62,7 @@ onMounted(() => {
       
       <div class="relative">
         <div class="absolute -inset-2 bg-amber-100 rounded-full animate-ping opacity-60"></div>
-        <div class="relative w-14 h-14 sm:w-16 sm:h-16 bg-amber-500 rounded-full flex items-center justify-center text-white shadow-md shadow-amber-500/25">
+        <div class="relative w-14 h-14 sm:w-16 sm:h-16 bg-amber-400 rounded-full flex items-center justify-center text-white shadow-md shadow-amber-400/25">
           <Check class="w-7 h-7 sm:w-8 sm:h-8 stroke-[3]" />
         </div>
       </div>
@@ -84,7 +84,7 @@ onMounted(() => {
 
         <div class="flex flex-col flex-1 min-w-0 gap-0.5">
           <h3 class="font-bold text-gray-800 text-xs sm:text-sm truncate">{{ form.name || 'Product name' }}</h3>
-          <span class="text-amber-600 font-extrabold text-xs sm:text-sm">
+          <span class="text-amber-400 font-extrabold text-xs sm:text-sm">
             {{ form.price ? `${form.price} $` : '0 $' }}
           </span>
           <div class="flex items-center gap-1.5">
@@ -99,7 +99,7 @@ onMounted(() => {
       <div class="w-full flex flex-col gap-2">
         <RouterLink 
           to="/"
-          class="w-full py-2.5 px-4 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl shadow-sm shadow-amber-500/20 transition-all flex items-center justify-center gap-2 group cursor-pointer text-xs sm:text-sm"
+          class="w-full py-2.5 px-4 bg-amber-400 hover:bg-amber-400 text-white font-semibold rounded-xl shadow-sm shadow-amber-400/20 transition-all flex items-center justify-center gap-2 group cursor-pointer text-xs sm:text-sm"
         >
           <span>View product</span>
           <ArrowRight class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
@@ -109,7 +109,7 @@ onMounted(() => {
           to="/create-menu-item"
           class="w-full py-2.5 px-4 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 font-semibold rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer text-xs sm:text-sm shadow-2xs"
         >
-          <Plus class="w-3.5 h-3.5 text-amber-500" />
+          <Plus class="w-3.5 h-3.5 text-amber-400" />
           <span>Create another product</span>
         </RouterLink>
       </div>

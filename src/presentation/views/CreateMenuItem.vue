@@ -12,12 +12,13 @@ import BackProduct from './comom/BackProduct.vue';
 import type { MenuItem } from '@/domain/entities/MenuItem';
 import { useCreateMenuItem } from '../stores/useCreateMenuItem.ts';
 import IncompleteStep from './comom/IncompleteStep.vue';
+import DialogBox from './comom/DialogBox.vue';
 import { useRouter } from 'vue-router';
 
-const router=useRouter();
+const router = useRouter();
 const route = useRoute();
 const menuStore = useMenuItem();
-const createStore=useCreateMenuItem();
+const createStore = useCreateMenuItem();
 const currentItem = ref<MenuItem | undefined>(undefined);
 const currentStepId = ref(1);
 
@@ -29,7 +30,10 @@ onMounted(() => {
         const foundItem = menuStore.menuItems.find(i => i.id === id);
         if (foundItem) {
             currentItem.value = foundItem;
+            createStore.updateForm(foundItem); 
         }
+    } else {
+        createStore.resetForm();
     }
 });
 
@@ -45,29 +49,26 @@ const prevStep = () => {
     }
 };
 
+const emit = defineEmits(["edit"]);
+
+const isDialogOpen = ref(false);
+
 const finishForm = () => {
     if (isEditMode.value) {
-        
+        isDialogOpen.value = true;
+        router.push("/");
     } else {
- menuStore.addMenuItem(createStore.formState);
-  router.push("/sucess");
-  console.log("Final product successfully created:", createStore.formState);
+        menuStore.addMenuItem(createStore.formState);
+        router.push("/success");
+        console.log("Final product successfully created:", createStore.formState);
     }
 };
 
-onMounted(() => {
-    if (isEditMode.value) {
-        const id = Number(route.params.id);
-        const foundItem = menuStore.menuItems.find(i => i.id === id);
-        if (foundItem) {
-            currentItem.value = foundItem;
-            createStore.updateForm(foundItem); 
-        }
-    } else {
-        createStore.resetForm();
-    }
-});
-
+const handleConfirmEdit = () => {
+    isDialogOpen.value = false;
+    emit("edit", currentItem.value);
+    console.log("Product successfully updated:", createStore.formState);
+};
 
 const isModalOpen = ref(false);
 const modalMessage = ref("");
@@ -121,6 +122,14 @@ const goToStep = (targetStepId: number) => {
 </script>
 
 <template>
+    <DialogBox
+      :item="currentItem ?? null"
+      :isOpen="isDialogOpen"
+      mode="edit"
+      @close="isDialogOpen = false"
+      @confirm="handleConfirmEdit"
+    />
+
     <div class="min-h-screen bg-gray-50 p-6 flex flex-col gap-8">
         <div class="flex flex-col gap-6">
             <BackProduct />
@@ -130,28 +139,28 @@ const goToStep = (targetStepId: number) => {
                     {{ isEditMode ? 'Edit product' : 'Create a product' }}
                 </h2>
                 
-<div class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
-    <div 
-        v-for="stepItem in steps" 
-        @click="goToStep(stepItem.id)"
-        :key="stepItem.id"
-        class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 cursor-pointer hover:opacity-90 select-none"
-        :class="[
-            currentStepId === stepItem.id 
-                ? 'bg-amber-400 text-gray-900 font-bold shadow-sm' 
-                : 'bg-gray-200 text-gray-400 hover:bg-gray-300 hover:text-gray-600'
-        ]"
-    >
-        <span class="w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold"
-            :class="currentStepId === stepItem.id ? 'bg-white/40 text-gray-900' : 'bg-gray-300 text-gray-500'"
-        >
-            {{ stepItem.id }}
-        </span>
-        <div class="flex flex-col">
-            <p class="text-sm whitespace-nowrap">{{ stepItem.title }}</p>
-        </div>
-    </div>
-</div>
+                <div class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
+                    <div 
+                        v-for="stepItem in steps" 
+                        @click="goToStep(stepItem.id)"
+                        :key="stepItem.id"
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 cursor-pointer hover:opacity-90 select-none"
+                        :class="[
+                            currentStepId === stepItem.id 
+                                ? 'bg-amber-400 text-gray-900 font-bold shadow-sm' 
+                                : 'bg-gray-200 text-gray-400 hover:bg-gray-300 hover:text-gray-600'
+                        ]"
+                    >
+                        <span class="w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold"
+                            :class="currentStepId === stepItem.id ? 'bg-white/40 text-gray-900' : 'bg-gray-300 text-gray-500'"
+                        >
+                            {{ stepItem.id }}
+                        </span>
+                        <div class="flex flex-col">
+                            <p class="text-sm whitespace-nowrap">{{ stepItem.title }}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -172,9 +181,9 @@ const goToStep = (targetStepId: number) => {
             Loading Product ...
         </div>
     </div>
-<IncompleteStep
-    v-model:is-modal-open="isModalOpen" 
-    :modal-message="modalMessage" 
-/>
-       
+    
+    <IncompleteStep
+        v-model:is-modal-open="isModalOpen" 
+        :modal-message="modalMessage" 
+    />
 </template>

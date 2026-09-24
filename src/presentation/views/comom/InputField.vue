@@ -23,7 +23,7 @@ const handleInput = (event: Event) => {
 <template>
     <div class="flex flex-col gap-1.5">
         <div class="flex justify-between items-center text-sm font-medium text-gray-700">
-            <label :for="name">{{ label }} <span v-if="required" class="text-amber-500">*</span></label> 
+            <label :for="name">{{ label }} <span v-if="required" class="text-amber-400">*</span></label> 
             <span v-if="maxLength && typeof modelValue === 'string'" class="text-xs text-gray-400">
                 {{ modelValue?.length || 0 }}/{{ maxLength }}
             </span>

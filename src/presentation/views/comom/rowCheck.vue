@@ -19,7 +19,7 @@ defineEmits<{
 <template>
   <div class="flex flex-row items-center mb-4 w-full">
     <label class="group flex items-center gap-3 cursor-pointer select-none">
-      <CheckCircle2 class="w-4 h-4 text-amber-500" />
+      <CheckCircle2 class="w-4 h-4 text-amber-400" />
       <Field 
         type="checkbox"
         :name="name" 
@@ -30,9 +30,9 @@ defineEmits<{
           $emit('update:modelValue', val);
           $emit('update:modelvalue', val);
         }" 
-        class="w-4 h-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500 accent-amber-500 cursor-pointer transition-all" 
+        class="w-4 h-4 rounded border-gray-300 text-amber-400 focus:ring-amber-400 accent-amber-400 cursor-pointer transition-all" 
       />
-      <span class="font-medium text-sm text-gray-800 group-hover:text-amber-900 transition-colors">
+      <span class="font-medium text-sm text-gray-800 group-hover:text-amber-400 transition-colors">
         {{ title }}
       </span>
     </label>

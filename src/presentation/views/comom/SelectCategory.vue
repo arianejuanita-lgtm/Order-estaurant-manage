@@ -26,7 +26,7 @@ defineEmits<{
 <template>
   <div class="flex flex-col flex-1 mb-4">
     <label :for="id" class="font-semibold text-sm text-gray-800 mb-1.5 flex items-center gap-2">
-      <LayoutGrid class="w-4 h-4 text-amber-500" />
+      <LayoutGrid class="w-4 h-4 text-amber-400" />
       {{ label }}
     </label>
     
@@ -36,7 +36,7 @@ defineEmits<{
       :name="name"
       as="select"
       @change="$emit('update:modelValue', ($event.target as HTMLSelectElement).value)"
-      class="border border-gray-200 p-3 rounded-xl text-sm bg-white outline-none hover:border-amber-400 focus:border-amber-500 focus:ring-2 focus:ring-amber-100 transition-all duration-200 cursor-pointer shadow-2xs"
+      class="border border-gray-200 p-3 rounded-xl text-sm bg-white outline-none hover:border-amber-400 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition-all duration-200 cursor-pointer shadow-2xs"
     >
       <option disabled value="" class="text-gray-400">{{ placeholder }}</option>
       <option

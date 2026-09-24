@@ -23,7 +23,7 @@ defineEmits<{
 <template>
   <div class="flex flex-col flex-1 mb-4">
     <label class="font-semibold text-sm text-gray-800 mb-2 flex items-center gap-2">
-      <ListChecks class="w-4 h-4 text-amber-500" />
+      <ListChecks class="w-4 h-4 text-amber-400" />
       {{ label }}
     </label>
     
@@ -34,7 +34,7 @@ defineEmits<{
         class="group relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl border text-sm cursor-pointer transition-all duration-200 select-none shadow-2xs"
         :class="[
           modelValue.includes(option[itemLabel])
-            ? 'bg-amber-50/70 border-amber-500 text-amber-900 font-medium ring-2 ring-amber-100 shadow-xs'
+            ? 'bg-amber-50/70 border-amber-400  font-medium ring-2 ring-amber-100 shadow-xs'
             : 'bg-white border-gray-200 text-gray-600 hover:border-amber-400 hover:bg-amber-50/20'
         ]"
       >
@@ -48,10 +48,10 @@ defineEmits<{
         />
 
         <span 
-          class="w-2.5 h-2.5 rounded-full transition-all duration-200"
+          class="w-3 h-3  transition-all duration-200 flex items-center justify-center"
           :class="[
             modelValue.includes(option[itemLabel]) 
-              ? 'bg-amber-500 scale-110 shadow-xs ring-2 ring-amber-200' 
+              ? 'bg-amber-400 scale-105 shadow-xs ring-2 ring-amber-200' 
               : 'bg-gray-300 group-hover:bg-amber-400'
           ]"
         ></span>

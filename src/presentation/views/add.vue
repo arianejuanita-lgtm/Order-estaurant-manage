@@ -337,7 +337,7 @@ const handleConfirmAction = async () => {
 
  <div class="flex justify-center items-center w-full mt-6 box-border px-2">
   <Boutton
-    class="w-full p-3 bg-amber-400 border-none rounded-2xl font-bold text-base cursor-pointer transition-colors hover:bg-amber-500 text-black text-center"
+    class="w-full p-3 bg-amber-400 border-none rounded-2xl font-bold text-base cursor-pointer transition-colors hover:bg-amber-400 text-black text-center"
     type="submit"
     :haut="60"
     :title="isEditMode ? 'Update' : 'Save'"

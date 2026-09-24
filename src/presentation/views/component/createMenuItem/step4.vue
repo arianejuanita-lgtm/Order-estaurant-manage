@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import type { IStep } from "@/data/repositories/StepRepository";
 import RetourButton from "../../comom/RetourButton.vue";
 import ActionButton from "../../comom/ActionButton.vue";
@@ -8,9 +8,8 @@ import IngredientInput from "../../comom/IngredientInput.vue";
 import { Form } from "vee-validate";
 import * as zod from "zod";
 import { toTypedSchema } from "@vee-validate/zod";
-import { useMenuItem } from "@/presentation/stores/useMenuItem.ts";
 import { useCreateMenuItem } from "@/presentation/stores/useCreateMenuItem";
-import { useRouter } from 'vue-router'
+import { useRoute } from 'vue-router';
 
 defineProps<{
   itemStep: IStep;
@@ -18,7 +17,11 @@ defineProps<{
 
 const emit = defineEmits(["prev", "finish"]);
 const createStore = useCreateMenuItem();
-const menuItemStore = useMenuItem();
+const route = useRoute();
+
+const isEditing = computed(() => {
+  return !!route.params.id || !!createStore.formState.id;
+});
 
 const validationSchema = toTypedSchema(
   zod.object({
@@ -35,7 +38,7 @@ const initialValues = {
 };
 
 const dietaryList = ref<string[]>(createStore.formState.dietary || []);
-const router = useRouter()
+
 const onSubmit = (values: any) => {
   createStore.updateForm({
     stock: {
@@ -48,7 +51,6 @@ const onSubmit = (values: any) => {
     dietary: dietaryList.value,
   });
 
- 
   emit("finish");
 };
 </script>
@@ -78,14 +80,12 @@ const onSubmit = (values: any) => {
               type="number"
               label="Stock quantity" 
               placeholder="100" 
-              
             />
             <InputField 
               name="seuil" 
               type="number"
               label="Alert threshold" 
               placeholder="5" 
-              
             />
           </div>
         </div>
@@ -108,7 +108,7 @@ const onSubmit = (values: any) => {
       <div class="flex justify-between pt-4 border-t border-gray-100">
         <RetourButton type="button" @click="emit('prev')" />
         <ActionButton
-          label="Create product"
+          :label="isEditing ? 'Update product' : 'Create product'"
           variant="finish"
           type="submit"
         />

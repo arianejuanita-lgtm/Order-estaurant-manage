@@ -93,13 +93,13 @@ const onSubmit = (values: any) => {
                 name="supplements"
                 type="checkbox"
                 :value="supp.id"
-                class="w-4 h-4 accent-amber-500 rounded border-gray-300 focus:ring-amber-400 shrink-0 cursor-pointer"
+                class="w-4 h-4 accent-amber-400 rounded border-gray-300 focus:ring-amber-400 shrink-0 cursor-pointer"
               />
               <span class="text-xs sm:text-sm font-semibold text-gray-800 truncate" :title="supp.label">
                 {{ supp.label }}
               </span>
             </div>
-            <div class="text-xs sm:text-sm font-bold text-amber-600 shrink-0 pl-1">
+            <div class="text-xs sm:text-sm font-bold text-amber-400 shrink-0 pl-1">
               +{{ supp.price }}
             </div>
           </label>

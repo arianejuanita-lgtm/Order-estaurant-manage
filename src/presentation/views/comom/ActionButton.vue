@@ -22,7 +22,7 @@ const variantClasses = computed(() => {
     if (props.variant === 'finish') {
         return 'bg-green-500 hover:bg-green-600 text-white font-semibold shadow-sm';
     }
-    return 'bg-amber-400 hover:bg-amber-500 text-gray-900 font-semibold shadow-sm';
+    return 'bg-amber-400 hover:bg-amber-400 text-gray-900 font-semibold shadow-sm';
 });
 </script>
 

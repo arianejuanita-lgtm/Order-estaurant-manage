@@ -45,7 +45,7 @@ const handleInput = (event: Event) => {
 
         <button 
             @click.stop="emit('add')"
-            class="w-7 h-7 bg-amber-400 hover:bg-amber-500 text-black rounded-lg flex items-center justify-center font-bold shadow-sm transition-colors cursor-pointer border-none"
+            class="w-7 h-7 bg-amber-400 hover:bg-amber-400 text-black rounded-lg flex items-center justify-center font-bold shadow-sm transition-colors cursor-pointer border-none"
         >
             <Plus :size="12" />
         </button>

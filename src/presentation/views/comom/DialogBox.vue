@@ -43,7 +43,7 @@ const config = computed(() => {
         message: `Are you sure you want to update `,
         confirmText: 'Save Changes',
         iconBg: 'bg-blue-100 text-blue-600',
-        confirmBtn: 'bg-amber-400 hover:bg-amber-500 border-amber-400 text-black',
+        confirmBtn: 'bg-amber-400 hover:bg-amber-400 border-amber-400 text-black',
       };
     case 'delete':
       return {
@@ -59,8 +59,8 @@ const config = computed(() => {
         title: 'New Item Created',
         message: `We have successfully prepared `,
         confirmText: 'Confirm',
-        iconBg: 'bg-amber-100 text-amber-600',
-        confirmBtn: 'bg-amber-400 hover:bg-amber-500 border-amber-400 text-black',
+        iconBg: 'bg-amber-100 text-amber-400',
+        confirmBtn: 'bg-amber-400 hover:bg-amber-400 border-amber-400 text-black',
       };
   }
 });

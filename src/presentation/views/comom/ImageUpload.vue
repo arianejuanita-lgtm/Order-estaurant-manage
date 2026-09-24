@@ -42,7 +42,7 @@ const onFileSelected = (event: Event) => {
                     modelValue ? 'hidden md:flex' : 'flex'
                 ]"
             >
-                <div class="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center text-amber-500">
+                <div class="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center text-amber-400">
                     <Camera class="w-6 h-6" />
                 </div>
                 <div class="flex flex-col gap-1">
@@ -73,7 +73,7 @@ const onFileSelected = (event: Event) => {
                         @click="triggerFileInput"
                         class="absolute bottom-4 right-4 flex items-center gap-2 bg-white/90 hover:bg-white text-gray-800 text-xs font-semibold px-4 py-2 rounded-xl shadow-md backdrop-blur-sm transition-all cursor-pointer"
                     >
-                        <RefreshCw class="w-3.5 h-3.5 text-amber-500" />
+                        <RefreshCw class="w-3.5 h-3.5 text-amber-400" />
                         <span>Change</span>
                     </button>
                 </template>

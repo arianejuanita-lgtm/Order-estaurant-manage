@@ -14,6 +14,7 @@ import Pencilc from "../comom/Pencilc.vue";
 import Truckc from "../comom/Truckc.vue";
 import Reviews from "../comom/Reviews.vue";
 import Plusmoin from "../comom/Plusmoin.vue";
+import Loading from "../comom/Loading.vue"; 
 
 const orderStore = useOrder();
 const menu = useMenuItem();
@@ -21,6 +22,7 @@ const checked = ref<boolean>(false);
 const isDialogOpen = ref<boolean>(false);
 const isDetailsOpen = ref<boolean>(false);
 const router = useRouter();
+const isLoading = ref<boolean>(false);
 
 const props = defineProps<{
   item: MenuItem;
@@ -99,9 +101,16 @@ const openDeleteDialog = () => {
   isDialogOpen.value = true;
 };
 
-const handleConfirmDelete = () => {
-  menu.deleteMenuItem(props.item.id);
-  isDialogOpen.value = false;
+const handleConfirmDelete = async () => {
+    isDialogOpen.value = false; 
+    isLoading.value = true;     
+    
+    try {
+        await menu.deleteMenuItem(props.item.id);
+    } catch (error) {
+        console.error("Erreur lors de la suppression", error);
+        isLoading.value = false; 
+    }
 };
 
 const handleEditClick = (menuId: number) => {
@@ -115,8 +124,12 @@ const goToDetails = (menuId: number) => {
 
 <template>
   <div
-    class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1 flex flex-col p-3"
+    class="relative bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1 flex flex-col p-3"
   >
+    <div v-if="isLoading" class="absolute inset-0 bg-white/70 backdrop-blur-[1px] z-50 flex items-center justify-center">
+        <Loading :isLoading="isLoading"/>
+    </div>
+
     <div
       @click="goToDetails(item.id)"
       class="w-full h-40 rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center relative cursor-pointer group"
@@ -187,7 +200,7 @@ const goToDetails = (menuId: number) => {
           <Boutton
             title="Add"
             :haut="32"
-            class="px-4 py-1 text-xs bg-amber-400 hover:bg-amber-500 font-bold rounded-xl shadow-xs"
+            class="px-4 py-1 text-xs bg-amber-400 hover:bg-amber-400 font-bold rounded-xl shadow-xs"
           />
         </div>
 

@@ -24,7 +24,7 @@ const props = defineProps({
     :style="{ height: props.haut + 'px' }"
     :type="props.type"
     :class="props.class"
-    class="flex items-center justify-center bg-amber-400 border border-amber-400 px-5 rounded-[20px] cursor-pointer font-bold text-black transition-colors hover:bg-amber-500"
+    class="flex items-center justify-center bg-amber-400 border border-amber-400 px-5 rounded-[20px] cursor-pointer font-bold text-black transition-colors hover:bg-amber-400"
   >
     {{ title }}
   </button>

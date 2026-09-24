@@ -60,7 +60,7 @@ const handleImageError = (event: Event) => {
             <div class="flex items-center gap-1 bg-amber-50 px-2 py-0.5 rounded-lg text-amber-400 font-semibold">
               <Star :size="12" fill="#f59e0b" color="#f59e0b" />
               <span>{{ item.rating }}</span>
-              <span class="text-amber-400/70 font-normal">({{ item.reviews }})</span>
+              <span class="text-amber-400 font-normal">({{ item.reviews }})</span>
             </div>
 
             <div class="flex items-center gap-1 bg-gray-100 px-2 py-0.5 rounded-lg text-gray-700 font-medium">
@@ -119,7 +119,7 @@ const handleImageError = (event: Event) => {
               <button 
                 @click.stop="emit('add')"
                 :disabled="!item.isAvailable"
-                class="flex items-center gap-1.5 bg-amber-400 hover:bg-amber-500 disabled:bg-gray-200 disabled:text-gray-400 text-black font-bold px-3.5 py-1.5 rounded-xl shadow-md transition-all cursor-pointer border-none text-xs"
+                class="flex items-center gap-1.5 bg-amber-400 hover:bg-amber-400 disabled:bg-gray-200 disabled:text-gray-400 text-black font-bold px-3.5 py-1.5 rounded-xl shadow-md transition-all cursor-pointer border-none text-xs"
               >
                 <ShoppingBag :size="14" />
                 Add to Cart
@@ -136,7 +136,7 @@ const handleImageError = (event: Event) => {
               <span class="w-5 text-center font-bold text-gray-900 text-xs">{{ currentQuantity }}</span>
               <button 
                 @click.stop="emit('add')"
-                class="w-7 h-7 bg-amber-400 hover:bg-amber-500 text-black rounded-lg flex items-center justify-center font-bold shadow-sm transition-colors cursor-pointer border-none"
+                class="w-7 h-7 bg-amber-400 hover:bg-amber-400 text-black rounded-lg flex items-center justify-center font-bold shadow-sm transition-colors cursor-pointer border-none"
               >
                 <Plus :size="12" />
               </button>

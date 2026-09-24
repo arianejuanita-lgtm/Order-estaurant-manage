@@ -20,7 +20,7 @@ defineEmits(['update:modelValue']);
 <template>
   <div class="flex flex-col flex-1 mb-4">
     <label :for="labelFor" class="font-semibold text-sm text-gray-800 mb-1.5 flex items-center gap-2">
-      <PenLine class="w-4 h-4 text-amber-500" />
+      <PenLine class="w-4 h-4 text-amber-400" />
       {{ title }}
     </label>
     <Field 
@@ -32,7 +32,7 @@ defineEmits(['update:modelValue']);
       @update:model-value="$emit('update:modelValue', $event)" 
       :min="min"
       :max="max"
-      class="border border-gray-200 bg-white p-3 rounded-xl text-sm outline-none hover:border-amber-400 focus:border-amber-500 focus:ring-2 focus:ring-amber-100 transition-all duration-200 shadow-2xs"
+      class="border border-gray-200 bg-white p-3 rounded-xl text-sm outline-none hover:border-amber-400 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition-all duration-200 shadow-2xs"
     />
   </div>
 </template>
