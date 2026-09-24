@@ -50,6 +50,7 @@ const onSubmit = () => {
                     v-model="isAvailable"
                     title="Available for sale"
                     description="The product is visible in your menu"
+                    @update:modelValue="($event) => (isAvailable = $event)"
                 />
 
                 <div class="flex flex-col gap-2">
@@ -59,18 +60,21 @@ const onSubmit = () => {
                         v-model="isSurPlace"
                         title="Dine-in"
                         :icon="Store"
+                        @update:modelValue="($event) => (isSurPlace = $event)"
                     />
 
                     <ModeVente
                         v-model="isEmporter"
                         title="Takeaway"
                         :icon="Store"
+                        @update:modelValue="($event) => (isEmporter = $event)"
                     />
 
                     <ModeVente
                         v-model="isLivraison"
                         title="Delivery"
                         :icon="Truck"
+                        @update:modelValue="($event) => (isLivraison = $event)"
                     />
                 </div>
 

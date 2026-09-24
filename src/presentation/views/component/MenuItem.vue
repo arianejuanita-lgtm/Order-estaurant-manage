@@ -6,7 +6,6 @@ import { useMenuItem } from "@/presentation/stores/useMenuItem";
 import { useOrder } from "@/presentation/stores/useOrder.ts";
 import { ref, computed, onMounted } from "vue";
 import DialogBox from "../comom/DialogBox.vue";
-import DetailsItem from "../DetailsItem.vue";
 import type { MenuItem } from "@/domain/entities/MenuItem";
 import { useRouter } from "vue-router";
 import Suppersed from "../comom/Suppersed.vue";

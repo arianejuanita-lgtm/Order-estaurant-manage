@@ -2,6 +2,8 @@
 import { ref, watch, computed } from 'vue';
 import type { MenuItem } from '@/domain/entities/MenuItem';
 import { Check, AlertTriangle, Edit3 } from 'lucide-vue-next';
+import { useRouter } from 'vue-router';
+const router=useRouter();
 
 type DialogMode = 'add' | 'edit' | 'delete';
 
@@ -19,6 +21,7 @@ const props = withDefaults(
 const emit = defineEmits(['close', 'confirm']);
 const handleSubmit = () => {
   emit('confirm');
+  router.push("/home");
 };
 
 const dialogRef = ref<HTMLDialogElement | null>(null);

@@ -94,6 +94,7 @@ const onInvalidSubmit = ({ errors }: { errors: any }) => {
                 :required="true"
                 v-model="nameValue"
                 :max-length="100"
+                @update:modelValue="($event) => (nameValue = $event)"
             />
 
             <SelectCategory
@@ -106,6 +107,7 @@ const onInvalidSubmit = ({ errors }: { errors: any }) => {
                 name="category"
                 :options="filterStore.categories"
                 v-model="categoryValue"
+                @update:modelValue="($event) => (categoryValue = $event)"
             />
             <ErrorMessage name="category" class="text-xs text-red-500 mt-0.5" />
 
@@ -141,12 +143,14 @@ const onInvalidSubmit = ({ errors }: { errors: any }) => {
                 placeholder="Describe your product..." 
                 v-model="descValue"
                 :max-length="500"
+                @update:modelValue="($event) => (descValue = $event)"
             />
 
             <Disponibility
                 v-model="isAvailable"
                 title="Product available"
                 description="The product is visible in your menu"
+                @update:modelValue="($event) => (isAvailable = $event)"
             />
 
             <div class="flex justify-end pt-4 border-t border-gray-100">

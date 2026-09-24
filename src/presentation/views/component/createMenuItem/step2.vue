@@ -15,7 +15,11 @@ defineProps<{
   itemStep: IStep;
 }>();
 
+const supplementStore = useSupplement();
+const createStore = useCreateMenuItem();
 const emit = defineEmits(["next", "prev"]);
+
+const price=ref<number>(createStore.formState.price);
 
 const validationSchema = toTypedSchema(
   zod.object({
@@ -32,8 +36,6 @@ const validationSchema = toTypedSchema(
   }),
 );
 
-const supplementStore = useSupplement();
-const createStore = useCreateMenuItem();
 
 onMounted(async () => {
   await supplementStore.fetchSupplement();
@@ -48,7 +50,7 @@ const variantsList = ref<IVariants[]>(createStore.formState.variants || []);
 
 const onSubmit = (values: any) => {
   createStore.updateForm({
-    price: values.price,
+    price: price.value,
     supplements: values.supplements || [],
     variants: variantsList.value,
   });
@@ -86,6 +88,8 @@ const onInvalidSubmit = ({ errors }: { errors: any }) => {
           placeholder="Ex: 2500"
           :required="true"
           type="number"
+          v-model="price"
+          @update:modelValue="($event) => (price = $event)"
         />
       </div>
 

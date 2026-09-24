@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import type { IStep } from "@/data/repositories/StepRepository";
 import RetourButton from "../../comom/RetourButton.vue";
 import ActionButton from "../../comom/ActionButton.vue";
@@ -19,6 +19,46 @@ const emit = defineEmits(["prev", "finish"]);
 const createStore = useCreateMenuItem();
 const route = useRoute();
 
+const formatPreparationTime = (val: any): string => {
+  if (typeof val === "number") {
+    const hours = Math.floor(val / 60).toString().padStart(2, '0');
+    const minutes = (val % 60).toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  }
+  return val ? String(val) : "";
+};
+
+const rawTime = createStore.formState.preparationTime ?? (createStore.formState as any).preparation_time ?? "";
+
+const quantity = ref<number>(createStore.formState.stock?.quantity ?? 0);
+const temps = ref<string>(formatPreparationTime(rawTime));
+const seuil = ref<number>(createStore.formState.stock?.alert_threshold ?? 0);
+const dietary = ref<string[]>(createStore.formState.dietary || []);
+
+watch(
+  () => createStore.formState,
+  (newState) => {
+    if (newState) {
+      if (newState.stock?.quantity !== undefined) {
+        quantity.value = newState.stock.quantity;
+      }
+      if (newState.stock?.alert_threshold !== undefined) {
+        seuil.value = newState.stock.alert_threshold;
+      }
+      
+      const incomingTime = newState.preparationTime ?? (newState as any).preparation_time;
+      if (incomingTime !== undefined) {
+        temps.value = formatPreparationTime(incomingTime);
+      }
+      
+      if (newState.dietary) {
+        dietary.value = newState.dietary;
+      }
+    }
+  },
+  { immediate: true, deep: true }
+);
+
 const isEditing = computed(() => {
   return !!route.params.id || !!createStore.formState.id;
 });
@@ -31,24 +71,22 @@ const validationSchema = toTypedSchema(
   })
 );
 
-const initialValues = {
-  quantity: createStore.formState.stock?.quantity ?? 0,
-  seuil: createStore.formState.stock?.alert_threshold ?? 0,
-  temps: createStore.formState.preparationTime ?? "",
-};
-
-const dietaryList = ref<string[]>(createStore.formState.dietary || []);
+const initialValues = computed(() => ({
+  quantity: quantity.value,
+  seuil: seuil.value,
+  temps: temps.value,
+}));
 
 const onSubmit = (values: any) => {
   createStore.updateForm({
     stock: {
-      quantity: values.quantity,
-      alert_threshold: values.seuil,
+      quantity: quantity.value,
+      alert_threshold: seuil.value,
       sold_by_unit: createStore.formState.stock?.sold_by_unit ?? true,
-      in_stock: values.quantity > 0,
+      in_stock: quantity.value > 0,
     },
-    preparationTime: values.temps,
-    dietary: dietaryList.value,
+    preparationTime: temps.value,
+    dietary: dietary.value,
   });
 
   emit("finish");
@@ -80,12 +118,16 @@ const onSubmit = (values: any) => {
               type="number"
               label="Stock quantity" 
               placeholder="100" 
+              v-model="quantity"
+              @update:modelValue="($event) => (quantity = $event)"
             />
             <InputField 
               name="seuil" 
               type="number"
               label="Alert threshold" 
-              placeholder="5" 
+              placeholder="5"
+              v-model="seuil"
+              @update:modelValue="($event) => (seuil = $event)" 
             />
           </div>
         </div>
@@ -96,11 +138,13 @@ const onSubmit = (values: any) => {
             type="time"
             label="Preparation time" 
             :required="true"
+            v-model="temps"
+            @update:modelValue="($event) => (temps = $event)"
           />
         </div>
 
         <div class="pt-4 border-t border-gray-100">
-          <IngredientInput v-model="dietaryList" />
+          <IngredientInput v-model="dietary" />
         </div>
 
       </div>
