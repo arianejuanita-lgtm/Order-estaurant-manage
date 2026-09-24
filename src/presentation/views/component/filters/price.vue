@@ -1,41 +1,27 @@
-<!-- <script setup lang="ts">
-import { useFilter } from '@/presentation/stores/useFilter';
+<script setup lang="ts">
 import { useFiltered } from '@/presentation/stores/useFiltered';
 import { ref, computed, watch } from 'vue';
 import { useMenuItem } from '@/presentation/stores/useMenuItem';
 
-const filterStore = useFilter();
 const filteredStore = useFiltered();
+const menuStore = useMenuItem();
 
-let maxPrice: number = 0;
-let minPrice : number;
-const menuStore=useMenuItem();
-let tabLength =menuStore.menuItems.length;
-let tab=menuStore.menuItems;
-  for (let i=1 ; i<=tabLength ; i++){
-    maxPrice= tab[0]?.price ?? 0;
-    if(tab[i]?.price > maxPrice){
-      maxPrice = tab[i]?.price
-    }
-  }
-
-const priceRangeData = computed(() => filterStore.PriceRanges);
-
-const prixMin = computed(() => {
-  return priceRangeData.value && priceRangeData.value.length > 0 ? Math.min(...priceRangeData.value) : minPrice;
+const maxPriceCalculated = computed(() => {
+  if (!menuStore.menuItems || menuStore.menuItems.length === 0) return 1000; 
+  const prices = menuStore.menuItems.map(item => Number(item.price) || 0);
+  return Math.max(...prices);
 });
 
-const prixMax = computed(() => {
-  return priceRangeData.value && priceRangeData.value.length > 0 ? Math.max(...priceRangeData.value) : maxPrice;
-});
+const prixMin = computed(() => 0);
+const prixMax = computed(() => maxPriceCalculated.value);
 
-const valMin = ref<number>(filteredStore.price || prixMin.value);
-const valMax = ref<number>(filteredStore.price || prixMax.value);
+const valMin = ref<number>(filteredStore.minPrice);
+const valMax = ref<number>(filteredStore.maxPrice);
 
-watch(prixMax, (newMax) => {
-  if (filteredStore.price === 1000 || filteredStore.price > newMax) {
+watch(maxPriceCalculated, (newMax) => {
+  if (filteredStore.maxPrice === 1000 || filteredStore.maxPrice > newMax) {
     valMax.value = newMax;
-    filteredStore.price = newMax;
+    filteredStore.maxPrice = newMax;
   }
 });
 
@@ -43,19 +29,27 @@ const controlMin = () => {
   if (valMin.value > valMax.value) {
     valMin.value = valMax.value;
   }
-  filteredStore.price = valMin.value;
+  filteredStore.minPrice = valMin.value;
 };
 
 const controlMax = () => {
   if (valMax.value < valMin.value) {
     valMax.value = valMin.value;
   }
-  filteredStore.price = valMax.value;
+  filteredStore.maxPrice = valMax.value;
 };
+
+watch(() => filteredStore.minPrice, (newMin) => {
+  if (newMin === 0) valMin.value = 0;
+});
+
+watch(() => filteredStore.maxPrice, (newMax) => {
+  if (newMax >= maxPriceCalculated.value) valMax.value = maxPriceCalculated.value;
+});
 
 const trackStyle = computed(() => {
   const currentMin = prixMin.value;
-  const currentMax = prixMax.value;
+  const currentMax = prixMax.value || 1;
   const range = currentMax - currentMin || 1;
 
   const minPercent = ((valMin.value - currentMin) / range) * 100;
@@ -70,7 +64,7 @@ const trackStyle = computed(() => {
 <template>
   <div class="w-full max-w-[350px] p-2.5 font-sans">
     <label class="block mb-3.5 text-sm font-semibold text-gray-700">
-      Price range : {{ valMin }}$ - {{ valMax }}$
+      Price range : {{ valMin }}$- {{ valMax }}$
     </label>
     
     <div class="relative w-full h-1.5">
@@ -94,4 +88,4 @@ const trackStyle = computed(() => {
       />
     </div>
   </div>
-</template> -->
+</template>

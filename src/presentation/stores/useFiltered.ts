@@ -8,7 +8,9 @@ export const useFiltered = defineStore("filtered", () => {
   const catego = ref<string[]>([]);
   const diate = ref<string[]>([]);
   const port = ref<string[]>([]);
-  const price = ref<number>(0);
+  
+  const minPrice = ref<number>(0);
+  const maxPrice = ref<number>(1000); 
   const title = ref<string>("");
 
   const finalMenu = computed(() => {
@@ -41,11 +43,9 @@ export const useFiltered = defineStore("filtered", () => {
       });
     }
 
-    if (price.value) {
-      result = result.filter(
-        (x) => Math.round(x.price) === Number(price.value),
-      );
-    }
+    result = result.filter(
+      (x) => Math.round(x.price) >= minPrice.value && Math.round(x.price) <= maxPrice.value
+    );
 
     return result;
   });
@@ -54,7 +54,8 @@ export const useFiltered = defineStore("filtered", () => {
     catego.value = []; 
     diate.value = [];
     port.value = [];
-    price.value = 0;
+    minPrice.value = 0;
+    maxPrice.value = 1000; 
     title.value = "";
   };
 
@@ -62,7 +63,8 @@ export const useFiltered = defineStore("filtered", () => {
     catego,
     diate,
     port,
-    price,
+    minPrice,
+    maxPrice,
     title,
     menu: finalMenu,
     clearFilter,
