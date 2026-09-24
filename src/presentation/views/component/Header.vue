@@ -14,9 +14,9 @@ const navLinks = [
   { name: 'Home', path: '/' },
   { name: 'Menu', path: '/home' },
   { name: 'Categorie', path: '/categorie' },
-  { name: 'About', path: '/about' },
-  { name: 'Blog', path: '/blog' },
-  { name: 'Contact', path: '/contact' },
+  // { name: 'About', path: '/about' },
+  // { name: 'Blog', path: '/blog' },
+  // { name: 'Contact', path: '/contact' },
 ];
 
 const toggleMobileMenu = () => {
