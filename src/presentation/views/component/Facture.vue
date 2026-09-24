@@ -78,6 +78,8 @@ const handleConfirm = async () => {
         :disabled="isLoading"
         class="mt-4 w-full bg-[#F5BE18] hover:bg-[#e0ab12] active:scale-[0.98] border-none p-[0.85rem] rounded-[10px] text-base font-semibold cursor-pointer transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
       >
+
+
         <svg 
           v-if="isLoading" 
           class="animate-spin h-5 w-5 text-neutral-900" 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Restaurant from '../../../assets/Restaurant.png';
-import HeaderIconButton from '../comom/HeaderIconButton.vue'; // Ajustez le chemin selon votre structure
+import HeaderIconButton from '../comom/HeaderIconButton.vue'; 
 import { Search, User, ShoppingBag, Menu as MenuIcon, X } from 'lucide-vue-next';
 import { RouterLink } from 'vue-router';
 import { useOrder } from '@/presentation/stores/useOrder.ts';

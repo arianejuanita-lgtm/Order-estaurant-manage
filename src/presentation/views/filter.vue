@@ -34,7 +34,7 @@ onUnmounted(() => {
     <button
       @click.stop="toggleDropdown"
       class="flex md:hidden items-center justify-center w-[40px] h-[40px] bg-white border border-gray-300 rounded-xl shadow-sm hover:border-[#F5BE18] transition-colors"
-      aria-label="Ouvrir les filtres"
+      aria-label="Open filter"
     >
       <SlidersHorizontal :size="20" class="text-gray-700" />
     </button>
