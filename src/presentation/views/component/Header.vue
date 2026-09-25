@@ -13,7 +13,7 @@ const menuContainerRef = ref<HTMLElement | null>(null);
 const navLinks = [
   { name: 'Home', path: '/' },
   { name: 'Menu', path: '/home' },
-  { name: 'Categorie', path: '/categorie' },
+  { name: 'Category', path: '/categorie' },
   // { name: 'About', path: '/about' },
   // { name: 'Blog', path: '/blog' },
   // { name: 'Contact', path: '/contact' },
@@ -64,8 +64,7 @@ onUnmounted(() => {
     </div>
 
     <div class="flex items-center gap-[6px] lg:gap-[12px] min-w-auto lg:min-w-[220px] justify-end">
-      
-      <HeaderIconButton :icon="User" label="User profile" />
+      <RouterLink to="/profil"> <HeaderIconButton :icon="User" label="User profile" /></RouterLink>
       <RouterLink to="/orderMenuItem" class="no-underline">
         <HeaderIconButton 
           :icon="ShoppingBag" 

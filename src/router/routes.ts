@@ -6,6 +6,7 @@ import Succes from "@/presentation/views/component/createMenuItem/Succes.vue";
 import DetailsMenuItem from "@/presentation/views/DetailsMenuItem.vue";
 import HomeView from "@/presentation/views/HomeView.vue";
 import CategoryView from "@/presentation/views/CategoryView.vue";
+import Profil from "@/presentation/views/Profil.vue";
 
 const routes = [
     { path: '/', component: HomeView },
@@ -16,7 +17,8 @@ const routes = [
     { path: '/edit-menu-item/:id',component: CreateMenuItem},
     {path:'/sucess', name:'sucess', component:Succes},
     {path:'/detail-menu-item/:id', name:'detail-menu-item', component:DetailsMenuItem , props:true},
-    {path:'/categorie',component:CategoryView}
+    {path:'/categorie',component:CategoryView},
+    {path:'/profil',component:Profil}
 
 ];
 

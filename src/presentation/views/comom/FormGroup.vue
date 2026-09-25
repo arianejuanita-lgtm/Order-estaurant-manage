@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { Field } from 'vee-validate';
 import { PenLine } from 'lucide-vue-next';
 
@@ -29,7 +29,7 @@ defineEmits(['update:modelValue']);
       :step="step" 
       :id="idu" 
       :model-value="modelValue"
-      @update:model-value="$emit('update:modelValue', $event)" 
+      @update:model-value="$emit('update:modelValue', $event)"
       :min="min"
       :max="max"
       class="border border-gray-200 bg-white p-3 rounded-xl text-sm outline-none hover:border-amber-400 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition-all duration-200 shadow-2xs"

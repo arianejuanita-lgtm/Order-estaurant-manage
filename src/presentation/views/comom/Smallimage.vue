@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import logo from '../../../assets/logo.png';
+// import Image from "next/image"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
 
 defineProps<{
     gallery: string[];

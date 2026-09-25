@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Field } from 'vee-validate';
 import { ListChecks } from 'lucide-vue-next';
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -7,7 +6,7 @@ interface CheckboxOption {
   [key: string]: any; 
 }
 
-defineProps<{
+const props = defineProps<{
   label: string;            
   name: string;            
   options: CheckboxOption[]; 
@@ -16,9 +15,22 @@ defineProps<{
   itemKey: string;          
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'update:modelValue', value: any[]): void;
 }>();
+
+const toggleOption = (itemValue: string) => {
+  const current = [...props.modelValue];
+  const index = current.indexOf(itemValue);
+  
+  if (index > -1) {
+    current.splice(index, 1);
+  } else {
+    current.push(itemValue);
+  }
+  
+  emit('update:modelValue', current);
+};
 </script>
 
 <template>
@@ -29,9 +41,10 @@ defineEmits<{
     </label>
     
     <div class="flex flex-wrap gap-2.5">
-      <label
+      <div
         v-for="option in options"
         :key="option[itemKey]"
+        @click="toggleOption(option[itemLabel])"
         class="group relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl border text-sm cursor-pointer transition-all duration-200 select-none shadow-2xs"
         :class="[
           modelValue.includes(option[itemLabel])
@@ -39,22 +52,14 @@ defineEmits<{
             : 'bg-white border-gray-200 text-gray-600 hover:border-amber-400 hover:bg-amber-50/20'
         ]"
       >
-        <Field
-          type="checkbox"
-          :name="name"
-          :value="option[itemLabel]"
-          :model-value="modelValue"
-          @update:model-value="$emit('update:modelValue', $event)"
-          class="hidden"
-        />
-
         <Checkbox 
           :model-value="modelValue.includes(option[itemLabel])"
-          class="data-[state=checked]:bg-amber-400 data-[state=checked]:border-amber-400 data-[state=checked]:text-black border-gray-300 transition-all"
+          @update:model-value="toggleOption(option[itemLabel])"
+          class="data-[state=checked]:bg-amber-400 data-[state=checked]:border-amber-400 data-[state=checked]:text-black border-gray-300 transition-all pointer-events-none"
         />
 
         <span class="transition-colors">{{ option[itemLabel] }}</span>
-      </label>
+      </div>
     </div>
   </div>
 </template>

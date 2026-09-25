@@ -32,30 +32,13 @@ onMounted(() => {
 <template>
   <div class="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-800">
     
-    <header class="bg-white border-b border-gray-100 sticky top-0 z-40 px-6 py-4 flex items-center justify-between shadow-2xs">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-2xl bg-amber-400 flex items-center justify-center shadow-xs">
-          <Layers class="w-5 h-5 text-gray-900" />
-        </div>
-        <div>
-          <h1 class="text-base font-extrabold text-gray-900 tracking-tight">Catalog Management</h1>
-          <p class="text-xs text-gray-500">Manage categories, dietaries and portion sizes</p>
-        </div>
-      </div>
-
-      <Boutton 
-        title="Refresh" 
-        :icon="RefreshCcw" 
-        :click="loadData"
-        class="bg-white border border-gray-200 hover:border-amber-400 text-gray-700 px-4 py-2 rounded-xl text-xs font-semibold transition-all shadow-2xs cursor-pointer"
-      />
-    </header>
+  
 
     <main class="flex-1 max-w-7xl w-full mx-auto px-6 py-8 flex flex-col gap-6">
       
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex flex-col gap-1">
-          <h2 class="text-2xl font-black text-gray-900 tracking-tight">Catalog Items</h2>
+          <h2 class="text-xl font-black text-gray-900 tracking-tight">Catalog Items</h2>
           <p class="text-xs text-gray-500">View and inspect your restaurant's classification elements.</p>
         </div>
 

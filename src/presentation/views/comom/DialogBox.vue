@@ -3,7 +3,9 @@ import { ref, watch, computed } from 'vue';
 import type { MenuItem } from '@/domain/entities/MenuItem';
 import { Check, AlertTriangle, Edit3 } from 'lucide-vue-next';
 import { useRouter } from 'vue-router';
-const router=useRouter();
+import Boutton from '@/presentation/views/comom/Boutton.vue';
+
+const router = useRouter();
 
 type DialogMode = 'add' | 'edit' | 'delete';
 
@@ -46,7 +48,7 @@ const config = computed(() => {
         message: `Are you sure you want to update `,
         confirmText: 'Save Changes',
         iconBg: 'bg-blue-100 text-blue-600',
-        confirmBtn: 'bg-amber-400 hover:bg-amber-400 border-amber-400 text-black',
+        confirmClass: 'bg-amber-400 hover:bg-amber-500 border-amber-400 text-black',
       };
     case 'delete':
       return {
@@ -54,7 +56,7 @@ const config = computed(() => {
         message: `Are you sure you want to delete `,
         confirmText: 'Delete',
         iconBg: 'bg-red-100 text-red-600',
-        confirmBtn: 'bg-red-500 hover:bg-red-600 border-red-500 text-white',
+        confirmClass: 'bg-red-500 hover:bg-red-600 border-red-500 text-white',
       };
     case 'add':
     default:
@@ -63,7 +65,7 @@ const config = computed(() => {
         message: `We have successfully prepared `,
         confirmText: 'Confirm',
         iconBg: 'bg-amber-100 text-amber-400',
-        confirmBtn: 'bg-amber-400 hover:bg-amber-400 border-amber-400 text-black',
+        confirmClass: 'bg-amber-400 hover:bg-amber-500 border-amber-400 text-black',
       };
   }
 });
@@ -91,21 +93,22 @@ const config = computed(() => {
       </p>
     </div>
         
-    <div class="flex items-center justify-center gap-3 mt-2">
-      <button 
+   <div class="flex items-center justify-center gap-3 mt-2">
+      <Boutton
+        title="Cancel"
+        :haut="40"
         type="button"
-        @click="closeDialog" 
-        class="px-4 sm:px-5 py-2.5 sm:py-3 rounded-[20px] border border-gray-300 bg-white text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
-      >
-        Cancel
-      </button>
-      <button 
+        @click="closeDialog"
+        class="bg-white border-gray-300 text-gray-700 hover:bg-gray-50 text-xs sm:text-sm font-semibold px-4 sm:px-5"
+      />
+
+      <Boutton
+        :title="config.confirmText"
+        :haut="40"
         type="button"
-        @click="handleSubmit" 
-        :class="['flex items-center justify-center border px-5 sm:px-6 py-2.5 sm:py-3 rounded-[20px] cursor-pointer font-bold transition-colors text-xs sm:text-sm shadow-sm', config.confirmBtn]"
-      >
-        {{ config.confirmText }}
-      </button>
+        @click="handleSubmit"
+        :class="['text-xs sm:text-sm px-5 sm:px-6 shadow-sm', config.confirmClass].join(' ')"
+      />
     </div>
   </dialog>
 </template>
