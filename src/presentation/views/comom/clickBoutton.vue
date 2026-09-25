@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Component } from 'vue';
+import { Button } from "@/components/ui/button";
 
 withDefaults(
   defineProps<{
@@ -15,13 +16,14 @@ withDefaults(
 </script>
 
 <template>
-  <button 
+  <Button 
     type="button"
     @click="click" 
-    class="flex items-center justify-center shrink-0 gap-2 bg-amber-400 border border-amber-400 font-bold text-black text-sm transition-colors hover:bg-amber-400 shadow-xs cursor-pointer"
+    variant="default"
+    class="flex items-center justify-center shrink-0 gap-2 bg-amber-400 border border-amber-400 font-bold text-black text-sm transition-colors hover:bg-amber-500 shadow-xs cursor-pointer h-auto"
     :class="size"
   >
-    <component :is="icon" class="w-3 h-5" />
+    <component :is="icon" v-if="icon" class="w-4 h-4 shrink-0" />
     <span v-if="title" class="max-[420px]:hidden">{{ title }}</span>
-  </button>
+  </Button>
 </template>

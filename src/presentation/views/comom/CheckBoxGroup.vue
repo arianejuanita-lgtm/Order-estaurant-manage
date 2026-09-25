@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Field } from 'vee-validate';
 import { ListChecks } from 'lucide-vue-next';
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface CheckboxOption {
   [key: string]: any; 
@@ -8,7 +9,7 @@ interface CheckboxOption {
 
 defineProps<{
   label: string;            
-  name: string;             
+  name: string;            
   options: CheckboxOption[]; 
   modelValue: any[];        
   itemLabel: string;        
@@ -34,7 +35,7 @@ defineEmits<{
         class="group relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl border text-sm cursor-pointer transition-all duration-200 select-none shadow-2xs"
         :class="[
           modelValue.includes(option[itemLabel])
-            ? 'bg-amber-50/70 border-amber-400  font-medium ring-2 ring-amber-100 shadow-xs'
+            ? 'bg-amber-50/70 border-amber-400 font-medium ring-2 ring-amber-100 shadow-xs'
             : 'bg-white border-gray-200 text-gray-600 hover:border-amber-400 hover:bg-amber-50/20'
         ]"
       >
@@ -47,14 +48,10 @@ defineEmits<{
           class="hidden"
         />
 
-        <span 
-          class="w-3 h-3  transition-all duration-200 flex items-center justify-center"
-          :class="[
-            modelValue.includes(option[itemLabel]) 
-              ? 'bg-amber-400 scale-105 shadow-xs ring-2 ring-amber-200' 
-              : 'bg-gray-300 group-hover:bg-amber-400'
-          ]"
-        ></span>
+        <Checkbox 
+          :model-value="modelValue.includes(option[itemLabel])"
+          class="data-[state=checked]:bg-amber-400 data-[state=checked]:border-amber-400 data-[state=checked]:text-black border-gray-300 transition-all"
+        />
 
         <span class="transition-colors">{{ option[itemLabel] }}</span>
       </label>

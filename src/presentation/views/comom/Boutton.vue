@@ -1,31 +1,30 @@
 <script setup lang="ts">
-const props = defineProps({
-  title: {
-    type: String,
-    required: true
-  },
-  haut: {
-    type: Number,
-    default: 50
-  },
-  type: {
-    type: String as () => 'button' | 'submit' | 'reset',
-    default: 'button' 
-  },
-  class: {
-    type: String,
-    default: ''
+import { Button } from "@/components/ui/button";
+
+const props = withDefaults(
+  defineProps<{
+    title: string;
+    haut?: number;
+    type?: 'button' | 'submit' | 'reset';
+    class?: string;
+  }>(),
+  {
+    haut: 50,
+    type: 'button',
+    class: ''
   }
-});
+);
 </script>
 
 <template>
-  <button 
-    :style="{ height: props.haut + 'px' }"
+  <Button 
     :type="props.type"
-    :class="props.class"
-    class="flex items-center justify-center bg-amber-400 border border-amber-400 px-5 rounded-[20px] cursor-pointer font-bold text-black transition-colors hover:bg-amber-400"
+    :style="{ height: props.haut + 'px' }"
+    :class="[
+      'bg-amber-400 border border-amber-400 rounded-[20px] cursor-pointer font-bold text-black hover:bg-amber-500 transition-colors',
+      props.class
+    ]"
   >
     {{ title }}
-  </button>
+  </Button>
 </template>
