@@ -12,6 +12,9 @@ import Loading from "./comom/Loading.vue";
 const createStore=useCreateMenuItem();
 
 const filter = useFiltered();
+
+console.log('filter.menu', filter.menu);
+
 const menu = useMenuItem();
 const isLoading = ref<boolean>(false); 
 

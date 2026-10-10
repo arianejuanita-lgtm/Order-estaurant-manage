@@ -80,7 +80,7 @@ const features = [
       </div>
     </section>
 
-    <section class="max-w-7xl w-full mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <section class="max-w-7xl w-full mx-auto px-6 py-5 grid grid-cols-1 md:grid-cols-3 gap-6">
       <InfoCard 
         v-for="(card, index) in infoCards" 
         :key="index"

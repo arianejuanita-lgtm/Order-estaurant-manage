@@ -10,18 +10,22 @@ export const useFiltered = defineStore("filtered", () => {
   const port = ref<string[]>([]);
   
   const minPrice = ref<number>(0);
-  const maxPrice = ref<number>(1000); 
+  const maxPrice = ref<number>(100000); 
   const title = ref<string>("");
 
   const finalMenu = computed(() => {
     let result = menuStore.menuItems;
 
+    if (!result || result.length === 0) {
+      return [];
+    }
+
     if (title.value) {
       const searchTerm = title.value.toLowerCase();
       result = result.filter(
         (item) =>
-          item.name.toLowerCase().includes(searchTerm) ||
-          item.description.toLowerCase().includes(searchTerm),
+          item.name?.toLowerCase().includes(searchTerm) ||
+          item.description?.toLowerCase().includes(searchTerm),
       );
     }
 
@@ -33,18 +37,20 @@ export const useFiltered = defineStore("filtered", () => {
 
     if (diate.value.length > 0) {
       result = result.filter((item) => {
-        return diate.value.some((d) => item.dietary.includes(d));
+        return diate.value.some((d) => item.dietary?.includes(d));
       });
     }
 
     if (port.value.length > 0) {
       result = result.filter((item) => {
-        return port.value.some((p) => item.portionSizes?.includes(p));
+        const sizes = item.portionSizes || (item as any).portionSizes;
+        return port.value.some((p) => sizes?.includes(p));
       });
     }
 
     result = result.filter(
-      (x) => Math.round(x.price) >= minPrice.value && Math.round(x.price) <= maxPrice.value
+      (x) => Math.round(Number(x.price) || 0) >= minPrice.value && 
+             Math.round(Number(x.price) || 0) <= maxPrice.value
     );
 
     return result;
@@ -55,7 +61,7 @@ export const useFiltered = defineStore("filtered", () => {
     diate.value = [];
     port.value = [];
     minPrice.value = 0;
-    maxPrice.value = 1000; 
+    maxPrice.value = 100000; 
     title.value = "";
   };
 

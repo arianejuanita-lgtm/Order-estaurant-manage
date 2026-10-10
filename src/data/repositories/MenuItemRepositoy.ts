@@ -12,6 +12,8 @@ export class MenuItemRepository implements IMenuItemRepository {
     const response = await apiClient.get(""); 
     const items = response.data.record.menu_items;
 
+    console.log('fetch item from repositorie', items);
+
     return items.map(
       (item: any) =>
         new MenuItem({

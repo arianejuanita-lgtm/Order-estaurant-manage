@@ -11,6 +11,8 @@ export const useMenuItem = defineStore("menuItem", () => {
   async function fecthMenuItems() {
     try {
       menuItems.value = await menuItemRepository.getMenuItem();
+
+      console.log('fecth items from stor pinia', menuItems.value);
     } catch (error) {
       console.log(error);
     }
