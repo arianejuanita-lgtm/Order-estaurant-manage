@@ -30,9 +30,10 @@ class DBDataSource {
     });
   }
 
-  async getAll(): Promise<any[]> {
+ async getAll(): Promise<any[]> {
     const db = await this.dbPromise;
-    return await db.getAll(STORE_NAME);
+    const items = await db.getAll(STORE_NAME);
+    return items.reverse(); 
   }
 
   async add(item: any): Promise<number> {
