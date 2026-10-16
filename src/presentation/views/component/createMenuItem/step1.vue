@@ -50,10 +50,15 @@ const handleImageUpdate = (newImage: string) => {
 };
 
 const onSubmit = (values: any) => {
+    const selectedCat = filterStore.categories.find(
+        (cat) => cat.label === values.category || cat.label === categoryValue.value
+    );
+
     createStore.updateForm({
-        name: values.name || nameValue.value,
-        category: categoryValue.value,
-        description: values.description || descValue.value,
+        name: values.name,
+        category: values.category || categoryValue.value,
+        categoryId: selectedCat ? (selectedCat as any).id || (selectedCat as any).categoryId : "",
+        description: values.description || "",
         image: previewImage.value,
         isAvailable: isAvailable.value,
         dietary: dietaryValue.value,

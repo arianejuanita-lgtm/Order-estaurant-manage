@@ -61,4 +61,4 @@ class DBDataSource {
   }
 }
 
-export const dbService = new DBDataSource();
+export const dbDataSource = new DBDataSource();
