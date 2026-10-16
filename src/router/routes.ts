@@ -14,7 +14,7 @@ const routes = [
     { path: '/menu-item/:id', redirect: '/' },
     {path:'/create-menu-item', component:CreateMenuItem},
     { path: '/edit-menu-item/:id',component: CreateMenuItem},
-    {path:'/sucess', name:'sucess', component:Succes},
+    { path: '/success', name: 'success', component: Succes },
     {path:'/detail-menu-item/:id', name:'detail-menu-item', component:DetailsMenuItem , props:true},
     {path:'/categorie',component:CategoryView}
 

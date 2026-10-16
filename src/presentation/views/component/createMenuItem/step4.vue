@@ -13,6 +13,7 @@ import { useRoute } from 'vue-router';
 
 defineProps<{
   itemStep: IStep;
+  isEditMode: boolean; 
 }>();
 
 const emit = defineEmits(["prev", "finish"]);
@@ -58,10 +59,6 @@ watch(
   },
   { immediate: true, deep: true }
 );
-
-const isEditing = computed(() => {
-  return !!route.params.id || !!createStore.formState.id;
-});
 
 const validationSchema = toTypedSchema(
   zod.object({
@@ -151,11 +148,11 @@ const onSubmit = (values: any) => {
 
       <div class="flex justify-between pt-4 border-t border-gray-100">
         <RetourButton type="button" @click="emit('prev')" />
-        <ActionButton
-          :label="isEditing ? 'Update product' : 'Create product'"
-          variant="finish"
-          type="submit"
-        />
+  <ActionButton
+  :label="isEditMode ? 'Update product' : 'Create product'"
+  variant="finish"
+  type="submit"
+/>
       </div>
     </Form>
   </div>

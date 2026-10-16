@@ -30,7 +30,7 @@ onMounted(() => {
         const foundItem = menuStore.menuItems.find(i => i.id === id);
         if (foundItem) {
             currentItem.value = foundItem;
-            createStore.updateForm(foundItem); 
+            createStore.updateForm(foundItem);
         }
     } else {
         createStore.resetForm();
@@ -121,13 +121,8 @@ const goToStep = (targetStepId: number) => {
 </script>
 
 <template>
-    <DialogBox
-      :item="currentItem ?? null"
-      :isOpen="isDialogOpen"
-      mode="edit"
-      @close="isDialogOpen = false"
-      @confirm="handleConfirmEdit"
-    />
+    <DialogBox :item="currentItem ?? null" :isOpen="isDialogOpen" mode="edit" @close="isDialogOpen = false"
+        @confirm="handleConfirmEdit" />
 
     <div class="min-h-screen bg-gray-50 p-6 flex flex-col gap-8">
         <div class="flex flex-col gap-6">
@@ -137,22 +132,17 @@ const goToStep = (targetStepId: number) => {
                 <h2 class="text-3xl font-bold text-gray-900">
                     {{ isEditMode ? 'Edit product' : 'Create a product' }}
                 </h2>
-                
+
                 <div class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
-                    <div 
-                        v-for="stepItem in steps" 
-                        @click="goToStep(stepItem.id)"
-                        :key="stepItem.id"
+                    <div v-for="stepItem in steps" @click="goToStep(stepItem.id)" :key="stepItem.id"
                         class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 cursor-pointer hover:opacity-90 select-none"
                         :class="[
-                            currentStepId === stepItem.id 
-                                ? 'bg-amber-400 text-gray-900 font-bold shadow-sm' 
+                            currentStepId === stepItem.id
+                                ? 'bg-amber-400 text-gray-900 font-bold shadow-sm'
                                 : 'bg-gray-200 text-gray-400 hover:bg-gray-300 hover:text-gray-600'
-                        ]"
-                    >
+                        ]">
                         <span class="w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold"
-                            :class="currentStepId === stepItem.id ? 'bg-white/40 text-gray-900' : 'bg-gray-300 text-gray-500'"
-                        >
+                            :class="currentStepId === stepItem.id ? 'bg-white/40 text-gray-900' : 'bg-gray-300 text-gray-500'">
                             {{ stepItem.id }}
                         </span>
                         <div class="flex flex-col">
@@ -166,23 +156,23 @@ const goToStep = (targetStepId: number) => {
         <div v-if="!isEditMode || currentItem" class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
             <div class="lg:col-span-3 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <Step1 v-if="currentStepId === 1" :itemStep="steps[0]!" :initialData="currentItem" @next="nextStep" />
-                <Step2 v-else-if="currentStepId === 2" :itemStep="steps[1]!" :initialData="currentItem" @next="nextStep" @prev="prevStep" />
-                <Step3 v-else-if="currentStepId === 3" :itemStep="steps[2]!" :initialData="currentItem" @next="nextStep" @prev="prevStep" />
-                <Step4 v-else-if="currentStepId === 4" :itemStep="steps[3]!" :initialData="currentItem" @prev="prevStep" @finish="finishForm" />
+                <Step2 v-else-if="currentStepId === 2" :itemStep="steps[1]!" :initialData="currentItem" @next="nextStep"
+                    @prev="prevStep" />
+                <Step3 v-else-if="currentStepId === 3" :itemStep="steps[2]!" :initialData="currentItem" @next="nextStep"
+                    @prev="prevStep" />
+                <Step4 v-else-if="currentStepId === 4" :itemStep="steps[3]!" :initialData="currentItem"
+                    :isEditMode="isEditMode" @prev="prevStep" @finish="finishForm" />
             </div>
 
             <div class="lg:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-gray-100 sticky top-6">
                 <ApercueItem :item="currentItem" />
             </div>
         </div>
-        
+
         <div v-else class="flex justify-center items-center py-20 text-gray-400">
             Loading Product ...
         </div>
     </div>
-    
-    <IncompleteStep
-        v-model:is-modal-open="isModalOpen" 
-        :modal-message="modalMessage" 
-    />
+
+    <IncompleteStep v-model:is-modal-open="isModalOpen" :modal-message="modalMessage" />
 </template>
